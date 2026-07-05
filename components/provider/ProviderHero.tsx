@@ -154,7 +154,7 @@ export default function ProviderHero({ provider, category, policyCount }: Props)
             Get Quote
           </a>
           <a
-            href={provider.brochureUrl ?? "#"}
+            href={(provider as Record<string, unknown>).brochureUrl as string ?? "#"}
             className="border-2 border-gray-200 text-gray-600 px-6 py-3 rounded-xl font-medium hover:border-gray-300 transition-colors flex items-center gap-2"
           >
             <svg

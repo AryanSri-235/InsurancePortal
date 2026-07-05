@@ -57,8 +57,12 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
     }
   }
 
+  const heroBg = config.color.bg ?? config.color.gradient ?? "from-blue-700 to-indigo-700";
+  const heroBadgeBg = config.color.badge ?? "bg-white/20 text-white";
+  const heroBadgeText = config.color.badgeText ?? config.label;
+
   return (
-    <section className={`relative bg-gradient-to-br ${config.color.bg} text-white overflow-hidden`}>
+    <section className={`relative bg-gradient-to-br ${heroBg} text-white overflow-hidden`}>
       <div className="absolute inset-0 opacity-10">
         <div className="absolute top-0 right-0 w-96 h-96 rounded-full bg-white blur-3xl" />
         <div className="absolute bottom-0 left-0 w-64 h-64 rounded-full bg-white blur-3xl" />
@@ -69,8 +73,8 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
 
           {/* Left: Copy */}
           <div>
-            <div className={`inline-block ${config.color.badge} rounded-full px-4 py-1.5 text-xs font-semibold mb-5`}>
-              {config.emoji} {config.color.badgeText}
+            <div className={`inline-block ${heroBadgeBg} rounded-full px-4 py-1.5 text-xs font-semibold mb-5`}>
+              {config.emoji} {heroBadgeText}
             </div>
 
             <h1 className="text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight mb-5">
@@ -83,32 +87,36 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
 
             {/* Trust badges row */}
             <div className="flex flex-wrap gap-3 mb-9">
-              {config.trustBadges.map((badge) => (
-                <span
-                  key={badge}
-                  className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium"
-                >
-                  <svg className="w-3.5 h-3.5 text-green-300 shrink-0" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fillRule="evenodd"
-                      d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
-                  {badge}
-                </span>
-              ))}
+              {config.trustBadges.map((badge, i) => {
+                const text = typeof badge === "string" ? badge : ((badge as Record<string, string>).label ?? (badge as Record<string, string>).text ?? "");
+                return (
+                  <span
+                    key={i}
+                    className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur-sm rounded-full px-3 py-1.5 text-xs font-medium"
+                  >
+                    <svg className="w-3.5 h-3.5 text-green-300 shrink-0" fill="currentColor" viewBox="0 0 20 20">
+                      <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
+                    </svg>
+                    {text}
+                  </span>
+                );
+              })}
             </div>
 
             {/* 4 highlight stat boxes */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {config.highlights.map((h) => (
-                <div key={h.label} className="bg-white/15 backdrop-blur-sm rounded-2xl p-4 text-center">
-                  <div className="text-2xl mb-1.5">{h.icon}</div>
-                  <div className="font-bold text-sm leading-tight">{h.value}</div>
-                  <div className="text-white/70 text-xs mt-0.5">{h.label}</div>
-                </div>
-              ))}
+              {config.highlights.slice(0, 4).map((h, i) => {
+                const icon  = typeof h === "string" ? "" : ((h as Record<string, string>).icon ?? "");
+                const value = typeof h === "string" ? h  : ((h as Record<string, string>).value ?? (h as Record<string, string>).title ?? "");
+                const label = typeof h === "string" ? "" : ((h as Record<string, string>).label ?? (h as Record<string, string>).description ?? "");
+                return (
+                  <div key={i} className="bg-white/15 backdrop-blur-sm rounded-2xl p-4 text-center">
+                    {icon && <div className="text-2xl mb-1.5">{icon}</div>}
+                    <div className="font-bold text-sm leading-tight">{value}</div>
+                    <div className="text-white/70 text-xs mt-0.5">{label}</div>
+                  </div>
+                );
+              })}
             </div>
           </div>
 

@@ -163,7 +163,7 @@ export default function ProviderPlans({ policies, category, providerName }: Prop
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
             {filteredAndSorted.map((policy) => (
               <div
-                key={policy.id as string}
+                key={policy.id}
                 className="bg-white border-2 border-gray-100 rounded-3xl overflow-hidden hover:shadow-xl hover:-translate-y-1 transition-all relative flex flex-col"
               >
                 {/* Top Gradient Bar */}
