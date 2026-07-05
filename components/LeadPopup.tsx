@@ -2,8 +2,8 @@
 
 import { useEffect, useState, useRef } from "react";
 
-const FIRST_DELAY = 45_000;   // 45 seconds on first visit
-const REPEAT_DELAY = 120_000; // every 2 minutes after dismissal
+const FIRST_DELAY = 15_000;  // 15 seconds on first visit
+const REPEAT_DELAY = 60_000; // every 1 minute after dismissal
 
 const CATEGORIES = ["term", "health", "motor", "life"];
 const CAT_LABELS: Record<string, string> = {
