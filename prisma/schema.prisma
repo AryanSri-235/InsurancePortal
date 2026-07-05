@@ -1,0 +1,224 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Provider {
+  id                   Int      @id @default(autoincrement())
+  slug                 String   @unique
+  name                 String
+  logoUrl              String?
+  bannerUrl            String?
+  tagline              String?
+  about                String?
+  irdaiRegNo           String?
+  claimSettlementRatio Float?
+  solvencyRatio        Float?
+  networkHospitals     Int?
+  categories           String[]
+  isActive             Boolean  @default(true)
+  createdAt            DateTime @default(now())
+  updatedAt            DateTime @updatedAt
+
+  policies Policy[]
+
+  @@map("providers")
+}
+
+model Policy {
+  id                Int      @id @default(autoincrement())
+  slug              String   @unique
+  providerId        Int
+  provider          Provider @relation(fields: [providerId], references: [id])
+  name              String
+  category          String
+  subCategory       String?
+  description       String?
+  premiumStartsFrom Float?
+  coverAmount       String?
+  policyTerm        String?
+  eligibilityAge    String?
+  keyBenefits       String[]
+  exclusions        String[]
+  documentsRequired String[]
+  brochureUrl       String?
+  isFeatured        Boolean  @default(false)
+  isActive          Boolean  @default(true)
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  riders   PolicyRider[]
+  leads    Lead[]
+  dueDates DueDate[]
+
+  @@map("policies")
+}
+
+model PolicyRider {
+  id           Int     @id @default(autoincrement())
+  policyId     Int
+  policy       Policy  @relation(fields: [policyId], references: [id])
+  name         String
+  description  String?
+  extraPremium Float?
+
+  @@map("policy_riders")
+}
+
+model Lead {
+  id          Int      @id @default(autoincrement())
+  leadType    String   @default("quote")
+  name        String
+  phone       String
+  email       String?
+  category    String?
+  city        String?
+  policyId    Int?
+  policy      Policy?  @relation(fields: [policyId], references: [id])
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  utmContent  String?
+  utmTerm     String?
+  referrerUrl String?
+  userAgent   String?
+  deviceType  String?
+  status      String   @default("new")
+  assignedTo  Int?
+  isReturning Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  notes LeadNote[]
+
+  @@map("leads")
+}
+
+model LeadNote {
+  id        Int      @id @default(autoincrement())
+  leadId    Int
+  lead      Lead     @relation(fields: [leadId], references: [id])
+  note      String
+  createdBy Int?
+  createdAt DateTime @default(now())
+
+  @@map("lead_notes")
+}
+
+model DueDate {
+  id               Int      @id @default(autoincrement())
+  policyHolderName String
+  phone            String
+  email            String?
+  policyId         Int?
+  policy           Policy?  @relation(fields: [policyId], references: [id])
+  policyNumber     String?
+  dueDate          DateTime
+  status           String   @default("pending")
+  notes            String?
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  @@map("due_dates")
+}
+
+model AdminUser {
+  id           Int       @id @default(autoincrement())
+  name         String
+  email        String    @unique
+  passwordHash String
+  role         String    @default("VIEWER")
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  activityLogs AdminActivityLog[]
+
+  @@map("admin_users")
+}
+
+model BlogPost {
+  id          Int       @id @default(autoincrement())
+  slug        String    @unique
+  title       String
+  excerpt     String?
+  bodyHtml    String
+  category    String?
+  author      String?
+  coverImage  String?
+  isPublished Boolean   @default(false)
+  publishedAt DateTime?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("blog_posts")
+}
+
+model Faq {
+  id         Int     @id @default(autoincrement())
+  question   String
+  answer     String
+  category   String?
+  providerId Int?
+  sortOrder  Int     @default(0)
+
+  @@map("faqs")
+}
+
+model Testimonial {
+  id       Int     @id @default(autoincrement())
+  name     String
+  city     String?
+  rating   Int     @default(5)
+  body     String
+  category String?
+  isActive Boolean @default(true)
+
+  @@map("testimonials")
+}
+
+model Setting {
+  key   String @id
+  value String
+
+  @@map("settings")
+}
+
+model NewsletterSubscriber {
+  id        Int      @id @default(autoincrement())
+  email     String   @unique
+  source    String?  // "footer" | "blog" | "other"
+  createdAt DateTime @default(now())
+
+  @@map("newsletter_subscribers")
+}
+
+model ContactMessage {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String
+  phone     String?
+  subject   String?
+  message   String
+  createdAt DateTime @default(now())
+
+  @@map("contact_messages")
+}
+
+model AdminActivityLog {
+  id          Int       @id @default(autoincrement())
+  adminUserId Int
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id])
+  action      String
+  entity      String?
+  entityId    Int?
+  details     String?
+  createdAt   DateTime  @default(now())
+
+  @@map("admin_activity_logs")
+}
