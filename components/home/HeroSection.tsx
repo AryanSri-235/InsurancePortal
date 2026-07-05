@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import BgDecorations from "./BgDecorations";
 
@@ -12,17 +12,61 @@ const CATEGORIES = [
 ];
 
 const TRUST = [
-  { num: "50+",     label: "Insurers" },
-  { num: "₹500Cr+", label: "Claims Settled" },
-  { num: "1L+",     label: "Customers" },
-  { num: "99%",     label: "Claim Support" },
+  { num: 50,   suffix: "+",     prefix: "",  label: "Insurers",       icon: "🏢", color: "from-blue-500 to-indigo-500",    shadow: "shadow-blue-100"   },
+  { num: 500,  suffix: "Cr+",   prefix: "₹", label: "Claims Settled", icon: "✅", color: "from-emerald-500 to-teal-500",  shadow: "shadow-emerald-100" },
+  { num: 1,    suffix: "L+",    prefix: "",  label: "Customers",      icon: "👥", color: "from-orange-500 to-amber-500",  shadow: "shadow-orange-100"  },
+  { num: 99,   suffix: "%",     prefix: "",  label: "Claim Support",  icon: "🛡️", color: "from-violet-500 to-purple-500", shadow: "shadow-violet-100"  },
 ];
+
+function useCountUp(target: number, duration = 1500, start = false) {
+  const [count, setCount] = useState(0);
+  useEffect(() => {
+    if (!start) return;
+    let startTime: number | null = null;
+    const step = (timestamp: number) => {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      setCount(Math.floor(progress * target));
+      if (progress < 1) requestAnimationFrame(step);
+    };
+    requestAnimationFrame(step);
+  }, [start, target, duration]);
+  return count;
+}
+
+function StatBox({ stat, started }: { stat: typeof TRUST[0]; started: boolean }) {
+  const count = useCountUp(stat.num, 1400, started);
+  return (
+    <div className={`group w-full bg-white border-2 border-gray-100 rounded-2xl px-6 py-5 text-center hover:shadow-xl ${stat.shadow} hover:-translate-y-1.5 hover:border-transparent transition-all duration-300 cursor-default relative overflow-hidden`}>
+      {/* gradient top bar on hover */}
+      <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${stat.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-2xl`} />
+      <div className="text-2xl mb-2">{stat.icon}</div>
+      <div className={`text-3xl font-black bg-gradient-to-r ${stat.color} bg-clip-text text-transparent leading-none`}>
+        {stat.prefix}{count}{stat.suffix}
+      </div>
+      <div className="text-sm text-gray-400 font-medium mt-1">{stat.label}</div>
+    </div>
+  );
+}
 
 export default function HeroSection() {
   const [form, setForm]       = useState({ name: "", phone: "", category: "term" });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError]     = useState("");
+  const [statsStarted, setStatsStarted] = useState(false);
+  const statsRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = statsRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => { if (entry.isIntersecting) { setStatsStarted(true); observer.disconnect(); } },
+      { threshold: 0.3 }
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -86,15 +130,6 @@ export default function HeroSection() {
               ))}
             </div>
 
-            {/* Trust numbers */}
-            <div className="flex flex-wrap gap-8 pt-6 border-t border-gray-100">
-              {TRUST.map((t) => (
-                <div key={t.label}>
-                  <div className="text-2xl font-black text-gray-900">{t.num}</div>
-                  <div className="text-xs text-gray-400 mt-0.5">{t.label}</div>
-                </div>
-              ))}
-            </div>
           </div>
 
           {/* ── Right — Form card ── */}
@@ -198,6 +233,14 @@ export default function HeroSection() {
           </div>
 
         </div>
+
+        {/* ── Full-width stats strip below the grid ── */}
+        <div ref={statsRef} className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12 pt-10 border-t border-blue-100/60">
+          {TRUST.map((t) => (
+            <StatBox key={t.label} stat={t} started={statsStarted} />
+          ))}
+        </div>
+
       </div>
     </section>
   );
