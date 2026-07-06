@@ -6,7 +6,7 @@ const leadSchema = z.object({
   name: z.string().min(2).max(100),
   phone: z.string().regex(/^[6-9]\d{9}$/, "Invalid Indian mobile number"),
   email: z.string().email().optional().or(z.literal("")),
-  category: z.enum(["term", "life", "health", "motor"]).optional(),
+  category: z.string().max(50).optional(),
   city: z.string().max(100).optional(),
   leadType: z.enum(["quote", "callback", "contact_form"]).default("quote"),
   policyId: z.number().optional(),

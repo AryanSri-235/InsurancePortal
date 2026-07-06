@@ -3,7 +3,7 @@
 import { useEffect, useState, useCallback } from "react";
 
 const STATUS_OPTIONS = ["new", "contacted", "converted", "lost"];
-const CATEGORY_OPTIONS = ["term", "health", "motor", "life"];
+const CATEGORY_OPTIONS = ["term", "life", "health", "motor", "car", "two-wheeler", "family-health", "group-health", "travel", "home", "term-women", "return-premium", "guaranteed-return", "child-savings", "retirement"];
 
 const STATUS_BADGE: Record<string, string> = {
   new: "bg-blue-50 text-blue-700 border-blue-100",
