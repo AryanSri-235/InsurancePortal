@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 
@@ -81,7 +82,13 @@ const navGroups = [
   },
 ];
 
-export default function Sidebar() {
+interface Props {
+  children: React.ReactNode;
+  session: { name: string; role: string };
+}
+
+export default function AdminShell({ children, session }: Props) {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -91,11 +98,15 @@ export default function Sidebar() {
     router.refresh();
   }
 
-  return (
-    <aside className="w-56 h-screen sticky top-0 bg-slate-900 flex flex-col flex-shrink-0 overflow-hidden">
+  function closeSidebar() {
+    setSidebarOpen(false);
+  }
+
+  const sidebarContent = (
+    <>
       {/* Logo */}
-      <div className="px-4 py-5 border-b border-slate-800/60">
-        <Link href="/admin/dashboard" className="flex items-center gap-2.5 group">
+      <div className="px-4 py-5 border-b border-slate-800/60 flex items-center justify-between">
+        <Link href="/admin/dashboard" onClick={closeSidebar} className="flex items-center gap-2.5 group">
           <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center shadow-lg shadow-blue-900/40 group-hover:scale-105 transition-transform">
             <span className="text-white font-black text-xs tracking-tight">IP</span>
           </div>
@@ -104,6 +115,16 @@ export default function Sidebar() {
             <p className="text-slate-500 text-[10px] mt-0.5 font-medium">Admin Panel</p>
           </div>
         </Link>
+        {/* Close button — mobile only */}
+        <button
+          onClick={closeSidebar}
+          className="md:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+          aria-label="Close menu"
+        >
+          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
       </div>
 
       {/* Nav */}
@@ -118,13 +139,14 @@ export default function Sidebar() {
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm font-medium transition-all duration-150 group ${
+                    onClick={closeSidebar}
+                    className={`flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group ${
                       active
                         ? "bg-blue-600 text-white shadow-md shadow-blue-900/30"
                         : "text-slate-400 hover:text-white hover:bg-slate-800"
                     }`}
                   >
-                    <span className={`transition-colors ${active ? "text-white" : "text-slate-500 group-hover:text-slate-300"}`}>
+                    <span className={`transition-colors flex-shrink-0 ${active ? "text-white" : "text-slate-500 group-hover:text-slate-300"}`}>
                       {item.icon}
                     </span>
                     <span className="flex-1">{item.label}</span>
@@ -146,23 +168,94 @@ export default function Sidebar() {
         <Link
           href="/"
           target="_blank"
-          className="flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+          onClick={closeSidebar}
+          className="flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
           </svg>
           View Live Site
         </Link>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2.5 px-2.5 py-2 rounded-lg text-sm text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          className="w-full flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-sm text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
           Logout
         </button>
       </div>
-    </aside>
+    </>
+  );
+
+  return (
+    <div className="flex min-h-screen bg-slate-100">
+
+      {/* ── Desktop sidebar (always visible) ── */}
+      <aside className="hidden md:flex w-56 h-screen sticky top-0 bg-slate-900 flex-col flex-shrink-0 overflow-hidden">
+        {sidebarContent}
+      </aside>
+
+      {/* ── Mobile drawer overlay ── */}
+      {sidebarOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+          onClick={closeSidebar}
+        />
+      )}
+
+      {/* ── Mobile drawer ── */}
+      <aside
+        className={`fixed inset-y-0 left-0 z-50 w-72 bg-slate-900 flex flex-col flex-shrink-0 overflow-hidden transition-transform duration-300 ease-in-out md:hidden ${
+          sidebarOpen ? "translate-x-0" : "-translate-x-full"
+        }`}
+      >
+        {sidebarContent}
+      </aside>
+
+      {/* ── Main content area ── */}
+      <div className="flex-1 flex flex-col min-w-0">
+
+        {/* Top bar */}
+        <header className="bg-white border-b border-gray-200 px-4 sm:px-6 h-14 flex items-center justify-between flex-shrink-0 sticky top-0 z-30">
+          <div className="flex items-center gap-3">
+            {/* Hamburger — mobile only */}
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="md:hidden p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
+              aria-label="Open menu"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+              </svg>
+            </button>
+
+            <div className="flex items-center gap-2 text-xs text-gray-400">
+              <svg className="w-3.5 h-3.5 hidden sm:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+              </svg>
+              <span className="text-gray-300 hidden sm:inline">/</span>
+              <span className="font-medium text-gray-600">Admin</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <div className="text-right hidden sm:block">
+              <p className="text-sm font-semibold text-gray-900 leading-tight">{session.name}</p>
+              <p className="text-xs text-gray-400 capitalize">{session.role}</p>
+            </div>
+            <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md shadow-blue-200 flex-shrink-0">
+              {session.name.charAt(0).toUpperCase()}
+            </div>
+          </div>
+        </header>
+
+        {/* Page content */}
+        <main className="flex-1 p-4 sm:p-6 overflow-auto">
+          {children}
+        </main>
+      </div>
+    </div>
   );
 }
