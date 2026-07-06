@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Swal from "sweetalert2";
 import { CategoryConfig } from "@/lib/category-config";
 
 interface FormState {
@@ -22,17 +23,14 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
     smoke: "",
   });
   const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState("");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!/^[6-9]\d{9}$/.test(form.phone)) {
-      setError("Enter a valid 10-digit mobile number");
+      Swal.fire({ icon: "warning", title: "Invalid Number", text: "Please enter a valid 10-digit Indian mobile number.", confirmButtonColor: "#2563eb" });
       return;
     }
     setLoading(true);
-    setError("");
     try {
       const res = await fetch("/api/leads", {
         method: "POST",
@@ -45,13 +43,19 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
         }),
       });
       if (res.ok) {
-        setSuccess(true);
         setForm({ name: "", phone: "", age: "", gender: "", income: "", smoke: "" });
+        Swal.fire({
+          icon: "success",
+          title: "You're all set! 🎉",
+          html: `Our advisor will call you within <b>30 minutes</b> with the best ${config.label} quotes.<br/><br/><small style="color:#9ca3af">No spam · No pressure</small>`,
+          confirmButtonColor: "#2563eb",
+          confirmButtonText: "Great!",
+        });
       } else {
-        setError("Something went wrong. Please try again.");
+        Swal.fire({ icon: "error", title: "Oops!", text: "Something went wrong. Please try again.", confirmButtonColor: "#2563eb" });
       }
     } catch {
-      setError("Network error. Please try again.");
+      Swal.fire({ icon: "error", title: "Network Error", text: "Please check your connection and try again.", confirmButtonColor: "#2563eb" });
     } finally {
       setLoading(false);
     }
@@ -85,7 +89,6 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
               {config.subheadline}
             </p>
 
-            {/* Trust badges row */}
             <div className="flex flex-wrap gap-3 mb-9">
               {config.trustBadges.map((badge, i) => {
                 const text = typeof badge === "string" ? badge : ((badge as Record<string, string>).label ?? (badge as Record<string, string>).text ?? "");
@@ -103,7 +106,6 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
               })}
             </div>
 
-            {/* 4 highlight stat boxes */}
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
               {config.highlights.slice(0, 4).map((h, i) => {
                 const icon  = typeof h === "string" ? "" : ((h as Record<string, string>).icon ?? "");
@@ -122,158 +124,129 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
 
           {/* Right: Mini lead form card */}
           <div className="bg-white rounded-3xl shadow-2xl p-7 text-gray-900">
-            {success ? (
-              <div className="text-center py-6">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M5 13l4 4L19 7" />
-                  </svg>
+            <h2 className="text-xl font-bold mb-0.5 text-gray-900">
+              Get Best {config.label} Quotes
+            </h2>
+            <p className="text-gray-400 text-xs mb-5">Free expert advice · Takes 30 seconds</p>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div className="grid grid-cols-2 gap-3">
+
+                <div className="col-span-2">
+                  <input
+                    type="text"
+                    placeholder="Full Name"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    required
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 bg-gray-50"
+                  />
                 </div>
-                <h3 className="text-xl font-bold mb-2 text-gray-900">You&apos;re all set!</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">
-                  Our advisor calls you in <span className="font-semibold text-gray-700">30 min</span>.<br />
-                  No spam. No pressure.
-                </p>
-                <button
-                  onClick={() => setSuccess(false)}
-                  className="mt-5 text-blue-600 text-sm font-semibold hover:underline"
-                >
-                  Submit another request
-                </button>
-              </div>
-            ) : (
-              <>
-                <h2 className="text-xl font-bold mb-0.5 text-gray-900">
-                  Get Best {config.label} Quotes
-                </h2>
-                <p className="text-gray-400 text-xs mb-5">Free expert advice · Takes 30 seconds</p>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  {/* 2-column grid for fields */}
-                  <div className="grid grid-cols-2 gap-3">
+                <div>
+                  <input
+                    type="number"
+                    placeholder="Your age"
+                    min={18}
+                    max={75}
+                    value={form.age}
+                    onChange={(e) => setForm({ ...form, age: e.target.value })}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 bg-gray-50"
+                  />
+                </div>
 
-                    {/* Full Name */}
-                    <div className="col-span-2">
-                      <input
-                        type="text"
-                        placeholder="Full Name"
-                        value={form.name}
-                        onChange={(e) => setForm({ ...form, name: e.target.value })}
-                        required
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 bg-gray-50"
-                      />
-                    </div>
-
-                    {/* Age */}
-                    <div>
-                      <input
-                        type="number"
-                        placeholder="Your age"
-                        min={18}
-                        max={75}
-                        value={form.age}
-                        onChange={(e) => setForm({ ...form, age: e.target.value })}
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 bg-gray-50"
-                      />
-                    </div>
-
-                    {/* Annual Income */}
-                    <div>
-                      <select
-                        value={form.income}
-                        onChange={(e) => setForm({ ...form, income: e.target.value })}
-                        className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 bg-gray-50 text-gray-700"
-                      >
-                        <option value="">Annual Income</option>
-                        <option value="lt3">{"< ₹3 LPA"}</option>
-                        <option value="3-5">₹3–5 LPA</option>
-                        <option value="5-10">₹5–10 LPA</option>
-                        <option value="10-25">₹10–25 LPA</option>
-                        <option value="25+">₹25 LPA+</option>
-                      </select>
-                    </div>
-
-                    {/* Gender toggle */}
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-1.5">Gender</p>
-                      <div className="flex gap-2">
-                        {(["Male", "Female"] as const).map((g) => (
-                          <button
-                            key={g}
-                            type="button"
-                            onClick={() => setForm({ ...form, gender: g })}
-                            className={`flex-1 border-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
-                              form.gender === g
-                                ? "bg-blue-600 text-white border-blue-600"
-                                : "border-gray-200 text-gray-600 hover:border-gray-300"
-                            }`}
-                          >
-                            {g}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Tobacco/Smoke toggle */}
-                    <div>
-                      <p className="text-xs text-gray-500 font-medium mb-1.5">Tobacco / Smoke?</p>
-                      <div className="flex gap-2">
-                        {(["No", "Yes"] as const).map((s) => (
-                          <button
-                            key={s}
-                            type="button"
-                            onClick={() => setForm({ ...form, smoke: s })}
-                            className={`flex-1 border-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
-                              form.smoke === s
-                                ? "bg-blue-600 text-white border-blue-600"
-                                : "border-gray-200 text-gray-600 hover:border-gray-300"
-                            }`}
-                          >
-                            {s}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Phone with +91 prefix */}
-                    <div className="col-span-2">
-                      <div className="flex">
-                        <span className="inline-flex items-center px-4 rounded-l-xl border-2 border-r-0 border-gray-200 bg-gray-100 text-gray-500 text-sm font-medium">
-                          +91
-                        </span>
-                        <input
-                          type="tel"
-                          placeholder="10-digit mobile number"
-                          maxLength={10}
-                          value={form.phone}
-                          onChange={(e) =>
-                            setForm({ ...form, phone: e.target.value.replace(/\D/g, "") })
-                          }
-                          required
-                          className="flex-1 border-2 border-gray-200 rounded-r-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 bg-gray-50"
-                        />
-                      </div>
-                    </div>
-                  </div>
-
-                  {error && <p className="text-red-500 text-xs font-medium">{error}</p>}
-
-                  {/* Submit button */}
-                  <button
-                    type="submit"
-                    disabled={loading}
-                    className={`w-full bg-gradient-to-r ${config.color.bg} text-white py-3.5 rounded-xl font-bold text-sm hover:opacity-90 disabled:opacity-60 transition-all shadow-md`}
+                <div>
+                  <select
+                    value={form.income}
+                    onChange={(e) => setForm({ ...form, income: e.target.value })}
+                    className="w-full border-2 border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 bg-gray-50 text-gray-700"
                   >
-                    {loading ? "Submitting..." : `Get Free ${config.label} Quotes →`}
-                  </button>
+                    <option value="">Annual Income</option>
+                    <option value="lt3">{"< ₹3 LPA"}</option>
+                    <option value="3-5">₹3–5 LPA</option>
+                    <option value="5-10">₹5–10 LPA</option>
+                    <option value="10-25">₹10–25 LPA</option>
+                    <option value="25+">₹25 LPA+</option>
+                  </select>
+                </div>
 
-                  {/* Trust line */}
-                  <p className="text-xs text-gray-400 text-center font-medium">
-                    100% Free · No Spam · IRDAI Registered
-                  </p>
-                </form>
-              </>
-            )}
+                <div>
+                  <p className="text-xs text-gray-500 font-medium mb-1.5">Gender</p>
+                  <div className="flex gap-2">
+                    {(["Male", "Female"] as const).map((g) => (
+                      <button
+                        key={g}
+                        type="button"
+                        onClick={() => setForm({ ...form, gender: g })}
+                        className={`flex-1 border-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
+                          form.gender === g
+                            ? "bg-blue-600 text-white border-blue-600"
+                            : "border-gray-200 text-gray-600 hover:border-gray-300"
+                        }`}
+                      >
+                        {g}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div>
+                  <p className="text-xs text-gray-500 font-medium mb-1.5">Tobacco / Smoke?</p>
+                  <div className="flex gap-2">
+                    {(["No", "Yes"] as const).map((s) => (
+                      <button
+                        key={s}
+                        type="button"
+                        onClick={() => setForm({ ...form, smoke: s })}
+                        className={`flex-1 border-2 rounded-xl px-4 py-2.5 text-sm font-bold transition-all ${
+                          form.smoke === s
+                            ? "bg-blue-600 text-white border-blue-600"
+                            : "border-gray-200 text-gray-600 hover:border-gray-300"
+                        }`}
+                      >
+                        {s}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="col-span-2">
+                  <div className="flex">
+                    <span className="inline-flex items-center px-4 rounded-l-xl border-2 border-r-0 border-gray-200 bg-gray-100 text-gray-500 text-sm font-medium">
+                      +91
+                    </span>
+                    <input
+                      type="tel"
+                      placeholder="10-digit mobile number"
+                      maxLength={10}
+                      value={form.phone}
+                      onChange={(e) =>
+                        setForm({ ...form, phone: e.target.value.replace(/\D/g, "") })
+                      }
+                      required
+                      className="flex-1 border-2 border-gray-200 rounded-r-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 bg-gray-50"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="submit"
+                disabled={loading}
+                className={`w-full bg-gradient-to-r ${config.color.bg} text-white py-3.5 rounded-xl font-bold text-sm hover:opacity-90 disabled:opacity-60 transition-all shadow-md`}
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"/><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"/></svg>
+                    Submitting...
+                  </span>
+                ) : `Get Free ${config.label} Quotes →`}
+              </button>
+
+              <p className="text-xs text-gray-400 text-center font-medium">
+                100% Free · No Spam · IRDAI Registered
+              </p>
+            </form>
           </div>
         </div>
       </div>
