@@ -44,14 +44,31 @@ const PLAN_SECTIONS = [
   },
 ];
 
-// Flat list for mobile
+const COMPANY_LINKS = [
+  { label: "About Us",    href: "/about",      icon: "🏢", desc: "Our story & mission" },
+  { label: "Contact",     href: "/contact",    icon: "📞", desc: "Talk to our team" },
+  { label: "Blog",        href: "/blog",       icon: "✍️", desc: "Insurance guides & tips" },
+  { label: "Calculator",  href: "/calculator", icon: "🧮", desc: "Estimate your premium" },
+  { label: "FAQ",         href: "/faq",        icon: "❓", desc: "Common questions answered" },
+];
+
+const LEGAL_LINKS = [
+  { label: "Privacy Policy",    href: "/privacy-policy",    icon: "🔒", desc: "How we handle your data" },
+  { label: "Terms of Service",  href: "/terms",             icon: "📋", desc: "Rules for using our platform" },
+  { label: "Disclaimer",        href: "/disclaimer",        icon: "⚠️", desc: "Important disclosures" },
+  { label: "IRDAI Registration",href: "/irdai",             icon: "🏛️", desc: "Reg. No. WBA000000" },
+];
+
+// Flat list for mobile accordion
 const ALL_LINKS = PLAN_SECTIONS.flatMap((s) => s.links);
+
+type DropdownKey = "plans" | "company" | "legal" | null;
 
 export default function Navbar() {
   const [menuOpen, setMenuOpen]   = useState(false);
   const [scrolled, setScrolled]   = useState(false);
-  const [megaOpen, setMegaOpen]   = useState(false);
-  const [mobileOpen, setMobileOpen] = useState(false); // mobile plans accordion
+  const [activeDropdown, setActiveDropdown] = useState<DropdownKey>(null);
+  const [mobileOpen, setMobileOpen] = useState<DropdownKey>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
@@ -60,8 +77,22 @@ export default function Navbar() {
     return () => window.removeEventListener("scroll", handler);
   }, []);
 
-  const openMega  = () => { if (closeTimer.current) clearTimeout(closeTimer.current); setMegaOpen(true); };
-  const closeMega = () => { closeTimer.current = setTimeout(() => setMegaOpen(false), 120); };
+  function openDropdown(key: DropdownKey) {
+    if (closeTimer.current) clearTimeout(closeTimer.current);
+    setActiveDropdown(key);
+  }
+  function closeDropdown() {
+    closeTimer.current = setTimeout(() => setActiveDropdown(null), 120);
+  }
+
+  const chevron = (active: boolean) => (
+    <svg
+      className={`w-4 h-4 transition-transform duration-200 ${active ? "rotate-180 text-blue-600" : "text-gray-400"}`}
+      fill="none" stroke="currentColor" viewBox="0 0 24 24"
+    >
+      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+    </svg>
+  );
 
   return (
     <>
@@ -96,27 +127,24 @@ export default function Navbar() {
             </Link>
 
             {/* Desktop nav */}
-            <nav className="hidden md:flex items-center h-full">
+            <nav className="hidden md:flex items-center h-full gap-1">
 
-              {/* Insurance Plans mega menu */}
+              {/* ── Insurance Plans mega menu ── */}
               <div
                 className="relative h-full flex items-center"
-                onMouseEnter={openMega}
-                onMouseLeave={closeMega}
+                onMouseEnter={() => openDropdown("plans")}
+                onMouseLeave={closeDropdown}
               >
-                <button className="flex items-center gap-1.5 px-4 py-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors duration-200">
+                <button className={`flex items-center gap-1.5 px-3 py-2 text-sm font-semibold transition-colors duration-200 ${activeDropdown === "plans" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"}`}>
                   Insurance Plans
-                  <svg className={`w-4 h-4 transition-transform duration-200 ${megaOpen ? "rotate-180 text-blue-600" : "text-gray-400"}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                  {chevron(activeDropdown === "plans")}
                 </button>
 
-                {/* Wide mega dropdown */}
                 <div
-                  onMouseEnter={openMega}
-                  onMouseLeave={closeMega}
+                  onMouseEnter={() => openDropdown("plans")}
+                  onMouseLeave={closeDropdown}
                   className={`absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[780px] bg-white rounded-2xl shadow-2xl shadow-gray-200/80 border border-gray-100 p-5 transition-all duration-200 ${
-                    megaOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
+                    activeDropdown === "plans" ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
                   }`}
                 >
                   <div className="grid grid-cols-4 gap-6">
@@ -130,7 +158,7 @@ export default function Navbar() {
                             <Link
                               key={link.href}
                               href={link.href}
-                              onClick={() => setMegaOpen(false)}
+                              onClick={() => setActiveDropdown(null)}
                               className="flex items-start gap-2.5 p-2 rounded-xl hover:bg-blue-50 transition-colors duration-150 group"
                             >
                               <span className="text-lg mt-0.5 group-hover:scale-110 transition-transform duration-200 inline-block leading-none">{link.icon}</span>
@@ -144,8 +172,6 @@ export default function Navbar() {
                       </div>
                     ))}
                   </div>
-
-                  {/* Footer strip */}
                   <div className="border-t border-gray-100 mt-4 pt-3 flex items-center justify-between">
                     <span className="text-xs text-gray-400">Not sure which plan suits you? Talk to a free expert.</span>
                     <a href="tel:1800XXXXXXX" className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">
@@ -155,9 +181,79 @@ export default function Navbar() {
                 </div>
               </div>
 
-              <Link href="/calculator" className="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors duration-200">Calculator</Link>
-              <Link href="/blog"       className="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors duration-200">Blog</Link>
-              <Link href="/about"      className="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-blue-600 transition-colors duration-200">About</Link>
+              {/* ── Company dropdown ── */}
+              <div
+                className="relative h-full flex items-center"
+                onMouseEnter={() => openDropdown("company")}
+                onMouseLeave={closeDropdown}
+              >
+                <button className={`flex items-center gap-1.5 px-3 py-2 text-sm font-semibold transition-colors duration-200 ${activeDropdown === "company" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"}`}>
+                  Company
+                  {chevron(activeDropdown === "company")}
+                </button>
+
+                <div
+                  onMouseEnter={() => openDropdown("company")}
+                  onMouseLeave={closeDropdown}
+                  className={`absolute top-full left-1/2 -translate-x-1/2 mt-0 w-56 bg-white rounded-2xl shadow-2xl shadow-gray-200/80 border border-gray-100 p-2 transition-all duration-200 ${
+                    activeDropdown === "company" ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
+                  }`}
+                >
+                  {COMPANY_LINKS.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setActiveDropdown(null)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-blue-50 transition-colors group"
+                    >
+                      <span className="text-base group-hover:scale-110 transition-transform duration-150 inline-block">{link.icon}</span>
+                      <div>
+                        <p className="text-[13px] font-semibold text-gray-800 group-hover:text-blue-600 transition-colors leading-tight">{link.label}</p>
+                        <p className="text-[11px] text-gray-400 leading-tight">{link.desc}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              </div>
+
+              {/* ── Legal dropdown ── */}
+              <div
+                className="relative h-full flex items-center"
+                onMouseEnter={() => openDropdown("legal")}
+                onMouseLeave={closeDropdown}
+              >
+                <button className={`flex items-center gap-1.5 px-3 py-2 text-sm font-semibold transition-colors duration-200 ${activeDropdown === "legal" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"}`}>
+                  Legal
+                  {chevron(activeDropdown === "legal")}
+                </button>
+
+                <div
+                  onMouseEnter={() => openDropdown("legal")}
+                  onMouseLeave={closeDropdown}
+                  className={`absolute top-full left-1/2 -translate-x-1/2 mt-0 w-60 bg-white rounded-2xl shadow-2xl shadow-gray-200/80 border border-gray-100 p-2 transition-all duration-200 ${
+                    activeDropdown === "legal" ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
+                  }`}
+                >
+                  {LEGAL_LINKS.map((link) => (
+                    <Link
+                      key={link.href}
+                      href={link.href}
+                      onClick={() => setActiveDropdown(null)}
+                      className="flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-gray-50 transition-colors group"
+                    >
+                      <span className="text-base group-hover:scale-110 transition-transform duration-150 inline-block">{link.icon}</span>
+                      <div>
+                        <p className="text-[13px] font-semibold text-gray-800 group-hover:text-gray-900 transition-colors leading-tight">{link.label}</p>
+                        <p className="text-[11px] text-gray-400 leading-tight">{link.desc}</p>
+                      </div>
+                    </Link>
+                  ))}
+                  <div className="border-t border-gray-100 mt-1 pt-2 px-3 pb-1">
+                    <p className="text-[10px] text-gray-400">IRDAI Reg. No. WBA000000 · © 2026 InsurancePortal</p>
+                  </div>
+                </div>
+              </div>
+
             </nav>
 
             {/* Right CTAs */}
@@ -188,49 +284,70 @@ export default function Navbar() {
           </div>
 
           {/* Mobile menu */}
-          <div className={`md:hidden overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-[80vh] pb-4" : "max-h-0"}`}>
-            <div className="border-t border-gray-100 pt-3 overflow-y-auto max-h-[70vh]">
+          <div className={`md:hidden overflow-hidden transition-all duration-300 ${menuOpen ? "max-h-[85vh] pb-4" : "max-h-0"}`}>
+            <div className="border-t border-gray-100 pt-3 overflow-y-auto max-h-[75vh] space-y-1">
 
               {/* Insurance Plans accordion */}
-              <button
-                className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-gray-800 hover:bg-blue-50 rounded-xl transition-colors"
-                onClick={() => setMobileOpen(!mobileOpen)}
+              <MobileAccordion
+                label="Insurance Plans"
+                isOpen={mobileOpen === "plans"}
+                onToggle={() => setMobileOpen(mobileOpen === "plans" ? null : "plans")}
               >
-                <span>Insurance Plans</span>
-                <svg className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${mobileOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                </svg>
-              </button>
+                {PLAN_SECTIONS.map((section) => (
+                  <div key={section.heading} className="mb-3">
+                    <p className={`text-[10px] font-black uppercase tracking-widest px-3 mb-1 ${section.color}`}>{section.heading}</p>
+                    {section.links.map((link) => (
+                      <Link
+                        key={link.href}
+                        href={link.href}
+                        onClick={() => { setMenuOpen(false); setMobileOpen(null); }}
+                        className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                      >
+                        <span>{link.icon}</span>
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                ))}
+              </MobileAccordion>
 
-              {mobileOpen && (
-                <div className="pl-3 mt-1 space-y-0.5">
-                  {PLAN_SECTIONS.map((section) => (
-                    <div key={section.heading} className="mb-3">
-                      <p className={`text-[10px] font-black uppercase tracking-widest px-3 mb-1 ${section.color}`}>{section.heading}</p>
-                      {section.links.map((link) => (
-                        <Link
-                          key={link.href}
-                          href={link.href}
-                          onClick={() => { setMenuOpen(false); setMobileOpen(false); }}
-                          className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
-                        >
-                          <span>{link.icon}</span>
-                          {link.label}
-                        </Link>
-                      ))}
-                    </div>
-                  ))}
-                </div>
-              )}
-
-              <div className="border-t border-gray-100 mt-2 pt-2 space-y-1">
-                {[{ label: "Calculator", href: "/calculator" }, { label: "Blog", href: "/blog" }, { label: "About", href: "/about" }].map((l) => (
-                  <Link key={l.href} href={l.href} onClick={() => setMenuOpen(false)}
-                    className="block px-3 py-2 text-sm font-medium text-gray-600 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors">
-                    {l.label}
+              {/* Company accordion */}
+              <MobileAccordion
+                label="Company"
+                isOpen={mobileOpen === "company"}
+                onToggle={() => setMobileOpen(mobileOpen === "company" ? null : "company")}
+              >
+                {COMPANY_LINKS.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => { setMenuOpen(false); setMobileOpen(null); }}
+                    className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 hover:text-blue-600 hover:bg-blue-50 rounded-xl transition-colors"
+                  >
+                    <span>{link.icon}</span>
+                    {link.label}
                   </Link>
                 ))}
-              </div>
+              </MobileAccordion>
+
+              {/* Legal accordion */}
+              <MobileAccordion
+                label="Legal"
+                isOpen={mobileOpen === "legal"}
+                onToggle={() => setMobileOpen(mobileOpen === "legal" ? null : "legal")}
+              >
+                {LEGAL_LINKS.map((link) => (
+                  <Link
+                    key={link.href}
+                    href={link.href}
+                    onClick={() => { setMenuOpen(false); setMobileOpen(null); }}
+                    className="flex items-center gap-3 px-3 py-2 text-sm font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 rounded-xl transition-colors"
+                  >
+                    <span>{link.icon}</span>
+                    {link.label}
+                  </Link>
+                ))}
+              </MobileAccordion>
 
               <Link
                 href="/#lead-form"
@@ -244,5 +361,35 @@ export default function Navbar() {
         </div>
       </header>
     </>
+  );
+}
+
+function MobileAccordion({
+  label,
+  isOpen,
+  onToggle,
+  children,
+}: {
+  label: string;
+  isOpen: boolean;
+  onToggle: () => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <div>
+      <button
+        className="w-full flex items-center justify-between px-3 py-2.5 text-sm font-semibold text-gray-800 hover:bg-gray-50 rounded-xl transition-colors"
+        onClick={onToggle}
+      >
+        <span>{label}</span>
+        <svg
+          className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`}
+          fill="none" stroke="currentColor" viewBox="0 0 24 24"
+        >
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+        </svg>
+      </button>
+      {isOpen && <div className="pl-3 mt-1">{children}</div>}
+    </div>
   );
 }
