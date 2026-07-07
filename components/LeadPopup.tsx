@@ -26,7 +26,8 @@ export default function LeadPopup() {
   }
 
   useEffect(() => {
-    if (typeof window !== "undefined" && window.location.pathname.startsWith("/admin")) return;
+    const path = typeof window !== "undefined" ? window.location.pathname : "";
+    if (path.startsWith("/admin") || path === "/login" || path === "/register" || path.startsWith("/account") || path === "/forgot-password") return;
 
     const submitted = localStorage.getItem("lp_submitted");
     if (submitted) return;

@@ -126,6 +126,24 @@ model DueDate {
   @@map("due_dates")
 }
 
+model User {
+  id           Int       @id @default(autoincrement())
+  name         String
+  phone        String    @unique
+  email        String?   @unique
+  passwordHash String
+  dob          DateTime?
+  gender       String?
+  city         String?
+  pincode      String?
+  isActive     Boolean   @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  @@map("users")
+}
+
 model AdminUser {
   id           Int       @id @default(autoincrement())
   name         String

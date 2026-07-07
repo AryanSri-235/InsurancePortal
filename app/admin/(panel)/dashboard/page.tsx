@@ -20,6 +20,8 @@ async function getStats() {
     leadsByCategory,
     recentLeads,
     dueDatesUpcoming,
+    totalUsers,
+    usersToday,
   ] = await Promise.all([
     db.lead.count(),
     db.lead.count({ where: { createdAt: { gte: startOfDay } } }),
@@ -37,10 +39,12 @@ async function getStats() {
     db.dueDate.count({
       where: { dueDate: { lte: new Date(Date.now() + 30 * 86400000) }, status: "pending" },
     }),
+    db.user.count(),
+    db.user.count({ where: { createdAt: { gte: startOfDay } } }),
   ]);
 
   const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : "0";
-  return { totalLeads, leadsToday, leadsThisMonth, newLeads, convertedLeads, conversionRate, totalPolicies, totalProviders, leadsByCategory, recentLeads, dueDatesUpcoming };
+  return { totalLeads, leadsToday, leadsThisMonth, newLeads, convertedLeads, conversionRate, totalPolicies, totalProviders, leadsByCategory, recentLeads, dueDatesUpcoming, totalUsers, usersToday };
 }
 
 const STATUS_BADGE: Record<string, string> = {
@@ -133,6 +137,20 @@ export default async function DashboardPage() {
       ),
       iconBg: "bg-slate-100 text-slate-600",
       accent: "border-l-slate-400",
+      href: undefined,
+    },
+    {
+      label: "Registered Users",
+      value: stats.totalUsers,
+      sub: `${stats.usersToday} joined today`,
+      icon: (
+        <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+      ),
+      iconBg: "bg-pink-50 text-pink-600",
+      accent: "border-l-pink-500",
+      href: "/admin/registered-users",
     },
   ];
 
@@ -156,19 +174,31 @@ export default async function DashboardPage() {
       </div>
 
       {/* KPI grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-3 gap-4">
-        {kpiCards.map((card) => (
-          <div key={card.label} className={`bg-white rounded-xl border border-gray-200 border-l-4 ${card.accent} p-5 hover:shadow-md transition-shadow`}>
-            <div className="flex items-start justify-between mb-3">
-              <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide leading-tight">{card.label}</p>
-              <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${card.iconBg}`}>
-                {card.icon}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+        {kpiCards.map((card) => {
+          const inner = (
+            <>
+              <div className="flex items-start justify-between mb-3">
+                <p className="text-xs font-semibold text-gray-500 uppercase tracking-wide leading-tight">{card.label}</p>
+                <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${card.iconBg}`}>
+                  {card.icon}
+                </div>
               </div>
+              <p className="text-3xl font-bold text-gray-900 tracking-tight">{card.value}</p>
+              <p className="text-xs text-gray-400 mt-1.5">{card.sub}</p>
+              {card.href && <p className="text-xs text-blue-500 mt-2 font-medium">View all →</p>}
+            </>
+          );
+          return card.href ? (
+            <Link key={card.label} href={card.href} className={`bg-white rounded-xl border border-gray-200 border-l-4 ${card.accent} p-5 hover:shadow-md hover:border-blue-100 transition-all block`}>
+              {inner}
+            </Link>
+          ) : (
+            <div key={card.label} className={`bg-white rounded-xl border border-gray-200 border-l-4 ${card.accent} p-5 hover:shadow-md transition-shadow`}>
+              {inner}
             </div>
-            <p className="text-3xl font-bold text-gray-900 tracking-tight">{card.value}</p>
-            <p className="text-xs text-gray-400 mt-1.5">{card.sub}</p>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
       <div className="grid lg:grid-cols-3 gap-5">
@@ -270,6 +300,7 @@ export default async function DashboardPage() {
                 { href: "/admin/contact-messages", label: "Contact Messages", icon: "M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" },
                 { href: "/admin/newsletter", label: "Newsletter Subscribers", icon: "M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" },
                 { href: "/admin/due-dates", label: "Due Dates", badge: stats.dueDatesUpcoming, icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" },
+                { href: "/admin/registered-users", label: "Registered Users", badge: stats.usersToday, icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
                 { href: "/", label: "View Live Site", icon: "M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14", target: "_blank" },
               ].map((action) => (
                 <Link

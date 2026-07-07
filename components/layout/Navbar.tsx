@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/navigation";
 
 const PLAN_SECTIONS = [
   {
@@ -64,18 +65,43 @@ const ALL_LINKS = PLAN_SECTIONS.flatMap((s) => s.links);
 
 type DropdownKey = "plans" | "company" | "legal" | null;
 
+interface UserSession {
+  name: string;
+  phone: string;
+}
+
 export default function Navbar() {
+  const router = useRouter();
   const [menuOpen, setMenuOpen]   = useState(false);
   const [scrolled, setScrolled]   = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<DropdownKey>(null);
   const [mobileOpen, setMobileOpen] = useState<DropdownKey>(null);
+  const [userSession, setUserSession] = useState<UserSession | null>(null);
+  const [userMenuOpen, setUserMenuOpen] = useState(false);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const userMenuTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const handler = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", handler, { passive: true });
     return () => window.removeEventListener("scroll", handler);
   }, []);
+
+  // Check user session on mount via a lightweight cookie-read endpoint
+  useEffect(() => {
+    fetch("/api/auth/me")
+      .then((r) => r.ok ? r.json() : null)
+      .then((d) => { if (d?.user) setUserSession(d.user); })
+      .catch(() => {});
+  }, []);
+
+  async function handleLogout() {
+    await fetch("/api/auth/login", { method: "DELETE" });
+    setUserSession(null);
+    setUserMenuOpen(false);
+    router.push("/");
+    router.refresh();
+  }
 
   function openDropdown(key: DropdownKey) {
     if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -264,6 +290,56 @@ export default function Navbar() {
                 </svg>
                 1800-XXX-XXXX
               </a>
+
+              {/* Auth buttons — logged out */}
+              {!userSession && (
+                <>
+                  <Link href="/login" className="text-sm font-semibold text-gray-700 hover:text-blue-600 border border-gray-200 hover:border-blue-300 hover:bg-blue-50 px-4 py-2 rounded-xl transition-all duration-200">
+                    Login
+                  </Link>
+                  <Link href="/register" className="text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 px-4 py-2 rounded-xl transition-all duration-200">
+                    Register
+                  </Link>
+                </>
+              )}
+
+              {/* User avatar + dropdown — logged in */}
+              {userSession && (
+                <div
+                  className="relative"
+                  onMouseEnter={() => { if (userMenuTimer.current) clearTimeout(userMenuTimer.current); setUserMenuOpen(true); }}
+                  onMouseLeave={() => { userMenuTimer.current = setTimeout(() => setUserMenuOpen(false), 150); }}
+                >
+                  <button className="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-xl border border-gray-200 hover:border-blue-300 hover:bg-blue-50 transition-all">
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs shadow-sm">
+                      {userSession.name.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="text-sm font-semibold text-gray-700 max-w-[80px] truncate">{userSession.name.split(" ")[0]}</span>
+                    <svg className={`w-3.5 h-3.5 text-gray-400 transition-transform ${userMenuOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+                  <div className={`absolute top-full right-0 mt-1 w-52 bg-white rounded-2xl shadow-xl shadow-gray-200/80 border border-gray-100 p-2 transition-all duration-200 ${userMenuOpen ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-1 pointer-events-none"}`}>
+                    <div className="px-3 py-2 border-b border-gray-100 mb-1">
+                      <p className="text-sm font-bold text-gray-900 truncate">{userSession.name}</p>
+                      <p className="text-xs text-gray-400">+91 {userSession.phone}</p>
+                    </div>
+                    <Link href="/account" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" /></svg>
+                      My Account
+                    </Link>
+                    <Link href="/account/policies" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" /></svg>
+                      My Policies
+                    </Link>
+                    <button onClick={handleLogout} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-red-500 hover:bg-red-50 transition-colors mt-1 border-t border-gray-100 pt-2">
+                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                      Logout
+                    </button>
+                  </div>
+                </div>
+              )}
+
               <Link href="/#lead-form" className="btn-shine relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md shadow-blue-200 hover:shadow-lg hover:shadow-blue-300 hover:-translate-y-0.5">
                 Get Free Quote
               </Link>
@@ -349,10 +425,37 @@ export default function Navbar() {
                 ))}
               </MobileAccordion>
 
+              {/* Mobile auth */}
+              {!userSession ? (
+                <div className="flex gap-2 mt-2">
+                  <Link href="/login" onClick={() => setMenuOpen(false)} className="flex-1 border border-gray-200 text-gray-700 font-semibold text-sm text-center py-2.5 rounded-xl hover:bg-gray-50 transition-colors">
+                    Login
+                  </Link>
+                  <Link href="/register" onClick={() => setMenuOpen(false)} className="flex-1 bg-gray-900 text-white font-semibold text-sm text-center py-2.5 rounded-xl hover:bg-gray-800 transition-colors">
+                    Register
+                  </Link>
+                </div>
+              ) : (
+                <div className="mt-2 bg-gray-50 rounded-xl p-3">
+                  <div className="flex items-center gap-2.5 mb-2">
+                    <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm">
+                      {userSession.name.charAt(0).toUpperCase()}
+                    </div>
+                    <div>
+                      <p className="text-sm font-bold text-gray-900">{userSession.name}</p>
+                      <p className="text-xs text-gray-400">+91 {userSession.phone}</p>
+                    </div>
+                  </div>
+                  <button onClick={handleLogout} className="w-full text-sm text-red-500 font-semibold text-left px-2 py-1.5 hover:bg-red-50 rounded-lg transition-colors">
+                    Logout
+                  </button>
+                </div>
+              )}
+
               <Link
                 href="/#lead-form"
                 onClick={() => setMenuOpen(false)}
-                className="mt-3 block bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-bold text-center shadow-md shadow-blue-200"
+                className="mt-2 block bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-bold text-center shadow-md shadow-blue-200"
               >
                 Get Free Quote →
               </Link>

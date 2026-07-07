@@ -8,8 +8,13 @@ import LeadPopup from "@/components/LeadPopup";
 export default function PublicShell({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const isAdmin = pathname.startsWith("/admin");
+  const isAuthOrPanel =
+    pathname.startsWith("/account") ||
+    pathname === "/login" ||
+    pathname === "/register" ||
+    pathname === "/forgot-password";
 
-  if (isAdmin) return <>{children}</>;
+  if (isAdmin || isAuthOrPanel) return <>{children}</>;
 
   return (
     <>
