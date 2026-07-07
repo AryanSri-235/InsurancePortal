@@ -7,9 +7,11 @@ interface Props {
   phone: string;
   email?: string | null;
   city?: string | null;
+  small?: boolean;
+  sidebar?: boolean;
 }
 
-export default function QuickQuoteButton({ name, phone, email, city }: Props) {
+export default function QuickQuoteButton({ name, phone, email, city, small, sidebar }: Props) {
   async function handleQuote() {
     const { value: category } = await Swal.fire({
       title: "What are you looking for?",
@@ -55,12 +57,15 @@ export default function QuickQuoteButton({ name, phone, email, city }: Props) {
     }
   }
 
+  const cls = sidebar
+    ? "w-full text-center text-xs font-bold text-white bg-blue-600 hover:bg-blue-700 rounded-lg py-2 transition-colors"
+    : small
+    ? "text-xs font-semibold text-blue-600 hover:underline"
+    : "flex-shrink-0 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors shadow-md shadow-blue-200";
+
   return (
-    <button
-      onClick={handleQuote}
-      className="flex-shrink-0 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm px-6 py-3 rounded-xl transition-colors shadow-md shadow-blue-200"
-    >
-      Get Free Quote →
+    <button onClick={handleQuote} className={cls}>
+      {sidebar ? "Get Free Quote" : "Get free quote →"}
     </button>
   );
 }

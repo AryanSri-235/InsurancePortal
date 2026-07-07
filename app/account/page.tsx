@@ -11,58 +11,59 @@ async function getUserLeads(phone: string) {
   const now = new Date();
   const thirtyDaysOut = new Date(Date.now() + 30 * 86400000);
 
-  const [leads, upcomingDueDates] = await Promise.all([
+  const [leads, upcomingDueDates, allDueDates] = await Promise.all([
     db.lead.findMany({
       where: { phone },
       orderBy: { createdAt: "desc" },
       include: { policy: { include: { provider: true } } },
     }),
     db.dueDate.findMany({
-      where: {
-        phone,
-        dueDate: { gte: now, lte: thirtyDaysOut },
-        status: { not: "lapsed" },
-      },
+      where: { phone, dueDate: { gte: now, lte: thirtyDaysOut }, status: { not: "lapsed" } },
+      orderBy: { dueDate: "asc" },
+      include: { policy: { include: { provider: true } } },
+    }),
+    db.dueDate.findMany({
+      where: { phone },
       orderBy: { dueDate: "asc" },
       include: { policy: { include: { provider: true } } },
     }),
   ]);
 
-  const allDueDates = await db.dueDate.findMany({
-    where: { phone },
-    orderBy: { dueDate: "asc" },
-    include: { policy: { include: { provider: true } } },
-  });
-
   return { leads, upcomingDueDates, allDueDates };
 }
 
-const STATUS_BADGE: Record<string, string> = {
-  new:       "bg-blue-50 text-blue-700 border-blue-100",
-  contacted: "bg-amber-50 text-amber-700 border-amber-100",
-  converted: "bg-emerald-50 text-emerald-700 border-emerald-100",
-  lost:      "bg-red-50 text-red-600 border-red-100",
+const CAT_LABEL: Record<string, string> = {
+  term: "Term", life: "Life", health: "Health", motor: "Motor",
+  car: "Car", "two-wheeler": "Two-Wheeler", travel: "Travel", home: "Home",
 };
 
-const CAT_ICON: Record<string, string> = {
-  term: "🛡️", life: "💰", health: "🏥", motor: "🚗",
-  car: "🚗", "two-wheeler": "🛵", travel: "✈️", home: "🏠",
-};
-
-const DUE_STATUS: Record<string, { label: string; cls: string }> = {
-  pending:  { label: "Pending",  cls: "bg-amber-50 text-amber-700 border-amber-100" },
-  notified: { label: "Notified", cls: "bg-blue-50 text-blue-700 border-blue-100" },
-  lapsed:   { label: "Lapsed",   cls: "bg-red-50 text-red-600 border-red-100" },
-  renewed:  { label: "Renewed",  cls: "bg-emerald-50 text-emerald-700 border-emerald-100" },
+const CAT_COLOR: Record<string, string> = {
+  term: "#1E54D0", life: "#7C3AED", health: "#059669", motor: "#EA580C",
+  car: "#EA580C", "two-wheeler": "#D97706", travel: "#0891B2", home: "#16A34A",
 };
 
 function daysUntil(date: Date) {
   const diff = Math.ceil((new Date(date).getTime() - Date.now()) / 86400000);
-  if (diff < 0) return { label: `${Math.abs(diff)}d overdue`, cls: "text-red-600 font-bold" };
-  if (diff === 0) return { label: "Due today!", cls: "text-red-600 font-bold" };
-  if (diff <= 7)  return { label: `${diff}d left`, cls: "text-orange-600 font-semibold" };
-  if (diff <= 30) return { label: `${diff}d left`, cls: "text-amber-600 font-medium" };
-  return { label: `${diff}d left`, cls: "text-gray-500" };
+  if (diff < 0)  return { label: `${Math.abs(diff)}d overdue`, dot: "#DC2626", text: "#DC2626", urgent: true };
+  if (diff === 0) return { label: "Due today",    dot: "#DC2626", text: "#DC2626", urgent: true };
+  if (diff <= 7)  return { label: `${diff} days`,  dot: "#EA580C", text: "#EA580C", urgent: true };
+  if (diff <= 30) return { label: `${diff} days`,  dot: "#D97706", text: "#92400E", urgent: false };
+  return                { label: `${diff} days`,  dot: "#CBD5E1", text: "#64748B", urgent: false };
+}
+
+const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string; border: string }> = {
+  new:       { label: "Pending",   bg: "#EFF6FF", text: "#1D4ED8", border: "#BFDBFE" },
+  contacted: { label: "Contacted", bg: "#FFFBEB", text: "#92400E", border: "#FDE68A" },
+  converted: { label: "Converted", bg: "#ECFDF5", text: "#065F46", border: "#A7F3D0" },
+  lost:      { label: "Closed",    bg: "#FFF1F2", text: "#9F1239", border: "#FECDD3" },
+};
+
+function NavIcon({ path }: { path: string }) {
+  return (
+    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
+      <path d={path} />
+    </svg>
+  );
 }
 
 export default async function AccountPage() {
@@ -79,221 +80,302 @@ export default async function AccountPage() {
   if (!user) redirect("/login");
 
   const quoteRequests = leads.filter((l) => l.leadType === "quote");
-  const callbackRequests = leads.filter((l) => l.leadType === "callback");
+  const initials = user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+  const memberSince = new Date(user.createdAt).toLocaleDateString("en-IN", { month: "short", year: "numeric" });
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Top bar */}
-      <div className="bg-white border-b border-gray-100 sticky top-0 z-30">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2">
-            <div className="w-7 h-7 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-lg flex items-center justify-center">
-              <span className="text-white font-black text-[10px]">IP</span>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#EDF0F4", fontFamily: "'Inter', system-ui, sans-serif" }}>
+
+      {/* ── Sidebar ── */}
+      <aside style={{
+        width: 220, flexShrink: 0, background: "#0B1120",
+        display: "flex", flexDirection: "column",
+        position: "sticky", top: 0, height: "100vh", overflowY: "auto",
+      }}>
+        {/* Logo */}
+        <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
+            <div style={{ width: 28, height: 28, background: "#1E54D0", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
+              <span style={{ color: "#fff", fontWeight: 900, fontSize: 10, letterSpacing: "-0.5px" }}>IP</span>
             </div>
-            <span className="font-bold text-sm text-gray-900">Insurance<span className="text-blue-600">Portal</span></span>
+            <span style={{ color: "#fff", fontWeight: 700, fontSize: 14, letterSpacing: "-0.3px" }}>
+              Insurance<span style={{ color: "#4D80F0" }}>Portal</span>
+            </span>
           </Link>
-          <div className="flex items-center gap-3">
-            <Link href="/" className="text-xs text-gray-500 hover:text-gray-700 transition-colors">← Back to site</Link>
-            <LogoutButton />
-          </div>
         </div>
-      </div>
 
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 py-8 space-y-6">
-
-        {/* Welcome header */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl p-6 text-white">
-          <div className="flex items-start justify-between">
-            <div>
-              <p className="text-blue-100 text-sm font-medium">Welcome back,</p>
-              <h1 className="text-2xl font-bold mt-0.5">{user.name}</h1>
-              <p className="text-blue-200 text-sm mt-1">+91 {user.phone}{user.email ? ` · ${user.email}` : ""}</p>
-              {user.city && <p className="text-blue-200 text-xs mt-0.5">{user.city}</p>}
-            </div>
-            <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center text-2xl font-bold">
-              {user.name.charAt(0).toUpperCase()}
-            </div>
+        {/* Profile block */}
+        <div style={{ padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
+          <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg, #1E54D0 0%, #6366F1 100%)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10 }}>
+            <span style={{ color: "#fff", fontWeight: 800, fontSize: 16, letterSpacing: "-0.5px" }}>{initials}</span>
           </div>
-
-          {/* Quick stats */}
-          <div className="grid grid-cols-3 gap-4 mt-6">
-            <div className="bg-white/10 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold">{quoteRequests.length}</p>
-              <p className="text-blue-100 text-xs mt-0.5">Quote Requests</p>
-            </div>
-            <div className="bg-white/10 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold">{allDueDates.length}</p>
-              <p className="text-blue-100 text-xs mt-0.5">Tracked Renewals</p>
-            </div>
-            <div className="bg-white/10 rounded-xl p-3 text-center">
-              <p className="text-2xl font-bold">{upcomingDueDates.length}</p>
-              <p className="text-blue-100 text-xs mt-0.5">Due in 30 Days</p>
-            </div>
+          <p style={{ color: "#fff", fontWeight: 700, fontSize: 13, lineHeight: 1.3, marginBottom: 3 }}>{user.name}</p>
+          <p style={{ color: "#5C6B84", fontSize: 11, fontWeight: 500 }}>+91 {user.phone}</p>
+          {user.city && <p style={{ color: "#5C6B84", fontSize: 11, marginTop: 1 }}>{user.city}</p>}
+          <div style={{ marginTop: 10, display: "inline-flex", alignItems: "center", gap: 4, background: "rgba(30,84,208,0.15)", border: "1px solid rgba(30,84,208,0.3)", borderRadius: 20, padding: "3px 8px" }}>
+            <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#4ADE80" }} />
+            <span style={{ color: "#93C5FD", fontSize: 10, fontWeight: 600 }}>Member since {memberSince}</span>
           </div>
         </div>
 
-        {/* Upcoming renewals alert */}
-        {upcomingDueDates.length > 0 && (
-          <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
-            <div className="flex items-start gap-3">
-              <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center flex-shrink-0 text-lg">⚠️</div>
-              <div className="flex-1">
-                <p className="font-bold text-amber-900 text-sm">
-                  {upcomingDueDates.length} renewal{upcomingDueDates.length > 1 ? "s" : ""} coming up in the next 30 days
-                </p>
-                <div className="mt-3 space-y-2">
-                  {upcomingDueDates.map((d) => {
-                    const timing = daysUntil(d.dueDate);
-                    return (
-                      <div key={d.id} className="flex items-center justify-between bg-white rounded-xl px-4 py-2.5 border border-amber-100">
-                        <div>
-                          <p className="text-sm font-semibold text-gray-900">{d.policyNumber ?? "Policy"}</p>
-                          {d.policy && <p className="text-xs text-gray-500">{d.policy.provider.name} — {d.policy.name}</p>}
-                          {!d.policy && d.notes && <p className="text-xs text-gray-500">{d.notes}</p>}
-                        </div>
-                        <div className="text-right flex-shrink-0 ml-4">
-                          <p className={`text-sm ${timing.cls}`}>{timing.label}</p>
-                          <p className="text-xs text-gray-400">{new Date(d.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</p>
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+        {/* Nav */}
+        <nav style={{ padding: "12px 10px", flex: 1 }}>
+          <p style={{ color: "#3A4A60", fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "0 10px", marginBottom: 6 }}>Menu</p>
+          {[
+            { label: "Overview",  href: "#overview",  icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
+            { label: "Renewals",  href: "#renewals",  icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" },
+            { label: "Quotes",    href: "#quotes",    icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
+            { label: "Profile",   href: "#profile",   icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
+          ].map((item) => (
+            <a key={item.label} href={item.href} style={{ display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", borderRadius: 8, color: "#8899B4", fontSize: 13, fontWeight: 500, textDecoration: "none", transition: "all 0.15s", marginBottom: 1 }}
+              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#fff"; (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.06)"; }}
+              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#8899B4"; (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}>
+              <NavIcon path={item.icon} />
+              {item.label}
+            </a>
+          ))}
+        </nav>
 
-        {/* All Due Dates / Renewals */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50/60">
-            <div className="flex items-center gap-2">
-              <span className="text-base">📅</span>
-              <h2 className="font-bold text-gray-900 text-sm">Your Policy Renewals</h2>
-            </div>
-            <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full font-medium">{allDueDates.length} total</span>
+        {/* Sidebar CTA */}
+        <div style={{ padding: "16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+          <div style={{ background: "rgba(30,84,208,0.12)", border: "1px solid rgba(30,84,208,0.25)", borderRadius: 10, padding: "12px" }}>
+            <p style={{ color: "#93C5FD", fontSize: 11, fontWeight: 700, marginBottom: 2 }}>Need coverage?</p>
+            <p style={{ color: "#5C6B84", fontSize: 10, lineHeight: 1.4, marginBottom: 10 }}>Advisor calls you in 30 min.</p>
+            <QuickQuoteButton name={user.name} phone={user.phone} email={user.email} city={user.city} sidebar />
           </div>
-
-          {allDueDates.length === 0 ? (
-            <div className="py-16 flex flex-col items-center text-gray-400">
-              <span className="text-4xl mb-3">📋</span>
-              <p className="text-sm font-medium">No renewals tracked yet</p>
-              <p className="text-xs mt-1 max-w-xs text-center">Our advisors will add your policy renewal dates after you get a quote.</p>
-              <Link href="/#lead-form" className="mt-4 text-xs font-semibold text-blue-600 hover:underline">Get a free quote →</Link>
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-50">
-              {allDueDates.map((d) => {
-                const timing = daysUntil(d.dueDate);
-                const status = DUE_STATUS[d.status] ?? { label: d.status, cls: "bg-gray-50 text-gray-600 border-gray-100" };
-                return (
-                  <div key={d.id} className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl flex-shrink-0">
-                      {d.policy ? (CAT_ICON[d.policy.category] ?? "🛡️") : "🛡️"}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-900 text-sm truncate">{d.policyNumber ?? "Policy Renewal"}</p>
-                      {d.policy && (
-                        <p className="text-xs text-gray-500 truncate">{d.policy.provider.name} · {d.policy.name}</p>
-                      )}
-                      {d.notes && !d.policy && <p className="text-xs text-gray-500 truncate">{d.notes}</p>}
-                    </div>
-                    <div className="text-right flex-shrink-0 space-y-1">
-                      <p className={`text-xs ${timing.cls}`}>{timing.label}</p>
-                      <p className="text-xs text-gray-400">
-                        {new Date(d.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                      </p>
-                      <span className={`text-[10px] font-semibold px-2 py-0.5 rounded-full border inline-block ${status.cls}`}>{status.label}</span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
         </div>
 
-        {/* Quote requests */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
-          <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50/60">
-            <div className="flex items-center gap-2">
-              <span className="text-base">📨</span>
-              <h2 className="font-bold text-gray-900 text-sm">Your Quote Requests</h2>
-            </div>
-            <span className="text-xs text-gray-400 bg-gray-100 px-2 py-0.5 rounded-full font-medium">{quoteRequests.length} requests</span>
+        {/* Bottom links */}
+        <div style={{ padding: "12px 16px 16px", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 4 }}>
+          <Link href="/" style={{ color: "#5C6B84", fontSize: 11, fontWeight: 500, textDecoration: "none", display: "flex", alignItems: "center", gap: 6, padding: "5px 0" }}>
+            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            Back to site
+          </Link>
+          <LogoutButton />
+        </div>
+      </aside>
+
+      {/* ── Main ── */}
+      <main style={{ flex: 1, overflowY: "auto", padding: "32px 36px", maxHeight: "100vh" }}>
+        <div style={{ maxWidth: 740, margin: "0 auto" }}>
+
+          {/* Page header */}
+          <div id="overview" style={{ marginBottom: 28 }}>
+            <p style={{ fontSize: 11, fontWeight: 600, color: "#8899B4", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>
+              My Account
+            </p>
+            <h1 style={{ fontSize: 24, fontWeight: 800, color: "#0B1120", letterSpacing: "-0.6px", lineHeight: 1.2 }}>
+              Hello, {user.name.split(" ")[0]} 👋
+            </h1>
+            <p style={{ color: "#5C6B84", fontSize: 13, marginTop: 4 }}>
+              Here's a summary of your insurance activity.
+            </p>
           </div>
 
-          {quoteRequests.length === 0 ? (
-            <div className="py-16 flex flex-col items-center text-gray-400">
-              <span className="text-4xl mb-3">🔍</span>
-              <p className="text-sm font-medium">No quote requests yet</p>
-              <Link href="/#lead-form" className="mt-4 text-xs font-semibold text-blue-600 hover:underline">Get a free quote now →</Link>
-            </div>
-          ) : (
-            <div className="divide-y divide-gray-50">
-              {quoteRequests.map((lead) => {
-                const statusBadge = STATUS_BADGE[lead.status] ?? "bg-gray-50 text-gray-600 border-gray-100";
-                return (
-                  <div key={lead.id} className="flex items-center gap-4 px-5 py-4 hover:bg-gray-50 transition-colors">
-                    <div className="w-10 h-10 rounded-xl bg-blue-50 flex items-center justify-center text-xl flex-shrink-0">
-                      {CAT_ICON[lead.category ?? ""] ?? "🛡️"}
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <p className="font-semibold text-gray-900 text-sm capitalize">
-                        {lead.category ? lead.category.replace(/-/g, " ") : "Insurance"} Quote
-                      </p>
-                      {lead.policy && (
-                        <p className="text-xs text-gray-500 truncate">{lead.policy.provider.name} · {lead.policy.name}</p>
-                      )}
-                      <p className="text-xs text-gray-400 mt-0.5">
-                        Submitted {new Date(lead.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
-                      </p>
-                    </div>
-                    <div className="flex-shrink-0">
-                      <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border capitalize ${statusBadge}`}>
-                        {lead.status === "new" ? "Pending" : lead.status}
-                      </span>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </div>
-
-        {/* Account details */}
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-          <h2 className="font-bold text-gray-900 text-sm mb-4 flex items-center gap-2">
-            <span>👤</span> Account Details
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+          {/* ── Stats row ── */}
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 28 }}>
             {[
-              { label: "Full Name", value: user.name },
-              { label: "Mobile", value: `+91 ${user.phone}` },
-              { label: "Email", value: user.email ?? "—" },
-              { label: "City", value: user.city ?? "—" },
-              { label: "Gender", value: user.gender ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1) : "—" },
-              { label: "Date of Birth", value: user.dob ? new Date(user.dob).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "—" },
-              { label: "Member Since", value: new Date(user.createdAt).toLocaleDateString("en-IN", { month: "long", year: "numeric" }) },
-              { label: "Last Login", value: user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—" },
-            ].map((field) => (
-              <div key={field.label}>
-                <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-wide">{field.label}</p>
-                <p className="text-sm font-medium text-gray-900 mt-0.5">{field.value}</p>
+              { label: "Quote Requests", value: quoteRequests.length, accent: "#1E54D0", note: "submitted by you" },
+              { label: "Tracked Renewals", value: allDueDates.length, accent: "#7C3AED", note: "policies on record" },
+              { label: "Due This Month", value: upcomingDueDates.length, accent: upcomingDueDates.length > 0 ? "#EA580C" : "#059669", note: upcomingDueDates.length > 0 ? "need attention" : "you're all clear" },
+            ].map((s) => (
+              <div key={s.label} style={{ background: "#fff", borderRadius: 12, padding: "18px 20px", borderLeft: `3px solid ${s.accent}`, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
+                <p style={{ fontSize: 10, fontWeight: 700, color: "#8899B4", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>{s.label}</p>
+                <p style={{ fontSize: 32, fontWeight: 800, color: "#0B1120", letterSpacing: "-1px", lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>{s.value}</p>
+                <p style={{ fontSize: 11, color: "#8899B4", marginTop: 5 }}>{s.note}</p>
               </div>
             ))}
           </div>
-        </div>
 
-        {/* CTA */}
-        <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border border-blue-100 rounded-2xl p-6 flex flex-col sm:flex-row items-center gap-4">
-          <div className="flex-1">
-            <h3 className="font-bold text-gray-900">Need a new policy?</h3>
-            <p className="text-sm text-gray-500 mt-1">One tap — we already have your details. Our advisor calls you in 30 minutes.</p>
+          {/* ── Urgent alert ── */}
+          {upcomingDueDates.length > 0 && (
+            <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 12, padding: "16px 20px", marginBottom: 28 }}>
+              <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
+                <div style={{ width: 32, height: 32, borderRadius: 8, background: "#FEF3C7", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
+                  <svg width="16" height="16" fill="none" stroke="#D97706" viewBox="0 0 24 24" strokeWidth={2}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.962-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                  </svg>
+                </div>
+                <div style={{ flex: 1 }}>
+                  <p style={{ fontWeight: 700, color: "#92400E", fontSize: 13, marginBottom: 10 }}>
+                    {upcomingDueDates.length} renewal{upcomingDueDates.length > 1 ? "s" : ""} due in the next 30 days
+                  </p>
+                  <div style={{ display: "flex", flexDirection: "column", gap: 6 }}>
+                    {upcomingDueDates.map((d) => {
+                      const t = daysUntil(d.dueDate);
+                      return (
+                        <div key={d.id} style={{ background: "#fff", borderRadius: 8, padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", border: "1px solid #FDE68A" }}>
+                          <div>
+                            <p style={{ fontSize: 13, fontWeight: 600, color: "#0B1120" }}>{d.policyNumber ?? "Policy"}</p>
+                            {d.policy && <p style={{ fontSize: 11, color: "#8899B4", marginTop: 1 }}>{d.policy.provider.name} · {d.policy.name}</p>}
+                          </div>
+                          <div style={{ textAlign: "right" }}>
+                            <p style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{t.label}</p>
+                            <p style={{ fontSize: 11, color: "#8899B4" }}>{new Date(d.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</p>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+
+          {/* ── Renewals ── */}
+          <div id="renewals" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", marginBottom: 20, overflow: "hidden" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid #F1F5F9" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <svg width="15" height="15" fill="none" stroke="#1E54D0" viewBox="0 0 24 24" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                </svg>
+                <span style={{ fontWeight: 700, fontSize: 13, color: "#0B1120" }}>Policy Renewals</span>
+              </div>
+              <span style={{ fontSize: 11, color: "#8899B4", background: "#F1F5F9", padding: "2px 8px", borderRadius: 20, fontWeight: 600 }}>{allDueDates.length} total</span>
+            </div>
+
+            {allDueDates.length === 0 ? (
+              <div style={{ padding: "52px 20px", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <svg width="20" height="20" fill="none" stroke="#94A3B8" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
+                  </svg>
+                </div>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "#334155" }}>No renewals tracked yet</p>
+                <p style={{ fontSize: 12, color: "#94A3B8", textAlign: "center", maxWidth: 260 }}>Our advisors will add your policy renewal dates after you request a quote.</p>
+                <div style={{ marginTop: 4 }}>
+                  <QuickQuoteButton name={user.name} phone={user.phone} email={user.email} city={user.city} small />
+                </div>
+              </div>
+            ) : (
+              <div>
+                {allDueDates.map((d, i) => {
+                  const t = daysUntil(d.dueDate);
+                  const catColor = d.policy ? (CAT_COLOR[d.policy.category] ?? "#1E54D0") : "#1E54D0";
+                  const catLabel = d.policy ? (CAT_LABEL[d.policy.category] ?? d.policy.category) : "Policy";
+                  return (
+                    <div key={d.id} style={{ display: "flex", alignItems: "center", gap: 14, padding: "14px 20px", borderBottom: i < allDueDates.length - 1 ? "1px solid #F8FAFC" : "none" }}>
+                      {/* Urgency dot */}
+                      <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 0 }}>
+                        <div style={{ width: 10, height: 10, borderRadius: "50%", background: t.dot, flexShrink: 0 }} />
+                      </div>
+                      {/* Category tag */}
+                      <span style={{ fontSize: 10, fontWeight: 700, color: catColor, background: `${catColor}15`, border: `1px solid ${catColor}30`, borderRadius: 6, padding: "2px 7px", flexShrink: 0, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                        {catLabel}
+                      </span>
+                      {/* Details */}
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: "#0B1120", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                          {d.policyNumber ?? "Policy Renewal"}
+                        </p>
+                        {d.policy && (
+                          <p style={{ fontSize: 11, color: "#8899B4", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{d.policy.provider.name} · {d.policy.name}</p>
+                        )}
+                      </div>
+                      {/* Date + countdown */}
+                      <div style={{ textAlign: "right", flexShrink: 0 }}>
+                        <p style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{t.label}</p>
+                        <p style={{ fontSize: 11, color: "#94A3B8" }}>{new Date(d.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</p>
+                      </div>
+                      {/* Status pill */}
+                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 20, background: d.status === "renewed" ? "#ECFDF5" : d.status === "lapsed" ? "#FFF1F2" : "#FFFBEB", color: d.status === "renewed" ? "#065F46" : d.status === "lapsed" ? "#9F1239" : "#92400E", border: `1px solid ${d.status === "renewed" ? "#A7F3D0" : d.status === "lapsed" ? "#FECDD3" : "#FDE68A"}`, flexShrink: 0 }}>
+                        {d.status}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
-          <QuickQuoteButton name={user.name} phone={user.phone} email={user.email} city={user.city} />
-        </div>
 
-      </div>
+          {/* ── Quotes ── */}
+          <div id="quotes" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", marginBottom: 20, overflow: "hidden" }}>
+            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid #F1F5F9" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <svg width="15" height="15" fill="none" stroke="#1E54D0" viewBox="0 0 24 24" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span style={{ fontWeight: 700, fontSize: 13, color: "#0B1120" }}>Quote Requests</span>
+              </div>
+              <span style={{ fontSize: 11, color: "#8899B4", background: "#F1F5F9", padding: "2px 8px", borderRadius: 20, fontWeight: 600 }}>{quoteRequests.length}</span>
+            </div>
+
+            {quoteRequests.length === 0 ? (
+              <div style={{ padding: "52px 20px", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
+                <div style={{ width: 44, height: 44, borderRadius: 12, background: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <svg width="20" height="20" fill="none" stroke="#94A3B8" viewBox="0 0 24 24" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
+                  </svg>
+                </div>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "#334155" }}>No quote requests yet</p>
+                <p style={{ fontSize: 12, color: "#94A3B8" }}>Request a quote and an expert will call you within 30 minutes.</p>
+                <div style={{ marginTop: 4 }}>
+                  <QuickQuoteButton name={user.name} phone={user.phone} email={user.email} city={user.city} small />
+                </div>
+              </div>
+            ) : (
+              <div>
+                {quoteRequests.map((lead, i) => {
+                  const s = STATUS_CONFIG[lead.status] ?? STATUS_CONFIG.new;
+                  const catColor = CAT_COLOR[lead.category ?? ""] ?? "#1E54D0";
+                  const catLabel = CAT_LABEL[lead.category ?? ""] ?? (lead.category ?? "Insurance");
+                  return (
+                    <div key={lead.id} style={{ display: "flex", alignItems: "center", gap: 14, padding: "13px 20px", borderBottom: i < quoteRequests.length - 1 ? "1px solid #F8FAFC" : "none" }}>
+                      <span style={{ fontSize: 10, fontWeight: 700, color: catColor, background: `${catColor}15`, border: `1px solid ${catColor}30`, borderRadius: 6, padding: "2px 7px", flexShrink: 0, letterSpacing: "0.04em", textTransform: "uppercase" }}>
+                        {catLabel}
+                      </span>
+                      <div style={{ flex: 1, minWidth: 0 }}>
+                        <p style={{ fontSize: 13, fontWeight: 600, color: "#0B1120" }}>
+                          {catLabel} Quote
+                        </p>
+                        {lead.policy && (
+                          <p style={{ fontSize: 11, color: "#8899B4" }}>{lead.policy.provider.name} · {lead.policy.name}</p>
+                        )}
+                      </div>
+                      <p style={{ fontSize: 11, color: "#94A3B8", flexShrink: 0 }}>
+                        {new Date(lead.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                      </p>
+                      <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", padding: "3px 9px", borderRadius: 20, background: s.bg, color: s.text, border: `1px solid ${s.border}`, flexShrink: 0 }}>
+                        {s.label}
+                      </span>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+
+          {/* ── Profile ── */}
+          <div id="profile" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", overflow: "hidden" }}>
+            <div style={{ padding: "16px 20px", borderBottom: "1px solid #F1F5F9", display: "flex", alignItems: "center", gap: 8 }}>
+              <svg width="15" height="15" fill="none" stroke="#1E54D0" viewBox="0 0 24 24" strokeWidth={1.8}>
+                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+              </svg>
+              <span style={{ fontWeight: 700, fontSize: 13, color: "#0B1120" }}>Profile</span>
+            </div>
+            <div style={{ padding: "20px", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "18px 24px" }}>
+              {[
+                { label: "Full Name",    value: user.name },
+                { label: "Mobile",       value: `+91 ${user.phone}` },
+                { label: "Email",        value: user.email ?? "—" },
+                { label: "City",         value: user.city ?? "—" },
+                { label: "Gender",       value: user.gender ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1) : "—" },
+                { label: "Date of Birth",value: user.dob ? new Date(user.dob).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "—" },
+                { label: "Member Since", value: new Date(user.createdAt).toLocaleDateString("en-IN", { month: "long", year: "numeric" }) },
+                { label: "Last Login",   value: user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—" },
+              ].map((f) => (
+                <div key={f.label}>
+                  <p style={{ fontSize: 9, fontWeight: 700, color: "#94A3B8", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 4 }}>{f.label}</p>
+                  <p style={{ fontSize: 13, fontWeight: 600, color: "#0B1120" }}>{f.value}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Footer spacer */}
+          <div style={{ height: 40 }} />
+        </div>
+      </main>
     </div>
   );
 }
