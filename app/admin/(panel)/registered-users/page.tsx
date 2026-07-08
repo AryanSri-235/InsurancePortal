@@ -1,5 +1,6 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
+import PhoneLookup from "./PhoneLookup";
 
 export const dynamic = "force-dynamic";
 
@@ -87,6 +88,7 @@ export default async function RegisteredUsersPage({
           <h1 className="text-xl font-bold text-gray-900">Registered Users</h1>
           <p className="text-gray-400 text-sm mt-0.5">{overview.total} total users on the portal</p>
         </div>
+        <PhoneLookup />
       </div>
 
       {/* KPI cards */}
@@ -153,6 +155,7 @@ export default async function RegisteredUsersPage({
                   <th className="text-left px-4 py-3">Status</th>
                   <th className="text-left px-4 py-3 hidden md:table-cell">Registered</th>
                   <th className="text-left px-4 py-3 hidden xl:table-cell">Last Login</th>
+                  <th className="px-4 py-3"></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-50">
@@ -188,6 +191,14 @@ export default async function RegisteredUsersPage({
                       {u.lastLoginAt
                         ? new Date(u.lastLoginAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })
                         : <span className="text-gray-300">Never</span>}
+                    </td>
+                    <td className="px-4 py-3.5">
+                      <Link
+                        href={`/admin/registered-users/${u.id}`}
+                        className="text-xs font-semibold text-blue-600 hover:text-blue-800 bg-blue-50 hover:bg-blue-100 border border-blue-100 px-3 py-1.5 rounded-lg transition-colors whitespace-nowrap"
+                      >
+                        View →
+                      </Link>
                     </td>
                   </tr>
                 ))}

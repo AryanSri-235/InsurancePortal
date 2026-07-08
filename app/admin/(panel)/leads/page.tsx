@@ -1,8 +1,12 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import Swal from "sweetalert2";
 
 const STATUS_OPTIONS = ["new", "contacted", "converted", "lost"];
+
+interface RenewalModal { leadId: number; name: string; phone: string; }
+
 const CATEGORY_OPTIONS = ["term", "life", "health", "motor", "car", "two-wheeler", "family-health", "group-health", "travel", "home", "term-women", "return-premium", "guaranteed-return", "child-savings", "retirement"];
 
 const STATUS_BADGE: Record<string, string> = {
@@ -52,6 +56,10 @@ export default function LeadsPage() {
   const [loading, setLoading] = useState(true);
   const [filters, setFilters] = useState({ status: "", category: "", search: "", page: 1 });
   const [updatingId, setUpdatingId] = useState<number | null>(null);
+  const [renewalModal, setRenewalModal] = useState<RenewalModal | null>(null);
+  const [renewalDate, setRenewalDate] = useState("");
+  const [renewalPolicyNum, setRenewalPolicyNum] = useState("");
+  const [renewalSaving, setRenewalSaving] = useState(false);
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -74,7 +82,28 @@ export default function LeadsPage() {
 
   useEffect(() => { fetchLeads(); }, [fetchLeads]);
 
-  async function updateStatus(id: number, status: string) {
+  async function updateStatus(id: number, status: string, lead?: Lead) {
+    if (status === "converted" && lead) {
+      // Converted has its own renewal modal
+      setRenewalModal({ leadId: id, name: lead.name, phone: lead.phone });
+      setRenewalDate("");
+      setRenewalPolicyNum("");
+      return;
+    }
+
+    const label = status.charAt(0).toUpperCase() + status.slice(1);
+    const result = await Swal.fire({
+      icon: status === "lost" ? "warning" : "question",
+      title: `Mark as ${label}?`,
+      text: lead ? `Update "${lead.name}" status to ${label}.` : `Change lead status to ${label}.`,
+      showCancelButton: true,
+      confirmButtonText: `Yes, mark ${label}`,
+      cancelButtonText: "Cancel",
+      confirmButtonColor: status === "lost" ? "#DC2626" : "#2563EB",
+      reverseButtons: true,
+    });
+    if (!result.isConfirmed) return;
+
     setUpdatingId(id);
     try {
       await fetch("/api/admin/leads", {
@@ -85,6 +114,26 @@ export default function LeadsPage() {
       setLeads((prev) => prev.map((l) => l.id === id ? { ...l, status } : l));
     } finally {
       setUpdatingId(null);
+    }
+  }
+
+  async function confirmConvert(withRenewal: boolean) {
+    if (!renewalModal) return;
+    setRenewalSaving(true);
+    try {
+      await fetch("/api/admin/leads", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          id: renewalModal.leadId,
+          status: "converted",
+          ...(withRenewal && renewalDate ? { renewalDate, policyNumber: renewalPolicyNum } : {}),
+        }),
+      });
+      setLeads((prev) => prev.map((l) => l.id === renewalModal.leadId ? { ...l, status: "converted" } : l));
+      setRenewalModal(null);
+    } finally {
+      setRenewalSaving(false);
     }
   }
 
@@ -238,7 +287,7 @@ export default function LeadsPage() {
                       <select
                         value={lead.status}
                         disabled={updatingId === lead.id}
-                        onChange={(e) => updateStatus(lead.id, e.target.value)}
+                        onChange={(e) => updateStatus(lead.id, e.target.value, lead)}
                         className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500 bg-white disabled:opacity-50 text-gray-700 transition-colors"
                       >
                         {STATUS_OPTIONS.map((s) => (
@@ -278,6 +327,67 @@ export default function LeadsPage() {
           </div>
         )}
       </div>
+
+      {/* Renewal Modal */}
+      {renewalModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+            <div className="bg-emerald-50 border-b border-emerald-100 px-5 py-4 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <div>
+                <p className="font-bold text-gray-900 text-sm">Mark as Converted</p>
+                <p className="text-xs text-gray-500">{renewalModal.name} · {renewalModal.phone}</p>
+              </div>
+            </div>
+            <div className="p-5 space-y-4">
+              <p className="text-sm text-gray-600">Do you want to set a renewal due date for this customer?</p>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
+                  Renewal Date <span className="text-gray-400 normal-case font-normal">(optional)</span>
+                </label>
+                <input
+                  type="date"
+                  value={renewalDate}
+                  onChange={(e) => setRenewalDate(e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                />
+              </div>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
+                  Policy Number <span className="text-gray-400 normal-case font-normal">(optional)</span>
+                </label>
+                <input
+                  type="text"
+                  placeholder="POL-XXXXXXXX"
+                  value={renewalPolicyNum}
+                  onChange={(e) => setRenewalPolicyNum(e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                />
+              </div>
+              <div className="flex gap-2 pt-1">
+                <button
+                  onClick={() => confirmConvert(true)}
+                  disabled={renewalSaving}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-60"
+                >
+                  {renewalSaving ? "Saving..." : renewalDate ? "Convert + Add Renewal" : "Convert"}
+                </button>
+                <button
+                  onClick={() => confirmConvert(false)}
+                  disabled={renewalSaving}
+                  className="border border-gray-200 text-gray-600 text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Skip
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import Swal from "sweetalert2";
 
 interface DueDate {
   id: number;
@@ -63,7 +64,25 @@ export default function DueDatesPage() {
 
   useEffect(() => { fetchItems(); }, []);
 
-  async function updateStatus(id: number, status: string) {
+  async function updateStatus(id: number, status: string, currentStatus: string) {
+    const label = status.charAt(0).toUpperCase() + status.slice(1);
+    const icons: Record<string, "question" | "warning"> = {
+      renewed: "question",
+      lapsed: "warning",
+      notified: "question",
+      pending: "question",
+    };
+    const result = await Swal.fire({
+      icon: icons[status] ?? "question",
+      title: `Mark as ${label}?`,
+      text: `Change status from "${currentStatus}" to "${label}".`,
+      showCancelButton: true,
+      confirmButtonText: `Yes, mark ${label}`,
+      cancelButtonText: "Cancel",
+      confirmButtonColor: status === "lapsed" ? "#DC2626" : status === "renewed" ? "#059669" : "#2563EB",
+      reverseButtons: true,
+    });
+    if (!result.isConfirmed) return;
     await fetch("/api/admin/due-dates", {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
@@ -361,7 +380,7 @@ export default function DueDatesPage() {
                       <td className="px-4 py-3.5">
                         <select
                           value={item.status}
-                          onChange={(e) => updateStatus(item.id, e.target.value)}
+                          onChange={(e) => updateStatus(item.id, e.target.value, item.status)}
                           className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500 bg-white text-gray-700 transition-colors"
                         >
                           {STATUS_OPTIONS.map((s) => (

@@ -67,12 +67,33 @@ export async function PATCH(req: NextRequest) {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   try {
-    const { id, status } = await req.json();
+    const { id, status, renewalDate, policyNumber } = await req.json();
     const validStatuses = ["new", "contacted", "converted", "lost"];
     if (!id || !validStatuses.includes(status)) {
       return NextResponse.json({ error: "Invalid data" }, { status: 422 });
     }
-    const lead = await db.lead.update({ where: { id }, data: { status } });
+    const lead = await db.lead.update({
+      where: { id },
+      data: { status },
+      select: { id: true, name: true, phone: true, email: true, category: true, policyId: true, status: true },
+    });
+
+    // When converting, optionally create a DueDate
+    if (status === "converted" && renewalDate) {
+      await db.dueDate.create({
+        data: {
+          policyHolderName: lead.name,
+          phone: lead.phone,
+          email: lead.email ?? null,
+          policyId: lead.policyId ?? null,
+          policyNumber: policyNumber || null,
+          dueDate: new Date(renewalDate),
+          status: "pending",
+          notes: `Auto-created from lead #${lead.id}`,
+        },
+      });
+    }
+
     return NextResponse.json({ success: true, data: lead });
   } catch {
     return NextResponse.json({ error: "Server error" }, { status: 500 });

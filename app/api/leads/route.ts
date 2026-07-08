@@ -8,7 +8,7 @@ const leadSchema = z.object({
   email: z.string().email().optional().or(z.literal("")),
   category: z.string().max(50).optional(),
   city: z.string().max(100).optional(),
-  leadType: z.enum(["quote", "callback", "contact_form"]).default("quote"),
+  leadType: z.enum(["quote", "callback", "contact_form", "renewal"]).default("quote"),
   policyId: z.number().optional(),
   utmSource: z.string().optional(),
   utmMedium: z.string().optional(),

@@ -4,6 +4,8 @@ import { db } from "@/lib/db";
 import Link from "next/link";
 import LogoutButton from "@/components/user/LogoutButton";
 import QuickQuoteButton from "@/components/user/QuickQuoteButton";
+import RenewalRequestButton from "@/components/user/RenewalRequestButton";
+import ContactSupportForm from "@/components/user/ContactSupportForm";
 
 export const dynamic = "force-dynamic";
 
@@ -85,6 +87,11 @@ export default async function AccountPage() {
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "#EDF0F4", fontFamily: "'Inter', system-ui, sans-serif" }}>
+    <style>{`
+      .acct-nav-link { display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:8px;color:#8899B4;font-size:13px;font-weight:500;text-decoration:none;margin-bottom:1px;transition:all 0.15s; }
+      .acct-nav-link:hover { color:#fff;background:rgba(255,255,255,0.06); }
+      .acct-logout:hover { color:#F87171 !important; }
+    `}</style>
 
       {/* ── Sidebar ── */}
       <aside style={{
@@ -126,10 +133,9 @@ export default async function AccountPage() {
             { label: "Renewals",  href: "#renewals",  icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" },
             { label: "Quotes",    href: "#quotes",    icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
             { label: "Profile",   href: "#profile",   icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
+            { label: "Contact",   href: "#contact",   icon: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" },
           ].map((item) => (
-            <a key={item.label} href={item.href} style={{ display: "flex", alignItems: "center", gap: 9, padding: "8px 10px", borderRadius: 8, color: "#8899B4", fontSize: 13, fontWeight: 500, textDecoration: "none", transition: "all 0.15s", marginBottom: 1 }}
-              onMouseEnter={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#fff"; (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.06)"; }}
-              onMouseLeave={(e) => { (e.currentTarget as HTMLAnchorElement).style.color = "#8899B4"; (e.currentTarget as HTMLAnchorElement).style.background = "transparent"; }}>
+            <a key={item.label} href={item.href} className="acct-nav-link">
               <NavIcon path={item.icon} />
               {item.label}
             </a>
@@ -281,6 +287,15 @@ export default async function AccountPage() {
                       <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 20, background: d.status === "renewed" ? "#ECFDF5" : d.status === "lapsed" ? "#FFF1F2" : "#FFFBEB", color: d.status === "renewed" ? "#065F46" : d.status === "lapsed" ? "#9F1239" : "#92400E", border: `1px solid ${d.status === "renewed" ? "#A7F3D0" : d.status === "lapsed" ? "#FECDD3" : "#FDE68A"}`, flexShrink: 0 }}>
                         {d.status}
                       </span>
+                      {d.status !== "renewed" && d.status !== "lapsed" && (
+                        <RenewalRequestButton
+                          name={user.name}
+                          phone={user.phone}
+                          email={user.email}
+                          category={d.policy?.category}
+                          policyNumber={d.policyNumber}
+                        />
+                      )}
                     </div>
                   );
                 })}
@@ -370,6 +385,20 @@ export default async function AccountPage() {
                 </div>
               ))}
             </div>
+          </div>
+
+          {/* ── Contact / Support ── */}
+          <div id="contact" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", marginTop: 20, overflow: "hidden" }}>
+            <div style={{ padding: "16px 20px", borderBottom: "1px solid #F1F5F9", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+              <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                <svg width="15" height="15" fill="none" stroke="#1E54D0" viewBox="0 0 24 24" strokeWidth={1.8}>
+                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                </svg>
+                <span style={{ fontWeight: 700, fontSize: 13, color: "#0B1120" }}>Contact & Support</span>
+              </div>
+              <span style={{ fontSize: 11, color: "#8899B4" }}>We&apos;ll call you back</span>
+            </div>
+            <ContactSupportForm name={user.name} phone={user.phone} email={user.email} />
           </div>
 
           {/* Footer spacer */}
