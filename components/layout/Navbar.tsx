@@ -146,8 +146,8 @@ export default function Navbar() {
       <header
         className={`sticky top-0 z-50 transition-all duration-300 ${
           scrolled
-            ? "bg-white/95 backdrop-blur-md shadow-lg shadow-gray-100/80 border-b border-gray-100"
-            : "bg-white border-b border-gray-100"
+            ? "bg-white/95 backdrop-blur-md shadow-lg shadow-gray-100/80 border-b-2 border-blue-600"
+            : "bg-white border-b-2 border-blue-600"
         }`}
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -167,7 +167,7 @@ export default function Navbar() {
                 onMouseEnter={() => openDropdown("plans")}
                 onMouseLeave={closeDropdown}
               >
-                <button className={`flex items-center gap-1.5 px-3 py-2 text-sm font-semibold transition-colors duration-200 ${activeDropdown === "plans" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"}`}>
+                <button className={`flex items-center gap-1.5 px-3 py-2 text-sm font-semibold transition-colors duration-200 relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:transition-all after:duration-200 ${activeDropdown === "plans" ? "text-blue-600 after:bg-blue-600" : "text-gray-700 hover:text-blue-600 after:bg-transparent"}`}>
                   Insurance Plans
                   {chevron(activeDropdown === "plans")}
                 </button>
@@ -224,7 +224,7 @@ export default function Navbar() {
                 onMouseEnter={() => openDropdown("company")}
                 onMouseLeave={closeDropdown}
               >
-                <button className={`flex items-center gap-1.5 px-3 py-2 text-sm font-semibold transition-colors duration-200 ${activeDropdown === "company" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"}`}>
+                <button className={`flex items-center gap-1.5 px-3 py-2 text-sm font-semibold transition-colors duration-200 relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:transition-all after:duration-200 ${activeDropdown === "company" ? "text-blue-600 after:bg-blue-600" : "text-gray-700 hover:text-blue-600 after:bg-transparent"}`}>
                   Company
                   {chevron(activeDropdown === "company")}
                 </button>
@@ -264,7 +264,7 @@ export default function Navbar() {
                 onMouseEnter={() => openDropdown("legal")}
                 onMouseLeave={closeDropdown}
               >
-                <button className={`flex items-center gap-1.5 px-3 py-2 text-sm font-semibold transition-colors duration-200 ${activeDropdown === "legal" ? "text-blue-600" : "text-gray-700 hover:text-blue-600"}`}>
+                <button className={`flex items-center gap-1.5 px-3 py-2 text-sm font-semibold transition-colors duration-200 relative after:absolute after:bottom-0 after:left-3 after:right-3 after:h-0.5 after:rounded-full after:transition-all after:duration-200 ${activeDropdown === "legal" ? "text-blue-600 after:bg-blue-600" : "text-gray-700 hover:text-blue-600 after:bg-transparent"}`}>
                   Legal
                   {chevron(activeDropdown === "legal")}
                 </button>

@@ -49,7 +49,7 @@ export default function LeadCaptureStrip() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-green-700 py-16">
+    <section className="relative overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 py-16">
       <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full border-[32px] border-white/5 pointer-events-none" />
       <div className="absolute -bottom-24 -right-10 w-80 h-80 rounded-full border-[32px] border-white/5 pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border-[1px] border-white/10 pointer-events-none" />

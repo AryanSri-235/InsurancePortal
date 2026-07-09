@@ -60,7 +60,7 @@ export default function ContactPage() {
       {/* Contact channels */}
       <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             {channels.map((c, i) => (
               <div key={c.title} style={{ animationDelay: `${i * 0.08}s` }}
                 className={`animate-fade-in-up group bg-white border-2 rounded-3xl p-6 text-center card-hover hover:shadow-2xl transition-all duration-300 ${c.color}`}>

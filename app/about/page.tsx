@@ -202,7 +202,7 @@ export default function AboutPage() {
       {/* CTA */}
       <section className="py-24 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-12 text-white text-center relative overflow-hidden">
+          <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-6 sm:p-8 lg:p-12 text-white text-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none" />
             <p className="text-blue-200 text-sm font-semibold uppercase tracking-widest mb-3">Start Today</p>
             <h2 className="text-4xl font-black mb-3">Ready to find the right plan?</h2>

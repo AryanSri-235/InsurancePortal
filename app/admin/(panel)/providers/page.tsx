@@ -207,6 +207,7 @@ export default function ProvidersPage() {
                     {provider.policies.length === 0 ? (
                       <p className="px-5 py-4 text-sm text-gray-400">No policies for this provider.</p>
                     ) : (
+                      <div className="overflow-x-auto">
                       <table className="w-full text-sm">
                         <thead className="bg-gray-50">
                           <tr>
@@ -265,6 +266,7 @@ export default function ProvidersPage() {
                           ))}
                         </tbody>
                       </table>
+                      </div>
                     )}
                   </div>
                 )}

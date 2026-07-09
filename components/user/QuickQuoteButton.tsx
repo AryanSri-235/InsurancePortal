@@ -28,7 +28,7 @@ export default function QuickQuoteButton({ name, phone, email, city, small, side
       showCancelButton: true,
       confirmButtonText: "Send Request",
       cancelButtonText: "Cancel",
-      confirmButtonColor: "#2563eb",
+      confirmButtonColor: "#186874",
       inputValidator: (value) => {
         if (!value) return "Please select an insurance type";
       },
@@ -49,11 +49,11 @@ export default function QuickQuoteButton({ name, phone, email, city, small, side
         icon: "success",
         title: "Quote Requested!",
         html: `Our <b>${getCategoryLabel(category)}</b> advisor will call you at <b>+91 ${phone}</b> within 30 minutes.`,
-        confirmButtonColor: "#2563eb",
+        confirmButtonColor: "#186874",
         confirmButtonText: "Got it!",
       });
     } catch {
-      Swal.fire({ icon: "error", title: "Oops!", text: "Something went wrong. Please try again.", confirmButtonColor: "#2563eb" });
+      Swal.fire({ icon: "error", title: "Oops!", text: "Something went wrong. Please try again.", confirmButtonColor: "#186874" });
     }
   }
 

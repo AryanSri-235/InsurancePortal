@@ -143,7 +143,7 @@ export default function UsersPage() {
 
   return (
     <div className="p-6">
-      <div className="flex gap-6 max-w-[1400px] items-start">
+      <div className="flex flex-col lg:flex-row gap-6 max-w-[1400px] items-start">
 
         {/* ── Left: user list ── */}
         <div className="flex-1 min-w-0">
@@ -178,6 +178,7 @@ export default function UsersPage() {
             ) : filtered.length === 0 ? (
               <div className="py-20 text-center text-gray-400 text-sm">No users found</div>
             ) : (
+              <div className="overflow-x-auto">
               <table className="w-full text-sm">
                 <thead className="bg-gray-50 border-b border-gray-100">
                   <tr>
@@ -227,6 +228,7 @@ export default function UsersPage() {
                   ))}
                 </tbody>
               </table>
+              </div>
             )}
           </div>
         </div>

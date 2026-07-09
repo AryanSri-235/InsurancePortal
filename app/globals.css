@@ -12,6 +12,42 @@
   --font-mono: var(--font-geist-mono);
 }
 
+/* ── Brand palette override ──────────────────────────────────────
+   Primary  #186874  (teal)  → remaps the entire `blue-*` scale
+   Secondary #004aad (blue)  → remaps the entire `indigo-*` scale
+   All Tailwind utilities (bg-blue-600, text-blue-500, ring-blue-200,
+   from-blue-600 to-indigo-600, etc.) automatically use these values.
+────────────────────────────────────────────────────────────────── */
+@theme {
+  /* Primary — #186874 teal — replaces blue scale
+     50–200 are kept very neutral so hover/badge backgrounds
+     don't read as visible light green. */
+  --color-blue-50:  #f5f9fa;
+  --color-blue-100: #e8f2f3;
+  --color-blue-200: #d0e6e8;
+  --color-blue-300: #63c0c9;
+  --color-blue-400: #2ea5b1;
+  --color-blue-500: #208999;
+  --color-blue-600: #186874;
+  --color-blue-700: #145865;
+  --color-blue-800: #114a56;
+  --color-blue-900: #0f3d47;
+  --color-blue-950: #082830;
+
+  /* Secondary — #004aad blue — replaces indigo scale */
+  --color-indigo-50:  #f4f7ff;
+  --color-indigo-100: #e6edfc;
+  --color-indigo-200: #c8d9f9;
+  --color-indigo-300: #83aafb;
+  --color-indigo-400: #4d83f5;
+  --color-indigo-500: #1960e6;
+  --color-indigo-600: #004aad;
+  --color-indigo-700: #003c8f;
+  --color-indigo-800: #003175;
+  --color-indigo-900: #002760;
+  --color-indigo-950: #001a3e;
+}
+
 html {
   scroll-behavior: smooth;
 }
@@ -76,8 +112,8 @@ body {
 }
 
 @keyframes pulse-glow {
-  0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0.4); }
-  50%       { box-shadow: 0 0 0 8px rgba(59,130,246,0); }
+  0%, 100% { box-shadow: 0 0 0 0 rgba(24,104,116,0.4); }
+  50%       { box-shadow: 0 0 0 8px rgba(24,104,116,0); }
 }
 
 @keyframes shimmer {
@@ -126,7 +162,7 @@ body {
 
 /* ── Gradient text ── */
 .gradient-text {
-  background: linear-gradient(135deg, #2563eb, #16a34a);
+  background: linear-gradient(135deg, #186874, #004aad);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

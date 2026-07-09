@@ -13,25 +13,25 @@ const fallback: Testimonial[] = [
 
 const AVATARS = [
   "from-blue-500 to-blue-700",
-  "from-green-500 to-green-700",
+  "from-blue-600 to-blue-700",
   "from-blue-600 to-blue-800",
-  "from-green-600 to-green-800",
+  "from-indigo-600 to-indigo-700",
   "from-blue-400 to-blue-600",
-  "from-green-400 to-green-600",
+  "from-blue-500 to-indigo-600",
 ];
 
 const CAT_PILL: Record<string, string> = {
   term:   "bg-blue-100 text-blue-700",
-  health: "bg-green-100 text-green-700",
+  health: "bg-indigo-100 text-indigo-700",
   motor:  "bg-blue-100 text-blue-700",
-  life:   "bg-green-100 text-green-700",
+  life:   "bg-indigo-100 text-indigo-700",
 };
 
 function Stars({ rating }: { rating: number }) {
   return (
     <div className="flex gap-0.5">
       {[1,2,3,4,5].map((s) => (
-        <Star key={s} className={`w-4 h-4 ${s <= rating ? "text-green-500" : "text-gray-200"}`} fill="currentColor" />
+        <Star key={s} className={`w-4 h-4 ${s <= rating ? "text-amber-400" : "text-gray-200"}`} fill="currentColor" />
       ))}
     </div>
   );
@@ -52,17 +52,17 @@ export default function TestimonialsSection({ testimonials }: { testimonials: Te
           <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">Real Stories</p>
           <h2 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">
             What Our{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               Customers Say
             </span>
           </h2>
           <p className="text-gray-500 mt-4 text-lg">Trusted by over 1 lakh Indians across the country</p>
 
           {/* Overall rating pill */}
-          <div className="inline-flex items-center gap-3 mt-6 bg-green-50 border border-green-200 rounded-2xl px-5 py-2.5">
+          <div className="inline-flex items-center gap-3 mt-6 bg-indigo-50 border border-indigo-200 rounded-2xl px-5 py-2.5">
             <div className="flex gap-0.5">
               {[1,2,3,4,5].map(s => (
-                <Star key={s} className="w-4 h-4 text-green-500" fill="currentColor" />
+                <Star key={s} className="w-4 h-4 text-amber-400" fill="currentColor" />
               ))}
             </div>
             <span className="text-sm font-bold text-gray-800">4.8 out of 5</span>

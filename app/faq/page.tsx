@@ -93,7 +93,7 @@ export default function FaqPage() {
           </div>
 
           {/* CTA */}
-          <div className="mt-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-10 text-white text-center relative overflow-hidden">
+          <div className="mt-16 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-6 sm:p-10 text-white text-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none" />
             <p className="text-blue-200 text-sm font-semibold uppercase tracking-widest mb-3">Still Unsure?</p>
             <h3 className="text-3xl font-black mb-3">Talk to an Expert</h3>

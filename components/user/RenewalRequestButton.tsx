@@ -19,7 +19,7 @@ export default function RenewalRequestButton({ name, phone, email, category, pol
       showCancelButton: true,
       confirmButtonText: "Yes, request renewal",
       cancelButtonText: "Cancel",
-      confirmButtonColor: "#1E54D0",
+      confirmButtonColor: "#186874",
     });
 
     if (!result.isConfirmed) return;
@@ -41,18 +41,18 @@ export default function RenewalRequestButton({ name, phone, email, category, pol
         icon: "success",
         title: "Renewal Requested!",
         text: "Our advisor will call you within 30 minutes to help with your renewal.",
-        confirmButtonColor: "#1E54D0",
+        confirmButtonColor: "#186874",
         confirmButtonText: "Got it!",
       });
     } catch {
-      Swal.fire({ icon: "error", title: "Oops!", text: "Something went wrong. Please try again.", confirmButtonColor: "#1E54D0" });
+      Swal.fire({ icon: "error", title: "Oops!", text: "Something went wrong. Please try again.", confirmButtonColor: "#186874" });
     }
   }
 
   return (
     <button
       onClick={handleRenew}
-      style={{ fontSize: 11, fontWeight: 700, color: "#1E54D0", background: "#EFF6FF", border: "1px solid #BFDBFE", borderRadius: 6, padding: "4px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
+      style={{ fontSize: 11, fontWeight: 700, color: "#186874", background: "#eef8f9", border: "1px solid #a2dae0", borderRadius: 6, padding: "4px 10px", cursor: "pointer", whiteSpace: "nowrap" }}
     >
       Renew →
     </button>

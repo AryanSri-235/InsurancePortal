@@ -21,12 +21,12 @@ const calculators = [
     label: "Health Insurance",
     desc: "Find the right health cover for your family",
     icon: <Heart className="w-7 h-7" strokeWidth={1.8} />,
-    from: "from-green-500",
-    to: "to-green-700",
-    shadow: "shadow-green-200",
-    bg: "bg-green-50",
-    border: "hover:border-green-200",
-    text: "text-green-600",
+    from: "from-blue-600",
+    to: "to-indigo-700",
+    shadow: "shadow-indigo-200",
+    bg: "bg-blue-50",
+    border: "hover:border-indigo-200",
+    text: "text-blue-600",
     example: "Family floater from ₹12,000/yr",
   },
   {
@@ -47,12 +47,12 @@ const calculators = [
     label: "Life Insurance",
     desc: "Calculate returns on ULIP & endowment plans",
     icon: <CircleDollarSign className="w-7 h-7" strokeWidth={1.8} />,
-    from: "from-green-500",
-    to: "to-green-700",
-    shadow: "shadow-green-200",
-    bg: "bg-green-50",
-    border: "hover:border-green-200",
-    text: "text-green-600",
+    from: "from-blue-600",
+    to: "to-indigo-700",
+    shadow: "shadow-indigo-200",
+    bg: "bg-blue-50",
+    border: "hover:border-indigo-200",
+    text: "text-blue-600",
     example: "ULIP returns up to 12% p.a.",
   },
 ];
@@ -64,7 +64,7 @@ export default function CalculatorCTA() {
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-green-100/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-100/30 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -117,7 +117,7 @@ export default function CalculatorCTA() {
         </div>
 
         {/* Bottom strip — renewal reminder for existing policyholders */}
-        <div className="bg-gradient-to-r from-blue-600 to-green-700 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
           <div className="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none" />
           <div className="text-white relative">
             <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">Existing Policyholder?</p>

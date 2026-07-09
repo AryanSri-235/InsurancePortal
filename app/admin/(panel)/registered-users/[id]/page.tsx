@@ -418,6 +418,7 @@ export default function UserDetailPage() {
               <button onClick={() => setShowAddForm(true)} className="mt-2 text-blue-600 text-sm font-semibold hover:underline">+ Add first renewal</button>
             </div>
           ) : (
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/60 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
@@ -478,6 +479,7 @@ export default function UserDetailPage() {
                 })}
               </tbody>
             </table>
+            </div>
           )}
         </div>
       )}
@@ -494,6 +496,7 @@ export default function UserDetailPage() {
               <p className="text-sm font-medium">No leads yet</p>
             </div>
           ) : (
+            <div className="overflow-x-auto">
             <table className="w-full text-sm">
               <thead>
                 <tr className="border-b border-gray-100 bg-gray-50/60 text-[11px] font-semibold text-gray-400 uppercase tracking-wide">
@@ -531,6 +534,7 @@ export default function UserDetailPage() {
                 ))}
               </tbody>
             </table>
+            </div>
           )}
         </div>
       )}

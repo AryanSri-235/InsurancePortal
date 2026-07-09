@@ -12,7 +12,7 @@ const reasons = [
 
 const A = {
   blue:  { border: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80",  iconBg: "bg-blue-50",  bar: "#2563eb" },
-  green: { border: "border-green-200 hover:border-green-300 hover:shadow-green-100/80", iconBg: "bg-green-50", bar: "#16a34a" },
+  green: { border: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80", iconBg: "bg-blue-50", bar: "#186874" },
 };
 
 export default function WhyChooseUs() {
@@ -20,7 +20,7 @@ export default function WhyChooseUs() {
     <section className="py-24 bg-gray-50 relative overflow-hidden">
       <BgDecorations variant="whyUs" />
       <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-30 pointer-events-none" />
-      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-green-100 rounded-full blur-3xl opacity-30 pointer-events-none" />
+      <div className="absolute -bottom-40 -left-40 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-30 pointer-events-none" />
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">

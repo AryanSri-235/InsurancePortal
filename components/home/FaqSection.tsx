@@ -61,7 +61,7 @@ export default function FaqSection({ faqs }: { faqs: Faq[] }) {
 
         {/* CTA card */}
         <div className="mt-12 relative overflow-hidden rounded-3xl">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-green-700" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700" />
           <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
           <div className="relative p-8 text-center text-white">
             <p className="text-xl font-bold mb-1">Still have questions?</p>

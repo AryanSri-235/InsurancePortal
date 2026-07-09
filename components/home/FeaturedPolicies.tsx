@@ -10,12 +10,17 @@ type PolicyWithProvider = Policy & {
   provider: Pick<Provider, "name" | "slug" | "logoUrl" | "claimSettlementRatio">;
 };
 
-const CAT: Record<string, { label: string; pill: string; grad: string; border: string; shadow: string }> = {
-  term:   { label: "Term",   pill: "bg-blue-100 text-blue-700",  grad: "from-blue-600 to-blue-700",   border: "group-hover:border-blue-200",  shadow: "group-hover:shadow-blue-100/60"  },
-  health: { label: "Health", pill: "bg-green-100 text-green-700", grad: "from-green-600 to-green-700", border: "group-hover:border-green-200", shadow: "group-hover:shadow-green-100/60" },
-  motor:  { label: "Motor",  pill: "bg-blue-100 text-blue-700",  grad: "from-blue-600 to-blue-700",   border: "group-hover:border-blue-200",  shadow: "group-hover:shadow-blue-100/60"  },
-  life:   { label: "Life",   pill: "bg-green-100 text-green-700", grad: "from-green-600 to-green-700", border: "group-hover:border-green-200", shadow: "group-hover:shadow-green-100/60" },
+const CAT_LABEL: Record<string, string> = {
+  term: "Term", health: "Health", motor: "Motor", life: "Life",
+  travel: "Travel", home: "Home", "personal-accident": "PA",
+  fire: "Fire", marine: "Marine", pension: "Pension",
+  commercial: "Commercial", crop: "Crop", cyber: "Cyber",
 };
+
+const ACCENT = [
+  { pill: "bg-blue-100 text-blue-700",   grad: "from-blue-600 to-blue-700",   border: "group-hover:border-blue-200",   shadow: "group-hover:shadow-blue-100/60"   },
+  { pill: "bg-indigo-100 text-indigo-700", grad: "from-indigo-600 to-indigo-700", border: "group-hover:border-indigo-200", shadow: "group-hover:shadow-indigo-100/60" },
+];
 
 const CARD_W = 300; // px — keeps cards consistent
 
@@ -72,29 +77,36 @@ export default function FeaturedPolicies({ policies }: { policies: PolicyWithPro
             }}
           >
             {items.map((policy, i) => {
-              const cat = CAT[policy.category] ?? CAT.term;
+              const accent = ACCENT[i % 2];
+              const label = CAT_LABEL[policy.category] ?? policy.category;
               return (
                 <div
                   key={`${policy.id}-${i}`}
-                  className={`group flex-shrink-0 flex flex-col bg-white rounded-3xl border-2 border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden ${cat.border} ${cat.shadow}`}
+                  className={`group flex-shrink-0 flex flex-col bg-white rounded-3xl border-2 border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden ${accent.border} ${accent.shadow}`}
                   style={{ width: `${CARD_W}px` }}
                 >
                   {/* Top gradient bar */}
-                  <div className={`h-1.5 w-full bg-gradient-to-r ${cat.grad} flex-shrink-0`} />
+                  <div className={`h-1.5 w-full bg-gradient-to-r ${accent.grad} flex-shrink-0`} />
 
                   <div className="p-5 flex flex-col flex-1">
                     {/* Header */}
                     <div className="flex items-start justify-between mb-4">
                       <div className="flex-1 min-w-0">
-                        <span className={`inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full ${cat.pill} mb-2`}>
-                          {cat.label}
+                        <span className={`inline-block text-[11px] font-bold px-2.5 py-0.5 rounded-full ${accent.pill} mb-2`}>
+                          {label}
                         </span>
                         <h3 className="font-bold text-gray-900 text-sm leading-snug line-clamp-2">{policy.name}</h3>
                         <p className="text-xs text-gray-400 mt-0.5">by {policy.provider.name}</p>
                       </div>
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-100 to-gray-50 border border-gray-100 flex items-center justify-center text-sm font-black text-gray-400 flex-shrink-0 ml-3">
-                        {policy.provider.name.charAt(0)}
-                      </div>
+                      {policy.provider.logoUrl ? (
+                        <div className="w-10 h-10 rounded-xl border border-gray-100 bg-white flex items-center justify-center flex-shrink-0 ml-3 overflow-hidden p-1">
+                          <img src={policy.provider.logoUrl} alt={policy.provider.name} className="max-h-full max-w-full object-contain" />
+                        </div>
+                      ) : (
+                        <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-gray-100 to-gray-50 border border-gray-100 flex items-center justify-center text-sm font-black text-gray-400 flex-shrink-0 ml-3">
+                          {policy.provider.name.charAt(0)}
+                        </div>
+                      )}
                     </div>
 
                     {/* Stats grid */}
@@ -115,9 +127,9 @@ export default function FeaturedPolicies({ policies }: { policies: PolicyWithPro
                         </div>
                       )}
                       {policy.provider.claimSettlementRatio && (
-                        <div className="bg-emerald-50 rounded-xl p-2.5 border border-emerald-100">
+                        <div className="bg-blue-50 rounded-xl p-2.5 border border-blue-100">
                           <p className="text-[10px] text-gray-400 mb-0.5">Claim Ratio</p>
-                          <p className="text-sm font-bold text-emerald-700">{policy.provider.claimSettlementRatio}%</p>
+                          <p className="text-sm font-bold text-blue-700">{policy.provider.claimSettlementRatio}%</p>
                         </div>
                       )}
                       {policy.policyTerm && (
@@ -133,7 +145,7 @@ export default function FeaturedPolicies({ policies }: { policies: PolicyWithPro
                       <ul className="space-y-1 mb-4 flex-1">
                         {policy.keyBenefits.slice(0, 3).map((b, idx) => (
                           <li key={idx} className="flex items-start gap-2 text-[11px] text-gray-600">
-                            <span className="w-3.5 h-3.5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5"><Check className="w-3 h-3" /></span>
+                            <span className="w-3.5 h-3.5 rounded-full bg-blue-100 text-blue-600 flex items-center justify-center flex-shrink-0 mt-0.5"><Check className="w-3 h-3" /></span>
                             <span className="line-clamp-1">{b}</span>
                           </li>
                         ))}
@@ -142,7 +154,7 @@ export default function FeaturedPolicies({ policies }: { policies: PolicyWithPro
 
                     <Link
                       href={`/${policy.category}-insurance/${policy.provider.slug}/${policy.slug}`}
-                      className={`btn-shine mt-auto block w-full text-center bg-gradient-to-r ${cat.grad} text-white py-2.5 rounded-2xl text-xs font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200`}
+                      className={`btn-shine mt-auto block w-full text-center bg-gradient-to-r ${accent.grad} text-white py-2.5 rounded-2xl text-xs font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200`}
                     >
                       View Plan Details →
                     </Link>

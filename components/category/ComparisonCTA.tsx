@@ -21,7 +21,7 @@ export default function ComparisonCTA({ category }: ComparisonCTAProps) {
   return (
     <section className="py-16 bg-white w-full">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gradient-to-br from-blue-600 to-green-700 rounded-3xl p-10 text-white relative overflow-hidden">
+        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-5 sm:p-10 text-white relative overflow-hidden">
           {/* Decorative rings */}
           <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full border-[40px] border-white/10 pointer-events-none" />
           <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full border-[50px] border-white/10 pointer-events-none" />
@@ -53,7 +53,7 @@ export default function ComparisonCTA({ category }: ComparisonCTAProps) {
             <div className="flex flex-col items-center gap-4">
               <Link
                 href={`/compare?type=${category}`}
-                className="inline-block bg-white text-blue-700 font-black text-lg px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200 whitespace-nowrap"
+                className="inline-block bg-white text-blue-700 font-black text-lg px-8 py-4 rounded-2xl shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-200"
               >
                 Compare Plans Side by Side →
               </Link>

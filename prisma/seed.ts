@@ -46,6 +46,7 @@ async function main() {
       about: "Life Insurance Corporation of India is the largest state-owned insurance group and investment company in India, founded in 1956. With over 290 million policies and a pan-India network, LIC remains the most trusted insurer in India.",
       irdaiRegNo: "512", claimSettlementRatio: 98.62, solvencyRatio: 1.76, networkHospitals: 5000,
       categories: ["life", "term", "health"],
+      logoUrl: "/providers-logo/lic-logo.png",
     },
     {
       slug: "hdfc-life", name: "HDFC Life",
@@ -53,6 +54,7 @@ async function main() {
       about: "HDFC Life Insurance Company Limited is a leading long-term life insurance solutions provider offering a range of individual and group insurance solutions. It is a joint venture between HDFC Ltd. and abrdn plc.",
       irdaiRegNo: "101", claimSettlementRatio: 99.5, solvencyRatio: 1.93, networkHospitals: null,
       categories: ["life", "term", "health"],
+      logoUrl: "/providers-logo/hdfc-life.png",
     },
     {
       slug: "star-health", name: "Star Health Insurance",
@@ -60,6 +62,7 @@ async function main() {
       about: "Star Health and Allied Insurance Co. Ltd. is India's first standalone health insurance company, established in 2006. It offers comprehensive retail and corporate health insurance products with a massive hospital network.",
       irdaiRegNo: "129", claimSettlementRatio: 99.06, solvencyRatio: 1.64, networkHospitals: 14000,
       categories: ["health"],
+      logoUrl: "/providers-logo/star-health-insurance.png",
     },
     {
       slug: "icici-lombard", name: "ICICI Lombard",
@@ -67,6 +70,7 @@ async function main() {
       about: "ICICI Lombard is the largest private sector general insurance company in India. It offers a wide array of products including motor, health, travel, home, and commercial insurance backed by technology-driven claim settlement.",
       irdaiRegNo: "115", claimSettlementRatio: 97.9, solvencyRatio: 2.17, networkHospitals: 8700,
       categories: ["health", "motor", "travel"],
+      logoUrl: "/providers-logo/icici-lombard-logo.png",
     },
     {
       slug: "bajaj-allianz", name: "Bajaj Allianz",
@@ -81,6 +85,7 @@ async function main() {
       about: "SBI Life Insurance is a joint venture between State Bank of India and BNP Paribas Cardif. Leveraging SBI's massive branch network, it reaches customers across every corner of India with affordable life and term plans.",
       irdaiRegNo: "111", claimSettlementRatio: 97.05, solvencyRatio: 2.13, networkHospitals: null,
       categories: ["life", "term"],
+      logoUrl: "/providers-logo/sbi-life-insurance-logo.png",
     },
     {
       slug: "niva-bupa", name: "Niva Bupa Health Insurance",
@@ -88,6 +93,7 @@ async function main() {
       about: "Niva Bupa (formerly Max Bupa) is a standalone health insurance company, a joint venture between True North and Bupa, UK. Known for its innovative lock-the-clock feature and customer-centric health plans.",
       irdaiRegNo: "145", claimSettlementRatio: 91.6, solvencyRatio: 1.73, networkHospitals: 10000,
       categories: ["health"],
+      logoUrl: "/providers-logo/niva-bupa-health-insurance.png",
     },
     {
       slug: "tata-aig", name: "Tata AIG",
@@ -95,6 +101,7 @@ async function main() {
       about: "Tata AIG General Insurance Company Ltd. is a joint venture between Tata Group and American International Group (AIG). It offers a wide range of general insurance products with strong claim settlement and a focus on digital ease.",
       irdaiRegNo: "108", claimSettlementRatio: 97.47, solvencyRatio: 1.83, networkHospitals: 7200,
       categories: ["motor", "health", "travel", "home"],
+      logoUrl: "/providers-logo/tata-aig.png",
     },
     {
       slug: "kotak-life", name: "Kotak Life Insurance",
@@ -102,6 +109,7 @@ async function main() {
       about: "Kotak Life Insurance is a wholly owned subsidiary of Kotak Mahindra Bank Ltd. It offers a comprehensive range of life insurance, ULIP, and term plans backed by one of India's most trusted banking brands.",
       irdaiRegNo: "107", claimSettlementRatio: 98.82, solvencyRatio: 3.06, networkHospitals: null,
       categories: ["life", "term"],
+      logoUrl: "/providers-logo/kotak-life-insurance.png",
     },
     {
       slug: "reliance-general", name: "Reliance General Insurance",
@@ -109,6 +117,7 @@ async function main() {
       about: "Reliance General Insurance is one of the leading general insurance companies in India, offering motor, health, home, and travel insurance products with a strong digital claims process.",
       irdaiRegNo: "103", claimSettlementRatio: 98.0, solvencyRatio: 1.57, networkHospitals: 5800,
       categories: ["motor", "health", "travel", "home"],
+      logoUrl: "/providers-logo/reliance-general.png",
     },
     {
       slug: "max-life", name: "Max Life Insurance",
@@ -116,6 +125,7 @@ async function main() {
       about: "Max Life Insurance Co. Ltd. is a joint venture between Max Financial Services and Axis Bank. Known for its industry-leading claim settlement ratio and a customer-first approach to life and term insurance.",
       irdaiRegNo: "104", claimSettlementRatio: 99.65, solvencyRatio: 2.05, networkHospitals: null,
       categories: ["term", "life"],
+      logoUrl: "/providers-logo/max-life-insurance.png",
     },
     {
       slug: "aditya-birla-sunlife", name: "Aditya Birla Sun Life Insurance",
@@ -144,6 +154,7 @@ async function main() {
       about: "HDFC ERGO General Insurance is a joint venture between HDFC Ltd. and ERGO International. It is India's third-largest non-life insurer offering motor, health, travel, home, and commercial insurance.",
       irdaiRegNo: "146", claimSettlementRatio: 99.8, solvencyRatio: 1.67, networkHospitals: 13000,
       categories: ["motor", "health", "travel", "home"],
+      logoUrl: "/providers-logo/hdfc-ergo.png",
     },
     {
       slug: "new-india-assurance", name: "New India Assurance",
@@ -151,6 +162,7 @@ async function main() {
       about: "New India Assurance Company Limited is the largest public-sector non-life insurer in India, established in 1919 and now present in 28 countries. Trusted by millions for motor, health, marine, and property insurance.",
       irdaiRegNo: "190", claimSettlementRatio: 96.5, solvencyRatio: 2.05, networkHospitals: 9000,
       categories: ["motor", "health", "home", "travel"],
+      logoUrl: "/providers-logo/the-new-india-assurance.png",
     },
     {
       slug: "edelweiss-tokio", name: "Edelweiss Tokio Life",
@@ -165,6 +177,7 @@ async function main() {
       about: "PNB MetLife India Insurance Co. Ltd. is a joint venture between Punjab National Bank and MetLife International Holdings LLC. It leverages PNB's vast rural reach to offer affordable term and life insurance.",
       irdaiRegNo: "117", claimSettlementRatio: 97.18, solvencyRatio: 1.97, networkHospitals: null,
       categories: ["term", "life"],
+      logoUrl: "/providers-logo/pnb-metlife.avif",
     },
     {
       slug: "royal-sundaram", name: "Royal Sundaram General Insurance",
@@ -172,6 +185,7 @@ async function main() {
       about: "Royal Sundaram General Insurance is a joint venture between Sundaram Finance and Ageas Insurance. One of the first private-sector general insurers in India, it specialises in motor, health, and home insurance.",
       irdaiRegNo: "102", claimSettlementRatio: 98.5, solvencyRatio: 1.72, networkHospitals: 5200,
       categories: ["motor", "health", "home"],
+      logoUrl: "/providers-logo/royal-sundaram-logo.png",
     },
     {
       slug: "future-generali", name: "Future Generali India Insurance",
@@ -186,7 +200,7 @@ async function main() {
   for (const p of providerDefs) {
     const result = await prisma.provider.upsert({
       where: { slug: p.slug },
-      update: { claimSettlementRatio: p.claimSettlementRatio, solvencyRatio: p.solvencyRatio, networkHospitals: p.networkHospitals },
+      update: { claimSettlementRatio: p.claimSettlementRatio, solvencyRatio: p.solvencyRatio, networkHospitals: p.networkHospitals, logoUrl: (p as any).logoUrl ?? null },
       create: { ...p, isActive: true },
     });
     providers[p.slug] = result;

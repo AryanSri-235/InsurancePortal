@@ -15,8 +15,8 @@ const steps = [
     title: "Compare instantly",
     description: "We surface the best plans from 50+ insurers ranked by price, claim ratio & features.",
     Icon: GitCompare,
-    from: "#16a34a", to: "#15803d",
-    bg: "bg-green-50 border-green-100",
+    from: "#186874", to: "#004aad",
+    bg: "bg-blue-50 border-blue-100",
   },
   {
     num: "03",
@@ -47,7 +47,7 @@ export default function HowItWorks() {
 
         <div className="grid md:grid-cols-3 gap-6 relative">
           {/* Connector */}
-          <div className="hidden md:block absolute top-16 left-[calc(16.67%+32px)] right-[calc(16.67%+32px)] h-px bg-gradient-to-r from-blue-200 via-green-200 to-blue-200 z-0" />
+          <div className="hidden md:block absolute top-16 left-[calc(16.67%+32px)] right-[calc(16.67%+32px)] h-px bg-gradient-to-r from-blue-200 via-indigo-200 to-blue-200 z-0" />
 
           {steps.map((s, i) => (
             <div

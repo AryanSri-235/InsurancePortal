@@ -158,9 +158,15 @@ export default function ProviderGrid({ providers, category }: Props) {
               <div className="p-7 flex flex-col flex-1">
                 {/* Avatar + name */}
                 <div className="flex items-center gap-4 mb-6">
-                  <div className={`w-14 h-14 rounded-2xl border-2 flex items-center justify-center font-black text-xl flex-shrink-0 group-hover:scale-105 transition-transform duration-300 ${accent.avatarBg} ${accent.avatarText}`}>
-                    {p.name.charAt(0)}
-                  </div>
+                  {p.logoUrl ? (
+                    <div className="w-14 h-14 rounded-2xl border-2 border-gray-100 bg-white flex items-center justify-center flex-shrink-0 overflow-hidden p-1 group-hover:scale-105 transition-transform duration-300">
+                      <img src={p.logoUrl} alt={p.name} className="max-h-full max-w-full object-contain" />
+                    </div>
+                  ) : (
+                    <div className={`w-14 h-14 rounded-2xl border-2 flex items-center justify-center font-black text-xl flex-shrink-0 group-hover:scale-105 transition-transform duration-300 ${accent.avatarBg} ${accent.avatarText}`}>
+                      {p.name.charAt(0)}
+                    </div>
+                  )}
                   <div>
                     <h3 className="font-black text-gray-900 text-lg leading-tight">{p.name}</h3>
                     {p.irdaiRegNo && (

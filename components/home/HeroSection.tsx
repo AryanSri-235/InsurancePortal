@@ -14,10 +14,10 @@ const CATEGORIES = [
 ];
 
 const TRUST = [
-  { num: 50,  suffix: "+",    prefix: "",  label: "Insurers",       icon: Building2,   color: "from-blue-600 to-blue-500",   shadow: "shadow-blue-100"  },
-  { num: 500, suffix: "Cr+",  prefix: "₹", label: "Claims Settled", icon: BadgeCheck,  color: "from-green-600 to-green-500", shadow: "shadow-green-100" },
-  { num: 1,   suffix: "L+",   prefix: "",  label: "Customers",      icon: Users,       color: "from-blue-600 to-blue-500",   shadow: "shadow-blue-100"  },
-  { num: 99,  suffix: "%",    prefix: "",  label: "Claim Support",  icon: ShieldCheck, color: "from-green-600 to-green-500", shadow: "shadow-green-100" },
+  { num: 50,  suffix: "+",    prefix: "",  label: "Insurers",       icon: Building2,   color: "from-blue-600 to-blue-700",   shadow: "shadow-blue-100"   },
+  { num: 500, suffix: "Cr+",  prefix: "₹", label: "Claims Settled", icon: BadgeCheck,  color: "from-indigo-600 to-indigo-700", shadow: "shadow-indigo-100" },
+  { num: 1,   suffix: "L+",   prefix: "",  label: "Customers",      icon: Users,       color: "from-blue-600 to-blue-700",   shadow: "shadow-blue-100"   },
+  { num: 99,  suffix: "%",    prefix: "",  label: "Claim Support",  icon: ShieldCheck, color: "from-indigo-600 to-indigo-700", shadow: "shadow-indigo-100" },
 ];
 
 function useCountUp(target: number, duration = 1500, start = false) {
@@ -67,12 +67,12 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section id="lead-form" className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-green-50 min-h-[88vh] flex items-center">
+    <section id="lead-form" className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50 min-h-[88vh] flex items-center">
       <BgDecorations variant="hero" />
       <div className="absolute top-[-80px] left-[-80px] w-[420px] h-[420px] rounded-full opacity-40 blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, #bfdbfe, transparent)" }} />
       <div className="absolute bottom-[-60px] right-[-60px] w-[360px] h-[360px] rounded-full opacity-30 blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, #c7d2fe, transparent)" }} />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, #93c5fd, transparent)" }} />
-      <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: "radial-gradient(circle, #6366f1 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+      <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: "radial-gradient(circle, #186874 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
         <div className="grid lg:grid-cols-2 gap-14 items-center">
@@ -80,7 +80,7 @@ export default function HeroSection() {
           {/* ── Left copy ── */}
           <div className="animate-fade-in-up">
             <div className="inline-flex items-center gap-2 mb-7 px-4 py-2 rounded-full border border-blue-200 bg-blue-50 text-blue-700 text-sm font-semibold shadow-sm">
-              <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+              <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
               India's #1 Insurance Comparison Platform
             </div>
 
@@ -90,7 +90,7 @@ export default function HeroSection() {
                 <span className="relative z-10 bg-blue-600 bg-clip-text text-transparent">Matters</span>
                 <svg className="absolute -bottom-1 left-0 w-full overflow-visible" height="8" viewBox="0 0 220 8" fill="none">
                   <path d="M2 6 Q55 1 110 5 Q165 9 218 4" stroke="url(#hg)" strokeWidth="3" strokeLinecap="round"/>
-                  <defs><linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#3b82f6"/><stop offset="100%" stopColor="#6366f1"/></linearGradient></defs>
+                  <defs><linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#186874"/><stop offset="100%" stopColor="#004aad"/></linearGradient></defs>
                 </svg>
               </span>
               {" "}Most.
@@ -117,7 +117,7 @@ export default function HeroSection() {
           {/* ── Right — Form card ── */}
           <div className="animate-fade-in-up delay-200">
             <div className="relative">
-              <div className="absolute -inset-1 bg-gradient-to-br from-blue-200 to-green-200 rounded-3xl blur-xl opacity-60" />
+              <div className="absolute -inset-1 bg-gradient-to-br from-blue-200 to-indigo-200 rounded-3xl blur-xl opacity-60" />
               <div className="relative bg-white rounded-3xl shadow-2xl shadow-blue-100 border border-gray-100 p-8">
                 <div className="mb-7">
                   <h2 className="text-2xl font-bold text-gray-900">Get Free Quote</h2>
@@ -128,7 +128,7 @@ export default function HeroSection() {
 
                 <div className="mt-5 flex items-center gap-3 pt-5 border-t border-gray-100">
                   <div className="flex -space-x-2">
-                    {[["bg-blue-500","A"],["bg-green-500","R"],["bg-blue-600","S"]].map(([c,l], i) => (
+                    {[["bg-blue-500","A"],["bg-indigo-600","R"],["bg-blue-600","S"]].map(([c,l], i) => (
                       <div key={i} className={`w-7 h-7 rounded-full ${c} border-2 border-white flex items-center justify-center text-white text-xs font-bold`}>{l}</div>
                     ))}
                   </div>

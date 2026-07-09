@@ -5,9 +5,9 @@ import { Handshake, ClipboardList, SmilePlus, BadgeCheck } from "lucide-react";
 
 const stats = [
   { value: 50,  suffix: "+",  label: "Insurance Partners", icon: Handshake,     color: "text-blue-600",  bg: "bg-blue-50  border-blue-100"  },
-  { value: 200, suffix: "+",  label: "Plans Available",    icon: ClipboardList, color: "text-green-600", bg: "bg-green-50 border-green-100" },
+  { value: 200, suffix: "+",  label: "Plans Available",    icon: ClipboardList, color: "text-blue-600",  bg: "bg-indigo-50 border-indigo-100" },
   { value: 1,   suffix: "L+", label: "Happy Customers",   icon: SmilePlus,     color: "text-blue-600",  bg: "bg-blue-50  border-blue-100"  },
-  { value: 99,  suffix: "%",  label: "Claim Support Rate", icon: BadgeCheck,    color: "text-green-600", bg: "bg-green-50 border-green-100" },
+  { value: 99,  suffix: "%",  label: "Claim Support Rate", icon: BadgeCheck,    color: "text-blue-600",  bg: "bg-indigo-50 border-indigo-100" },
 ];
 
 function Counter({ target, suffix, color }: { target: number; suffix: string; color: string }) {
