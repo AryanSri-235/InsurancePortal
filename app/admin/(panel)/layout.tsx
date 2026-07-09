@@ -7,7 +7,11 @@ export default async function AdminPanelLayout({ children }: { children: React.R
   if (!session) redirect("/admin/login");
 
   return (
-    <AdminShell session={{ name: session.name, role: session.role }}>
+    <AdminShell session={{
+      name: session.name,
+      role: session.role,
+      bankName: session.bankName ?? undefined,
+    }}>
       {children}
     </AdminShell>
   );

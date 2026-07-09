@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Check } from "lucide-react";
 
 interface Props {
   name: string;
@@ -44,9 +45,7 @@ export default function ContactSupportForm({ name, phone, email }: Props) {
     return (
       <div style={{ padding: "32px 20px", display: "flex", flexDirection: "column", alignItems: "center", gap: 10 }}>
         <div style={{ width: 44, height: 44, borderRadius: 12, background: "#ECFDF5", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <svg width="22" height="22" fill="none" stroke="#059669" viewBox="0 0 24 24" strokeWidth={2}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-          </svg>
+          <Check width="22" height="22" stroke="#059669" strokeWidth={2} />
         </div>
         <p style={{ fontSize: 14, fontWeight: 700, color: "#065F46" }}>Message sent!</p>
         <p style={{ fontSize: 12, color: "#6B7280", textAlign: "center", maxWidth: 280 }}>

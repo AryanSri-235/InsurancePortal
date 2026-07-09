@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { type LucideIcon, Phone, Mail, MessageCircle, MapPin, CheckCircle, Zap } from "lucide-react";
 
-const channels = [
-  { icon: "📞", title: "Call Us Free", detail: "1800-XXX-XXXX", sub: "Mon–Sat · 9 AM–7 PM", color: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80", iconBg: "bg-blue-50", from: "#3b82f6", to: "#6366f1" },
-  { icon: "✉️", title: "Email Us", detail: "support@insuranceportal.in", sub: "Response within 24 hours", color: "border-emerald-200 hover:border-emerald-300 hover:shadow-emerald-100/80", iconBg: "bg-emerald-50", from: "#10b981", to: "#14b8a6" },
-  { icon: "💬", title: "WhatsApp", detail: "Chat on WhatsApp", sub: "Typical reply in < 5 min", color: "border-green-200 hover:border-green-300 hover:shadow-green-100/80", iconBg: "bg-green-50", from: "#22c55e", to: "#16a34a" },
-  { icon: "📍", title: "Office", detail: "Mumbai, Maharashtra", sub: "India 400001", color: "border-orange-200 hover:border-orange-300 hover:shadow-orange-100/80", iconBg: "bg-orange-50", from: "#f97316", to: "#f59e0b" },
+const channels: { icon: LucideIcon; title: string; detail: string; sub: string; color: string; iconBg: string; from: string; to: string }[] = [
+  { icon: Phone, title: "Call Us Free", detail: "1800-XXX-XXXX", sub: "Mon–Sat · 9 AM–7 PM", color: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80", iconBg: "bg-blue-50", from: "#3b82f6", to: "#6366f1" },
+  { icon: Mail, title: "Email Us", detail: "support@insuranceportal.in", sub: "Response within 24 hours", color: "border-emerald-200 hover:border-emerald-300 hover:shadow-emerald-100/80", iconBg: "bg-emerald-50", from: "#10b981", to: "#14b8a6" },
+  { icon: MessageCircle, title: "WhatsApp", detail: "Chat on WhatsApp", sub: "Typical reply in < 5 min", color: "border-green-200 hover:border-green-300 hover:shadow-green-100/80", iconBg: "bg-green-50", from: "#22c55e", to: "#16a34a" },
+  { icon: MapPin, title: "Office", detail: "Mumbai, Maharashtra", sub: "India 400001", color: "border-orange-200 hover:border-orange-300 hover:shadow-orange-100/80", iconBg: "bg-orange-50", from: "#f97316", to: "#f59e0b" },
 ];
 
 const subjects = ["Term Insurance Query", "Health Insurance Query", "Motor Insurance Query", "Life Insurance Query", "Claim Assistance", "Policy Renewal", "Other"];
@@ -63,8 +64,8 @@ export default function ContactPage() {
             {channels.map((c, i) => (
               <div key={c.title} style={{ animationDelay: `${i * 0.08}s` }}
                 className={`animate-fade-in-up group bg-white border-2 rounded-3xl p-6 text-center card-hover hover:shadow-2xl transition-all duration-300 ${c.color}`}>
-                <div className={`w-12 h-12 mx-auto rounded-2xl ${c.iconBg} flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300`}>
-                  {c.icon}
+                <div className={`w-12 h-12 mx-auto rounded-2xl ${c.iconBg} flex items-center justify-center mb-4 group-hover:scale-110 transition-transform duration-300`}>
+                  <c.icon className="w-6 h-6" style={{ color: c.from }} />
                 </div>
                 <p className="font-bold text-gray-900 text-sm mb-1">{c.title}</p>
                 <p className="text-blue-600 font-semibold text-xs mb-1">{c.detail}</p>
@@ -84,7 +85,9 @@ export default function ContactPage() {
             <div className="lg:col-span-3 bg-white border-2 border-gray-100 rounded-3xl p-8 shadow-xl shadow-gray-100/60">
               {sent ? (
                 <div className="text-center py-16">
-                  <div className="w-20 h-20 mx-auto bg-emerald-50 border-2 border-emerald-200 rounded-3xl flex items-center justify-center text-4xl mb-6">✅</div>
+                  <div className="w-20 h-20 mx-auto bg-emerald-50 border-2 border-emerald-200 rounded-3xl flex items-center justify-center mb-6">
+                    <CheckCircle className="w-8 h-8 text-emerald-600" />
+                  </div>
                   <h3 className="text-2xl font-black text-gray-900 mb-3">Message Sent!</h3>
                   <p className="text-gray-500 mb-6">Our team will get back to you within 24 hours.</p>
                   <button onClick={() => setSent(false)} className="text-blue-600 font-semibold text-sm hover:underline">Send another message</button>
@@ -166,7 +169,7 @@ export default function ContactPage() {
               </div>
 
               <div className="bg-amber-50 border-2 border-amber-100 rounded-3xl p-6">
-                <p className="font-bold text-gray-900 mb-2">⚡ Fastest way to get help</p>
+                <p className="font-bold text-gray-900 mb-2"><Zap className="w-4 h-4 inline mr-1" /> Fastest way to get help</p>
                 <p className="text-sm text-gray-500">Call us directly on <span className="font-bold text-blue-600">1800-XXX-XXXX</span> (free). Average wait time: under 2 minutes.</p>
               </div>
             </div>

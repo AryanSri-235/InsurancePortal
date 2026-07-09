@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
+import { Plus, X, Search, ShieldCheck, Star, Pencil, ExternalLink } from "lucide-react";
 
 interface Policy {
   id: number;
@@ -15,13 +16,36 @@ interface Policy {
   provider: { name: string };
 }
 
-const CATEGORY_OPTIONS = ["term", "health", "motor", "life"];
+const CATEGORY_OPTIONS: Record<string, string> = {
+  term:              "Term Insurance",
+  life:              "Life Insurance",
+  health:            "Health Insurance",
+  motor:             "Motor Insurance",
+  travel:            "Travel Insurance",
+  home:              "Home Insurance",
+  "personal-accident": "Personal Accident",
+  fire:              "Fire Insurance",
+  marine:            "Marine Insurance",
+  pension:           "Pension / Retirement",
+  commercial:        "Commercial / Business",
+  crop:              "Crop Insurance",
+  cyber:             "Cyber Insurance",
+};
 
 const CAT_BADGE: Record<string, string> = {
-  term:   "bg-blue-50 text-blue-700 border-blue-100",
-  health: "bg-emerald-50 text-emerald-700 border-emerald-100",
-  motor:  "bg-orange-50 text-orange-700 border-orange-100",
-  life:   "bg-violet-50 text-violet-700 border-violet-100",
+  term:              "bg-blue-50 text-blue-700 border-blue-100",
+  life:              "bg-violet-50 text-violet-700 border-violet-100",
+  health:            "bg-emerald-50 text-emerald-700 border-emerald-100",
+  motor:             "bg-orange-50 text-orange-700 border-orange-100",
+  travel:            "bg-sky-50 text-sky-700 border-sky-100",
+  home:              "bg-amber-50 text-amber-700 border-amber-100",
+  "personal-accident": "bg-red-50 text-red-700 border-red-100",
+  fire:              "bg-rose-50 text-rose-700 border-rose-100",
+  marine:            "bg-cyan-50 text-cyan-700 border-cyan-100",
+  pension:           "bg-teal-50 text-teal-700 border-teal-100",
+  commercial:        "bg-indigo-50 text-indigo-700 border-indigo-100",
+  crop:              "bg-lime-50 text-lime-700 border-lime-100",
+  cyber:             "bg-purple-50 text-purple-700 border-purple-100",
 };
 
 const inputCls = "border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors text-gray-700 placeholder-gray-400";
@@ -97,9 +121,7 @@ export default function PoliciesPage() {
           href="/admin/policies/new"
           className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
+          <Plus className="w-4 h-4" />
           Add Policy
         </Link>
       </div>
@@ -110,9 +132,7 @@ export default function PoliciesPage() {
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Search</span>
             <div className="relative">
-              <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Search by name or slug..."
@@ -131,8 +151,8 @@ export default function PoliciesPage() {
               className={inputCls}
             >
               <option value="">All Categories</option>
-              {CATEGORY_OPTIONS.map((c) => (
-                <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)}</option>
+              {Object.entries(CATEGORY_OPTIONS).map(([val, label]) => (
+                <option key={val} value={val}>{label}</option>
               ))}
             </select>
           </div>
@@ -156,9 +176,7 @@ export default function PoliciesPage() {
               onClick={() => setFilters({ category: "", search: "", featured: "" })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-3.5 h-3.5" />
               Clear
             </button>
           )}
@@ -196,9 +214,7 @@ export default function PoliciesPage() {
                 <tr>
                   <td colSpan={8}>
                     <div className="flex flex-col items-center justify-center py-14 text-gray-400">
-                      <svg className="w-8 h-8 mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                      </svg>
+                      <ShieldCheck className="w-8 h-8 mb-2 opacity-40" />
                       <p className="text-sm font-medium">No policies found</p>
                       {hasFilters && <p className="text-xs mt-1">Try adjusting your filters</p>}
                     </div>
@@ -230,9 +246,7 @@ export default function PoliciesPage() {
                         title={policy.isFeatured ? "Remove from featured" : "Mark as featured"}
                         className={`w-7 h-7 rounded-lg flex items-center justify-center mx-auto transition-all hover:scale-110 disabled:opacity-40 ${policy.isFeatured ? "bg-amber-50 border border-amber-200" : "bg-gray-50 border border-gray-200"}`}
                       >
-                        <svg className={`w-3.5 h-3.5 ${policy.isFeatured ? "text-amber-500 fill-amber-500" : "text-gray-300"}`} viewBox="0 0 24 24">
-                          <path d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z" />
-                        </svg>
+                        <Star className={`w-3.5 h-3.5 ${policy.isFeatured ? "text-amber-500 fill-amber-500" : "text-gray-300"}`} />
                       </button>
                     </td>
                     <td className="px-4 py-3.5 text-center">
@@ -250,9 +264,7 @@ export default function PoliciesPage() {
                           href={`/admin/policies/${policy.id}/edit`}
                           className="text-xs font-semibold text-gray-600 border border-gray-200 bg-gray-50 hover:bg-white hover:border-gray-300 px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1"
                         >
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
-                          </svg>
+                          <Pencil className="w-3 h-3" />
                           Edit
                         </Link>
                         <Link
@@ -260,9 +272,7 @@ export default function PoliciesPage() {
                           target="_blank"
                           className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
                         >
-                          <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
+                          <ExternalLink className="w-3 h-3" />
                         </Link>
                       </div>
                     </td>

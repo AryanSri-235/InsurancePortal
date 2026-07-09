@@ -1,17 +1,19 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { ClipboardList, Target, Handshake, Lock, Cookie, BadgeCheck, Calendar, Phone, Shield } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 export const metadata: Metadata = { title: "Privacy Policy | InsurancePortal" };
 
-const sections = [
-  { icon: "📋", title: "Information We Collect", body: "We collect information you provide directly: name, email, phone, date of birth, and insurance preferences. We also automatically collect device and usage data such as IP address, browser type, pages visited, and referral URLs for analytics and improvement." },
-  { icon: "🎯", title: "How We Use Your Information", body: "Your information is used to: provide insurance comparison services; connect you with relevant insurers; personalise your experience; respond to your enquiries; send policy reminders and relevant offers (with consent); comply with legal obligations; and improve our platform." },
-  { icon: "🤝", title: "Information Sharing", body: "We share your information with: (a) IRDAI-registered insurers when you request a quote; (b) service providers assisting us in operating the platform; (c) legal authorities when required by law. We do NOT sell your personal data to third parties." },
-  { icon: "🔐", title: "Data Security", body: "We implement 256-bit SSL encryption, secure data centres, and strict access controls to protect your personal information. While no system is 100% secure, we take all reasonable steps to protect your data from unauthorised access or disclosure." },
-  { icon: "🍪", title: "Cookies", body: "We use cookies and similar technologies to remember your preferences, analyse traffic, and improve our services. You can control cookie settings through your browser. Disabling cookies may affect some functionality." },
-  { icon: "✅", title: "Your Rights", body: "You have the right to: access the personal data we hold; request correction of inaccurate data; request deletion of your data (subject to legal obligations); withdraw consent for marketing; and lodge a complaint with the relevant data protection authority." },
-  { icon: "📅", title: "Data Retention", body: "We retain your personal information as long as necessary to provide our services and comply with legal obligations. Lead and enquiry data is typically retained for 3 years. You may request deletion at any time by contacting us." },
-  { icon: "📞", title: "Contact Us", body: "For privacy-related queries, please contact our Data Protection Officer at: privacy@insuranceportal.in or write to InsurancePortal, Mumbai, Maharashtra, India 400001." },
+const sections: { icon: LucideIcon; title: string; body: string }[] = [
+  { icon: ClipboardList, title: "Information We Collect", body: "We collect information you provide directly: name, email, phone, date of birth, and insurance preferences. We also automatically collect device and usage data such as IP address, browser type, pages visited, and referral URLs for analytics and improvement." },
+  { icon: Target, title: "How We Use Your Information", body: "Your information is used to: provide insurance comparison services; connect you with relevant insurers; personalise your experience; respond to your enquiries; send policy reminders and relevant offers (with consent); comply with legal obligations; and improve our platform." },
+  { icon: Handshake, title: "Information Sharing", body: "We share your information with: (a) IRDAI-registered insurers when you request a quote; (b) service providers assisting us in operating the platform; (c) legal authorities when required by law. We do NOT sell your personal data to third parties." },
+  { icon: Lock, title: "Data Security", body: "We implement 256-bit SSL encryption, secure data centres, and strict access controls to protect your personal information. While no system is 100% secure, we take all reasonable steps to protect your data from unauthorised access or disclosure." },
+  { icon: Cookie, title: "Cookies", body: "We use cookies and similar technologies to remember your preferences, analyse traffic, and improve our services. You can control cookie settings through your browser. Disabling cookies may affect some functionality." },
+  { icon: BadgeCheck, title: "Your Rights", body: "You have the right to: access the personal data we hold; request correction of inaccurate data; request deletion of your data (subject to legal obligations); withdraw consent for marketing; and lodge a complaint with the relevant data protection authority." },
+  { icon: Calendar, title: "Data Retention", body: "We retain your personal information as long as necessary to provide our services and comply with legal obligations. Lead and enquiry data is typically retained for 3 years. You may request deletion at any time by contacting us." },
+  { icon: Phone, title: "Contact Us", body: "For privacy-related queries, please contact our Data Protection Officer at: privacy@insuranceportal.in or write to InsurancePortal, Mumbai, Maharashtra, India 400001." },
 ];
 
 export default function PrivacyPolicyPage() {
@@ -34,7 +36,7 @@ export default function PrivacyPolicyPage() {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Summary card */}
           <div className="bg-blue-50 border-2 border-blue-100 rounded-3xl p-7 mb-10 flex gap-4">
-            <span className="text-3xl flex-shrink-0">🛡️</span>
+            <Shield className="w-10 h-10 text-blue-600 flex-shrink-0" />
             <div>
               <p className="font-black text-gray-900 mb-1">The short version</p>
               <p className="text-sm text-blue-800 leading-relaxed">
@@ -45,20 +47,23 @@ export default function PrivacyPolicyPage() {
 
           {/* Sections */}
           <div className="space-y-4">
-            {sections.map((s, i) => (
-              <div key={i} style={{ animationDelay: `${i * 0.05}s` }}
-                className="animate-fade-in-up bg-white border-2 border-gray-100 rounded-3xl p-7 hover:border-blue-100 hover:shadow-lg transition-all duration-300">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-blue-50 border-2 border-blue-100 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">
-                    {s.icon}
-                  </div>
-                  <div>
-                    <h2 className="font-black text-gray-900 text-lg mb-2">{i + 1}. {s.title}</h2>
-                    <p className="text-gray-500 leading-relaxed text-sm">{s.body}</p>
+            {sections.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <div key={i} style={{ animationDelay: `${i * 0.05}s` }}
+                  className="animate-fade-in-up bg-white border-2 border-gray-100 rounded-3xl p-7 hover:border-blue-100 hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-blue-50 border-2 border-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h2 className="font-black text-gray-900 text-lg mb-2">{i + 1}. {s.title}</h2>
+                      <p className="text-gray-500 leading-relaxed text-sm">{s.body}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           <div className="mt-10 text-center">

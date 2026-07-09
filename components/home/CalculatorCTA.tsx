@@ -1,18 +1,15 @@
 import Link from "next/link";
 import BgDecorations from "./BgDecorations";
+import { ShieldCheck, Heart, Car, CircleDollarSign, ChevronRight } from "lucide-react";
 
 const calculators = [
   {
     type: "term",
     label: "Term Insurance",
     desc: "How much life cover do you need?",
-    icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-      </svg>
-    ),
+    icon: <ShieldCheck className="w-7 h-7" strokeWidth={1.8} />,
     from: "from-blue-500",
-    to: "to-indigo-600",
+    to: "to-blue-700",
     shadow: "shadow-blue-200",
     bg: "bg-blue-50",
     border: "hover:border-blue-200",
@@ -23,52 +20,39 @@ const calculators = [
     type: "health",
     label: "Health Insurance",
     desc: "Find the right health cover for your family",
-    icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
-      </svg>
-    ),
-    from: "from-emerald-500",
-    to: "to-teal-600",
-    shadow: "shadow-emerald-200",
-    bg: "bg-emerald-50",
-    border: "hover:border-emerald-200",
-    text: "text-emerald-600",
+    icon: <Heart className="w-7 h-7" strokeWidth={1.8} />,
+    from: "from-green-500",
+    to: "to-green-700",
+    shadow: "shadow-green-200",
+    bg: "bg-green-50",
+    border: "hover:border-green-200",
+    text: "text-green-600",
     example: "Family floater from ₹12,000/yr",
   },
   {
     type: "motor",
     label: "Motor Insurance",
     desc: "Instant car & bike insurance quotes",
-    icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M9 17a2 2 0 11-4 0 2 2 0 014 0zM19 17a2 2 0 11-4 0 2 2 0 014 0z" />
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M13 16V6a1 1 0 00-1-1H4a1 1 0 00-1 1v10l1 1h10M13 16l2-5h3l2 4.5" />
-      </svg>
-    ),
-    from: "from-orange-500",
-    to: "to-amber-600",
-    shadow: "shadow-orange-200",
-    bg: "bg-orange-50",
-    border: "hover:border-orange-200",
-    text: "text-orange-600",
+    icon: <Car className="w-7 h-7" strokeWidth={1.8} />,
+    from: "from-blue-500",
+    to: "to-blue-700",
+    shadow: "shadow-blue-200",
+    bg: "bg-blue-50",
+    border: "hover:border-blue-200",
+    text: "text-blue-600",
     example: "Third party from ₹2,094/yr",
   },
   {
     type: "life",
     label: "Life Insurance",
     desc: "Calculate returns on ULIP & endowment plans",
-    icon: (
-      <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-      </svg>
-    ),
-    from: "from-violet-500",
-    to: "to-purple-600",
-    shadow: "shadow-violet-200",
-    bg: "bg-violet-50",
-    border: "hover:border-violet-200",
-    text: "text-violet-600",
+    icon: <CircleDollarSign className="w-7 h-7" strokeWidth={1.8} />,
+    from: "from-green-500",
+    to: "to-green-700",
+    shadow: "shadow-green-200",
+    bg: "bg-green-50",
+    border: "hover:border-green-200",
+    text: "text-green-600",
     example: "ULIP returns up to 12% p.a.",
   },
 ];
@@ -80,7 +64,7 @@ export default function CalculatorCTA() {
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none">
         <div className="absolute top-0 right-0 w-96 h-96 bg-blue-100/40 rounded-full blur-3xl" />
-        <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-100/30 rounded-full blur-3xl" />
+        <div className="absolute bottom-0 left-0 w-64 h-64 bg-green-100/30 rounded-full blur-3xl" />
       </div>
 
       <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -91,7 +75,7 @@ export default function CalculatorCTA() {
           </p>
           <h2 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight mb-4">
             Calculate Your{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 to-blue-700 bg-clip-text text-transparent">
               Premium Instantly
             </span>
           </h2>
@@ -126,16 +110,14 @@ export default function CalculatorCTA() {
 
               <span className={`inline-flex items-center gap-1 text-sm font-bold ${calc.text} group-hover:gap-2 transition-all duration-200`}>
                 Calculate now
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                </svg>
+                <ChevronRight className="w-4 h-4" />
               </span>
             </Link>
           ))}
         </div>
 
         {/* Bottom strip — renewal reminder for existing policyholders */}
-        <div className="bg-gradient-to-r from-blue-600 to-indigo-700 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
+        <div className="bg-gradient-to-r from-blue-600 to-green-700 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden">
           <div className="absolute right-0 top-0 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none" />
           <div className="text-white relative">
             <p className="text-blue-200 text-xs font-semibold uppercase tracking-widest mb-1">Existing Policyholder?</p>

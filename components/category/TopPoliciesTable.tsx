@@ -1,5 +1,6 @@
 import { Policy, Provider } from "@prisma/client";
 import Link from "next/link";
+import { Trophy, Tag } from "lucide-react";
 
 type PolicyWithProvider = Policy & {
   provider: Pick<Provider, "name" | "slug" | "claimSettlementRatio" | "logoUrl">;
@@ -16,22 +17,22 @@ const CAT_LABEL: Record<string, string> = {
 };
 
 const CAT_LEFT_BORDER: Record<string, string> = {
-  term: "border-l-blue-500", health: "border-l-emerald-500",
-  motor: "border-l-orange-500", life: "border-l-violet-500",
+  term: "border-l-blue-500", health: "border-l-green-500",
+  motor: "border-l-blue-500", life: "border-l-green-500",
 };
 
 const CAT_PROVIDER_PILL: Record<string, string> = {
   term: "bg-blue-50 text-blue-700 border border-blue-100",
-  health: "bg-emerald-50 text-emerald-700 border border-emerald-100",
-  motor: "bg-orange-50 text-orange-700 border border-orange-100",
-  life: "bg-violet-50 text-violet-700 border border-violet-100",
+  health: "bg-green-50 text-green-700 border border-green-100",
+  motor: "bg-blue-50 text-blue-700 border border-blue-100",
+  life: "bg-green-50 text-green-700 border border-green-100",
 };
 
 const CAT_BTN: Record<string, string> = {
   term: "bg-blue-600 hover:bg-blue-700",
-  health: "bg-emerald-600 hover:bg-emerald-700",
-  motor: "bg-orange-500 hover:bg-orange-600",
-  life: "bg-violet-600 hover:bg-violet-700",
+  health: "bg-green-600 hover:bg-green-700",
+  motor: "bg-blue-600 hover:bg-blue-700",
+  life: "bg-green-600 hover:bg-green-700",
 };
 
 function formatAmount(value: number | string | null | undefined): string {
@@ -85,13 +86,13 @@ export default function TopPoliciesTable({ policies, category }: Props) {
                       {policy.name}
                     </h3>
                     {tag === "popular" && (
-                      <span className="flex-shrink-0 text-[11px] font-bold bg-amber-50 text-amber-700 border border-amber-200 px-2.5 py-0.5 rounded-full whitespace-nowrap">
-                        🏆 Most Popular
+                      <span className="inline-flex items-center gap-1 flex-shrink-0 text-[11px] font-bold bg-green-50 text-green-700 border border-green-200 px-2.5 py-0.5 rounded-full whitespace-nowrap">
+                        <Trophy className="w-3 h-3" /> Most Popular
                       </span>
                     )}
                     {tag === "value" && (
-                      <span className="flex-shrink-0 text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-0.5 rounded-full whitespace-nowrap">
-                        💰 Best Value
+                      <span className="inline-flex items-center gap-1 flex-shrink-0 text-[11px] font-bold bg-blue-50 text-blue-700 border border-blue-200 px-2.5 py-0.5 rounded-full whitespace-nowrap">
+                        <Tag className="w-3 h-3" /> Best Value
                       </span>
                     )}
                   </div>
@@ -137,7 +138,7 @@ export default function TopPoliciesTable({ policies, category }: Props) {
                 {/* RIGHT — CSR + button stacked */}
                 <div className="flex-shrink-0 flex flex-col items-end gap-2.5">
                   {policy.provider.claimSettlementRatio != null && (
-                    <span className="bg-emerald-50 text-emerald-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-emerald-200 whitespace-nowrap">
+                    <span className="bg-green-50 text-green-700 text-xs font-bold px-3 py-1.5 rounded-xl border border-green-200 whitespace-nowrap">
                       {policy.provider.claimSettlementRatio}% CSR
                     </span>
                   )}

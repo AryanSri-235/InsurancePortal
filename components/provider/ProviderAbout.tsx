@@ -1,4 +1,5 @@
 import { Provider } from "@prisma/client";
+import { Check, Star, Award, BadgeCheck } from "lucide-react";
 
 interface ProviderAboutProps {
   provider: Provider;
@@ -13,17 +14,17 @@ const milestones = [
 
 const awards = [
   {
-    icon: "⭐",
+    icon: <Star className="w-5 h-5" />,
     text: "IRDA Best Insurer Award 2023",
-    color: "bg-amber-100 text-amber-800 border border-amber-200",
+    color: "bg-green-100 text-green-800 border border-green-200",
   },
   {
-    icon: "🏆",
+    icon: <Award className="w-5 h-5" />,
     text: "Economic Times Insurer of the Year",
     color: "bg-blue-100 text-blue-800 border border-blue-200",
   },
   {
-    icon: "✅",
+    icon: <BadgeCheck className="w-5 h-5" />,
     text: "ISO 9001:2015 Certified",
     color: "bg-green-100 text-green-800 border border-green-200",
   },
@@ -119,19 +120,7 @@ export default function ProviderAbout({ provider }: ProviderAboutProps) {
                 <ul className="space-y-3">
                   {provider.claimSettlementRatio != null && (
                     <li className="flex items-start gap-2 text-sm text-gray-600">
-                      <svg
-                        className="w-4 h-4 text-green-500 mt-0.5 shrink-0"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
+                      <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" strokeWidth={2.5} />
                       <span>
                         Claim settlement ratio:{" "}
                         <strong className="text-gray-800">
@@ -143,19 +132,7 @@ export default function ProviderAbout({ provider }: ProviderAboutProps) {
 
                   {provider.solvencyRatio != null && (
                     <li className="flex items-start gap-2 text-sm text-gray-600">
-                      <svg
-                        className="w-4 h-4 text-green-500 mt-0.5 shrink-0"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
+                      <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" strokeWidth={2.5} />
                       <span>
                         Solvency ratio:{" "}
                         <strong className="text-gray-800">
@@ -167,19 +144,7 @@ export default function ProviderAbout({ provider }: ProviderAboutProps) {
 
                   {provider.networkHospitals != null && (
                     <li className="flex items-start gap-2 text-sm text-gray-600">
-                      <svg
-                        className="w-4 h-4 text-green-500 mt-0.5 shrink-0"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        strokeWidth={2.5}
-                      >
-                        <path
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          d="M5 13l4 4L19 7"
-                        />
-                      </svg>
+                      <Check className="w-4 h-4 text-green-500 mt-0.5 shrink-0" strokeWidth={2.5} />
                       <span>
                         Network:{" "}
                         <strong className="text-gray-800">

@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Swal from "sweetalert2";
+import { CheckCircle } from "lucide-react";
 
 const TYPES = [
   { value: "term",   label: "Term" },
@@ -31,7 +32,7 @@ export default function LeadCaptureStrip() {
         setForm({ name: "", phone: "", email: "", category: "term" });
         Swal.fire({
           icon: "success",
-          title: "We'll call you shortly! 📞",
+          title: "We'll call you shortly!",
           text: "Our advisor will reach out within 30 minutes with your free quote.",
           confirmButtonColor: "#2563eb",
           confirmButtonText: "Got it!",
@@ -48,7 +49,7 @@ export default function LeadCaptureStrip() {
   }
 
   return (
-    <section className="relative overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700 py-16">
+    <section className="relative overflow-hidden bg-gradient-to-br from-blue-700 via-blue-600 to-green-700 py-16">
       <div className="absolute -top-20 -left-20 w-64 h-64 rounded-full border-[32px] border-white/5 pointer-events-none" />
       <div className="absolute -bottom-24 -right-10 w-80 h-80 rounded-full border-[32px] border-white/5 pointer-events-none" />
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border-[1px] border-white/10 pointer-events-none" />
@@ -122,9 +123,7 @@ export default function LeadCaptureStrip() {
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 mt-5 text-blue-200 text-xs">
             {["100% Free", "No Spam Calls", "IRDAI Registered", "256-bit SSL Secure"].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
-                <svg className="w-3.5 h-3.5 text-emerald-400" fill="currentColor" viewBox="0 0 20 20">
-                  <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"/>
-                </svg>
+                <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
                 {t}
               </span>
             ))}

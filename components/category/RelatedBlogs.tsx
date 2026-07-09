@@ -1,26 +1,28 @@
+import { Clock } from "lucide-react";
+
 interface RelatedBlogsProps {
   category: string;
 }
 
 const categoryColorMap: Record<string, string> = {
   term: "bg-blue-600",
-  health: "bg-emerald-600",
-  motor: "bg-orange-500",
-  life: "bg-purple-600",
+  health: "bg-green-600",
+  motor: "bg-blue-600",
+  life: "bg-green-600",
 };
 
 const categoryAccentMap: Record<string, string> = {
   term: "text-blue-600 bg-blue-50",
-  health: "text-emerald-600 bg-emerald-50",
-  motor: "text-orange-500 bg-orange-50",
-  life: "text-purple-600 bg-purple-50",
+  health: "text-green-600 bg-green-50",
+  motor: "text-blue-600 bg-blue-50",
+  life: "text-green-600 bg-green-50",
 };
 
 const categoryButtonMap: Record<string, string> = {
   term: "text-blue-600 hover:text-blue-800",
-  health: "text-emerald-600 hover:text-emerald-800",
-  motor: "text-orange-500 hover:text-orange-700",
-  life: "text-purple-600 hover:text-purple-800",
+  health: "text-green-600 hover:text-green-800",
+  motor: "text-blue-600 hover:text-blue-800",
+  life: "text-green-600 hover:text-green-800",
 };
 
 const blogData: Record<string, string[]> = {
@@ -97,17 +99,7 @@ export default function RelatedBlogs({ category }: RelatedBlogsProps) {
                 {/* Meta */}
                 <div className="flex items-center gap-3 text-xs text-gray-400 mb-3">
                   <span className="flex items-center gap-1">
-                    <svg
-                      className="w-3.5 h-3.5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2}
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6l4 2" />
-                      <circle cx="12" cy="12" r="10" />
-                    </svg>
+                    <Clock className="w-3.5 h-3.5" />
                     5 min read
                   </span>
                   <span>•</span>

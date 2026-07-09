@@ -9,8 +9,21 @@ export async function GET() {
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const providers = await db.provider.findMany({
-    where: { isActive: true },
-    select: { id: true, name: true, categories: true },
+    where: session.role === "ram" && session.bankName
+      ? { name: { contains: session.bankName, mode: "insensitive" } }
+      : {},
+    select: {
+      id: true, name: true, slug: true, logoUrl: true,
+      categories: true, isActive: true, claimSettlementRatio: true,
+      irdaiRegNo: true,
+      policies: {
+        select: {
+          id: true, name: true, slug: true, category: true,
+          subCategory: true, premiumStartsFrom: true, isFeatured: true, isActive: true,
+        },
+        orderBy: { name: "asc" },
+      },
+    },
     orderBy: { name: "asc" },
   });
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { Faq } from "@prisma/client";
 import BgDecorations from "./BgDecorations";
+import { Plus, Phone } from "lucide-react";
 
 const fallbackFaqs: Faq[] = [
   { id: 1, question: "What is term insurance and how does it work?", answer: "Term insurance is a pure life insurance product that provides financial protection to your family if you pass away during the policy term. If you survive the term, no benefit is paid (unless you opted for return of premium). It's the most affordable way to get maximum life cover — a ₹1 Crore cover can cost as little as ₹490/month.", category: "term", providerId: null, sortOrder: 1 },
@@ -44,9 +45,7 @@ export default function FaqSection({ faqs }: { faqs: Faq[] }) {
                     {faq.question}
                   </span>
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${isOpen ? "bg-blue-600 text-white rotate-45" : "bg-gray-100 text-gray-400 hover:bg-gray-200"}`}>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-                    </svg>
+                    <Plus className="w-4 h-4" strokeWidth={2.5} />
                   </div>
                 </button>
                 <div className={`transition-all duration-300 ${isOpen ? "max-h-60 opacity-100" : "max-h-0 opacity-0"} overflow-hidden`}>
@@ -62,7 +61,7 @@ export default function FaqSection({ faqs }: { faqs: Faq[] }) {
 
         {/* CTA card */}
         <div className="mt-12 relative overflow-hidden rounded-3xl">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-indigo-700" />
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-700 via-blue-600 to-green-700" />
           <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
           <div className="relative p-8 text-center text-white">
             <p className="text-xl font-bold mb-1">Still have questions?</p>
@@ -71,9 +70,7 @@ export default function FaqSection({ faqs }: { faqs: Faq[] }) {
               href="tel:+918000000000"
               className="inline-flex items-center gap-2 bg-white text-blue-700 font-bold px-7 py-3.5 rounded-2xl text-sm hover:bg-blue-50 transition-colors shadow-xl"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-              </svg>
+              <Phone className="w-4 h-4" />
               Call Free: 1800-XXX-XXXX
             </a>
           </div>

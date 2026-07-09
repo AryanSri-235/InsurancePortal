@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { ChevronDown } from "lucide-react";
 
 interface ProviderFaqProps {
   providerName: string;
@@ -60,24 +61,13 @@ export default function ProviderFaq({ providerName, category }: ProviderFaqProps
                 aria-expanded={openIndex === index}
               >
                 <span className="font-semibold pr-4">{faq.q}</span>
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  className="flex-shrink-0 transition-transform duration-200"
+                <ChevronDown
+                  className="flex-shrink-0 transition-transform duration-200 w-5 h-5"
                   style={{
                     transform: openIndex === index ? "rotate(180deg)" : "rotate(0deg)",
                   }}
                   aria-hidden="true"
-                >
-                  <polyline points="6 9 12 15 18 9" />
-                </svg>
+                />
               </button>
 
               {openIndex === index && (

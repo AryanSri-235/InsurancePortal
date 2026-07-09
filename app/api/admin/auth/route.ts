@@ -38,14 +38,23 @@ export async function POST(req: NextRequest) {
       data: { lastLoginAt: new Date() },
     });
 
+    const ROLE_MAP: Record<string, string> = {
+      SUPER_ADMIN: "superadmin", ADMIN: "superadmin",
+      EDITOR: "superadmin", VIEWER: "superadmin",
+      RAM: "ram", SALES: "sales", RENEWAL: "renewal",
+    };
+    const normalizedRole = ROLE_MAP[user.role] ?? user.role.toLowerCase().replace(/_/g, "");
+
     const token = await signToken({
       id: user.id,
       email: user.email,
       name: user.name,
-      role: user.role,
+      role: normalizedRole,
+      bankName: user.bankName,
+      maxPolicies: user.maxPolicies,
     });
 
-    const res = NextResponse.json({ success: true, user: { name: user.name, email: user.email, role: user.role } });
+    const res = NextResponse.json({ success: true, user: { name: user.name, email: user.email, role: user.role, bankName: user.bankName } });
     const opts = cookieOptions();
     res.cookies.set(opts.name, token, opts);
     return res;

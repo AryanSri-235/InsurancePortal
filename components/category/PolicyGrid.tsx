@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { Policy, Provider } from "@prisma/client";
+import { Check, Star } from "lucide-react";
 
 type PolicyWithProvider = Policy & {
   provider: Pick<Provider, "name" | "slug" | "claimSettlementRatio">;
@@ -11,36 +12,36 @@ const CAT: Record<string, {
   avatarBg: string; avatarText: string;
 }> = {
   term: {
-    bar: "from-blue-500 to-indigo-500",
+    bar: "from-blue-500 to-blue-600",
     providerPill: "bg-blue-50 text-blue-700 border border-blue-100",
     border: "hover:border-blue-200 hover:shadow-blue-100/80",
     shadow: "shadow-blue-100",
-    btnFrom: "from-blue-600", btnTo: "to-indigo-600", btnShadow: "shadow-blue-200",
+    btnFrom: "from-blue-600", btnTo: "to-blue-700", btnShadow: "shadow-blue-200",
     avatarBg: "bg-blue-50 border-blue-200", avatarText: "text-blue-600",
   },
   health: {
-    bar: "from-emerald-500 to-teal-500",
-    providerPill: "bg-emerald-50 text-emerald-700 border border-emerald-100",
-    border: "hover:border-emerald-200 hover:shadow-emerald-100/80",
-    shadow: "shadow-emerald-100",
-    btnFrom: "from-emerald-600", btnTo: "to-teal-600", btnShadow: "shadow-emerald-200",
-    avatarBg: "bg-emerald-50 border-emerald-200", avatarText: "text-emerald-600",
+    bar: "from-green-500 to-green-600",
+    providerPill: "bg-green-50 text-green-700 border border-green-100",
+    border: "hover:border-green-200 hover:shadow-green-100/80",
+    shadow: "shadow-green-100",
+    btnFrom: "from-green-600", btnTo: "to-green-700", btnShadow: "shadow-green-200",
+    avatarBg: "bg-green-50 border-green-200", avatarText: "text-green-600",
   },
   motor: {
-    bar: "from-orange-500 to-amber-500",
-    providerPill: "bg-orange-50 text-orange-700 border border-orange-100",
-    border: "hover:border-orange-200 hover:shadow-orange-100/80",
-    shadow: "shadow-orange-100",
-    btnFrom: "from-orange-500", btnTo: "to-amber-500", btnShadow: "shadow-orange-200",
-    avatarBg: "bg-orange-50 border-orange-200", avatarText: "text-orange-600",
+    bar: "from-blue-500 to-blue-600",
+    providerPill: "bg-blue-50 text-blue-700 border border-blue-100",
+    border: "hover:border-blue-200 hover:shadow-blue-100/80",
+    shadow: "shadow-blue-100",
+    btnFrom: "from-blue-600", btnTo: "to-blue-700", btnShadow: "shadow-blue-200",
+    avatarBg: "bg-blue-50 border-blue-200", avatarText: "text-blue-600",
   },
   life: {
-    bar: "from-violet-500 to-purple-500",
-    providerPill: "bg-violet-50 text-violet-700 border border-violet-100",
-    border: "hover:border-violet-200 hover:shadow-violet-100/80",
-    shadow: "shadow-violet-100",
-    btnFrom: "from-violet-600", btnTo: "to-purple-600", btnShadow: "shadow-violet-200",
-    avatarBg: "bg-violet-50 border-violet-200", avatarText: "text-violet-600",
+    bar: "from-green-500 to-green-600",
+    providerPill: "bg-green-50 text-green-700 border border-green-100",
+    border: "hover:border-green-200 hover:shadow-green-100/80",
+    shadow: "shadow-green-100",
+    btnFrom: "from-green-600", btnTo: "to-green-700", btnShadow: "shadow-green-200",
+    avatarBg: "bg-green-50 border-green-200", avatarText: "text-green-600",
   },
 };
 
@@ -77,8 +78,8 @@ export default function PolicyGrid({ policies, category }: { policies: PolicyWit
                 </div>
               </div>
               {policy.isFeatured && (
-                <span className="flex-shrink-0 bg-amber-50 text-amber-600 border-2 border-amber-200 text-xs font-black px-2.5 py-1 rounded-xl whitespace-nowrap">
-                  ★ Top Pick
+                <span className="inline-flex items-center gap-1 flex-shrink-0 bg-green-50 text-green-700 border-2 border-green-200 text-xs font-black px-2.5 py-1 rounded-xl whitespace-nowrap">
+                  <Star className="w-3 h-3 fill-current" /> Top Pick
                 </span>
               )}
             </div>
@@ -105,9 +106,9 @@ export default function PolicyGrid({ policies, category }: { policies: PolicyWit
                 </div>
               )}
               {policy.provider.claimSettlementRatio && (
-                <div className="bg-emerald-50 border-2 border-emerald-100 rounded-2xl p-3">
+                <div className="bg-green-50 border-2 border-green-100 rounded-2xl p-3">
                   <p className="text-xs text-gray-400 mb-1">Claim Ratio</p>
-                  <p className="text-sm font-black text-emerald-700">{policy.provider.claimSettlementRatio}%</p>
+                  <p className="text-sm font-black text-green-700">{policy.provider.claimSettlementRatio}%</p>
                 </div>
               )}
               {policy.eligibilityAge && (
@@ -123,10 +124,8 @@ export default function PolicyGrid({ policies, category }: { policies: PolicyWit
               <ul className="space-y-2 mb-6 flex-1">
                 {policy.keyBenefits.slice(0, 3).map((b, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-xs text-gray-600">
-                    <div className="w-4 h-4 rounded-full bg-emerald-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <svg className="w-2.5 h-2.5 text-emerald-600" fill="currentColor" viewBox="0 0 20 20">
-                        <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                      </svg>
+                    <div className="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                      <Check className="w-2.5 h-2.5 text-green-600" />
                     </div>
                     {b}
                   </li>

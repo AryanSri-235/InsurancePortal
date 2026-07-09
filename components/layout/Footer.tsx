@@ -1,13 +1,14 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import NewsletterForm from "@/components/NewsletterForm";
+import { Phone, Shield, TrendingUp, HeartPulse, Car, Lock, BadgeCheck, Award, Users } from "lucide-react";
 
 const insurance = [
-  { label: "Term Insurance", href: "/term-insurance", icon: "🛡️" },
-  { label: "Life Insurance", href: "/life-insurance", icon: "💰" },
-  { label: "Health Insurance", href: "/health-insurance", icon: "🏥" },
-  { label: "Motor Insurance", href: "/motor-insurance", icon: "🚗" },
+  { label: "Term Insurance",   href: "/term-insurance",   icon: Shield },
+  { label: "Life Insurance",   href: "/life-insurance",   icon: TrendingUp },
+  { label: "Health Insurance", href: "/health-insurance", icon: HeartPulse },
+  { label: "Motor Insurance",  href: "/motor-insurance",  icon: Car },
 ];
 
 const company = [
@@ -64,10 +65,10 @@ const socials = [
 ];
 
 const badges = [
-  { icon: "🔒", label: "256-bit SSL" },
-  { icon: "✅", label: "IRDAI Registered" },
-  { icon: "🏆", label: "4.8★ Rated" },
-  { icon: "👥", label: "1L+ Customers" },
+  { icon: Lock,       label: "256-bit SSL" },
+  { icon: BadgeCheck, label: "IRDAI Registered" },
+  { icon: Award,      label: "4.8â˜… Rated" },
+  { icon: Users,      label: "1L+ Customers" },
 ];
 
 export default function Footer() {
@@ -101,28 +102,27 @@ export default function Footer() {
 
           {/* Brand column */}
           <div className="md:col-span-4">
-            <Link href="/" className="flex items-center gap-3 mb-5 group w-fit">
-              <div className="w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center shadow-lg shadow-blue-900/50 group-hover:scale-105 transition-transform">
-                <span className="text-white font-black text-sm">IP</span>
-              </div>
-              <div>
-                <span className="text-xl font-black text-white">Insurance<span className="text-blue-400">Portal</span></span>
-                <p className="text-[10px] text-gray-600 uppercase tracking-widest font-semibold">IRDAI Registered</p>
+            <Link href="/" className="flex items-center mb-5 group w-fit">
+              <div className="bg-white rounded-xl px-3 py-1.5 group-hover:opacity-90 transition-opacity">
+                <img src="/logo-zoomed.png" alt="NPS Insurance.Life" className="h-10 w-auto object-contain" />
               </div>
             </Link>
 
             <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-xs">
-              India&apos;s trusted insurance comparison platform. Find the right policy at the best price — 100% free, no spam.
+              India&apos;s trusted insurance comparison platform. Find the right policy at the best price â€” 100% free, no spam.
             </p>
 
             {/* Trust badges */}
             <div className="grid grid-cols-2 gap-2 mb-6">
-              {badges.map((b) => (
+              {badges.map((b) => {
+                const Icon = b.icon;
+                return (
                 <div key={b.label} className="flex items-center gap-2 bg-gray-900 border border-gray-800 rounded-xl px-3 py-2">
-                  <span className="text-base">{b.icon}</span>
+                  <Icon className="w-4 h-4" />
                   <span className="text-xs font-semibold text-gray-400">{b.label}</span>
                 </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Social icons */}
@@ -144,17 +144,21 @@ export default function Footer() {
           <div className="md:col-span-2">
             <h3 className="text-white font-bold mb-5 text-sm tracking-widest uppercase">Insurance</h3>
             <ul className="space-y-3">
-              {insurance.map((c) => (
+              {insurance.map((c) => {
+                const Icon = c.icon;
+                return (
                 <li key={c.href}>
                   <Link
                     href={c.href}
                     className="flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-all duration-200 group"
                   >
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-xs">→</span>
+                    <Icon className="w-4 h-4" />
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-xs">â†’</span>
                     {c.label}
                   </Link>
                 </li>
-              ))}
+                );
+              })}
             </ul>
           </div>
 
@@ -165,7 +169,7 @@ export default function Footer() {
               {company.map((c) => (
                 <li key={c.href}>
                   <Link href={c.href} className="text-sm text-gray-500 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-xs">→</span>
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-xs">â†’</span>
                     {c.label}
                   </Link>
                 </li>
@@ -195,15 +199,13 @@ export default function Footer() {
                   href="/#lead-form"
                   className="text-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold px-4 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg shadow-blue-900/40 btn-shine"
                 >
-                  Get Free Quote →
+                  Get Free Quote â†’
                 </Link>
                 <a
                   href="tel:1800XXXXXXX"
                   className="flex items-center justify-center gap-2 text-sm font-semibold text-blue-400 hover:text-white border border-blue-800/60 py-2.5 rounded-xl hover:border-blue-500 transition-all duration-200"
                 >
-                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" />
-                  </svg>
+                  <Phone className="w-4 h-4" />
                   Call 1800-XXX-XXXX (Free)
                 </a>
               </div>
@@ -214,7 +216,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-gray-800/50 mt-14 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-600 order-2 md:order-1">
-            © 2026 InsurancePortal. All rights reserved.
+            Â© 2026 InsurancePortal. All rights reserved.
           </p>
           <p className="text-xs text-gray-700 text-center max-w-lg order-1 md:order-2 leading-relaxed">
             Insurance is the subject matter of solicitation. Please read the policy brochure carefully before concluding the sale. IRDAI Reg. No. WBA000000
@@ -224,7 +226,7 @@ export default function Footer() {
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
               All systems operational
             </span>
-            <span className="text-gray-800">·</span>
+            <span className="text-gray-800">Â·</span>
             <span>v2.0</span>
           </div>
         </div>
@@ -232,3 +234,5 @@ export default function Footer() {
     </footer>
   );
 }
+
+

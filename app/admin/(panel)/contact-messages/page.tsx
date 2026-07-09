@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { Search, X, Mail, ChevronDown, Trash2 } from "lucide-react";
 
 interface Message {
   id: number;
@@ -88,9 +89,7 @@ export default function ContactMessagesPage() {
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Search</span>
             <div className="relative">
-              <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Name, email, phone..."
@@ -118,9 +117,7 @@ export default function ContactMessagesPage() {
               onClick={() => setFilters({ search: "", subject: "", page: 1 })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-3.5 h-3.5" />
               Clear
             </button>
           )}
@@ -144,9 +141,7 @@ export default function ContactMessagesPage() {
           ))
         ) : messages.length === 0 ? (
           <div className="bg-white rounded-xl border border-gray-200 py-16 flex flex-col items-center text-gray-400">
-            <svg className="w-10 h-10 mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-            </svg>
+            <Mail className="w-10 h-10 mb-3 opacity-30" />
             <p className="font-medium text-sm">No messages yet</p>
             {hasFilters && <p className="text-xs mt-1">Try adjusting your filters</p>}
           </div>
@@ -183,9 +178,7 @@ export default function ContactMessagesPage() {
                     <span className="text-xs text-gray-400 whitespace-nowrap hidden sm:block">
                       {new Date(msg.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                     </span>
-                    <svg className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
+                    <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform ${isOpen ? "rotate-180" : ""}`} />
                   </div>
                 </div>
 
@@ -223,9 +216,7 @@ export default function ContactMessagesPage() {
                           href={`mailto:${msg.email}?subject=Re: ${encodeURIComponent(msg.subject ?? "Your enquiry")}`}
                           className="flex items-center gap-1.5 text-xs font-semibold text-blue-600 hover:text-blue-700 border border-blue-100 bg-blue-50 hover:bg-blue-100 px-3 py-1.5 rounded-lg transition-colors"
                         >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                          </svg>
+                          <Mail className="w-3.5 h-3.5" />
                           Reply
                         </a>
                         <button
@@ -233,9 +224,7 @@ export default function ContactMessagesPage() {
                           disabled={deletingId === msg.id}
                           className="flex items-center gap-1.5 text-xs font-semibold text-red-500 hover:text-red-700 border border-red-100 bg-red-50 hover:bg-red-100 px-3 py-1.5 rounded-lg transition-colors disabled:opacity-50"
                         >
-                          <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
-                          </svg>
+                          <Trash2 className="w-3.5 h-3.5" />
                           Delete
                         </button>
                       </div>

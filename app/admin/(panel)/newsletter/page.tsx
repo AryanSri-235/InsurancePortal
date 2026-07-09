@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import { Download, Search, X, Mail } from "lucide-react";
 
 interface Subscriber {
   id: number;
@@ -87,9 +88,7 @@ export default function NewsletterPage() {
           }}
           className="flex items-center gap-2 text-sm font-semibold text-gray-600 border border-gray-200 hover:border-gray-300 bg-white hover:bg-gray-50 px-4 py-2 rounded-lg transition-colors"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4" />
-          </svg>
+          <Download className="w-4 h-4" />
           Export CSV
         </button>
       </div>
@@ -117,9 +116,7 @@ export default function NewsletterPage() {
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Search</span>
             <div className="relative">
-              <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Search email..."
@@ -147,9 +144,7 @@ export default function NewsletterPage() {
               onClick={() => setFilters({ search: "", source: "", page: 1 })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 border border-red-100 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-3.5 h-3.5" />
               Clear
             </button>
           )}
@@ -184,9 +179,7 @@ export default function NewsletterPage() {
                 <tr>
                   <td colSpan={5}>
                     <div className="flex flex-col items-center py-14 text-gray-400">
-                      <svg className="w-8 h-8 mb-2 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                      </svg>
+                      <Mail className="w-8 h-8 mb-2 opacity-30" />
                       <p className="text-sm font-medium">No subscribers yet</p>
                     </div>
                   </td>

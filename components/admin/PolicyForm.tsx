@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { X, XCircle, Loader2 } from "lucide-react";
 
 export interface PolicyFormData {
   name: string;
@@ -27,13 +28,52 @@ const EMPTY: PolicyFormData = {
   isFeatured: false, isActive: true,
 };
 
-const CATEGORIES = ["term", "health", "motor", "life"];
+const CATEGORIES = [
+  "term",
+  "life",
+  "health",
+  "motor",
+  "travel",
+  "home",
+  "personal-accident",
+  "fire",
+  "marine",
+  "pension",
+  "commercial",
+  "crop",
+  "cyber",
+];
+
+const CAT_LABELS: Record<string, string> = {
+  "term":              "Term Insurance",
+  "life":              "Life Insurance",
+  "health":            "Health Insurance",
+  "motor":             "Motor Insurance",
+  "travel":            "Travel Insurance",
+  "home":              "Home Insurance",
+  "personal-accident": "Personal Accident",
+  "fire":              "Fire Insurance",
+  "marine":            "Marine Insurance",
+  "pension":           "Pension / Retirement",
+  "commercial":        "Commercial / Business",
+  "crop":              "Crop Insurance",
+  "cyber":             "Cyber Insurance",
+};
 
 const CAT_SUB: Record<string, string[]> = {
-  term:   ["Pure Term", "Return of Premium", "Increasing Cover"],
-  health: ["Individual", "Family Floater", "Senior Citizen", "Critical Illness"],
-  motor:  ["Comprehensive", "Third Party", "Own Damage"],
-  life:   ["Whole Life", "ULIP", "Endowment", "Money Back"],
+  term:              ["Pure Term", "Return of Premium", "Increasing Cover"],
+  life:              ["Whole Life", "ULIP", "Endowment", "Money Back"],
+  health:            ["Individual", "Family Floater", "Senior Citizen", "Critical Illness", "Group Health"],
+  motor:             ["Comprehensive", "Third Party", "Own Damage", "Electric Vehicle"],
+  travel:            ["Domestic", "International", "Student", "Senior Citizen Travel", "Group Travel"],
+  home:              ["Building", "Contents", "Building + Contents"],
+  "personal-accident": ["Individual", "Group", "Workmen Compensation"],
+  fire:              ["Standard Fire", "Industrial All Risk", "Consequential Loss"],
+  marine:            ["Cargo", "Hull", "Inland Transit"],
+  pension:           ["Immediate Annuity", "Deferred Annuity", "NPS Tier I", "NPS Tier II"],
+  commercial:        ["General Liability", "Professional Indemnity", "Directors & Officers"],
+  crop:              ["PMFBY", "Weather Based", "Horticulture"],
+  cyber:             ["Individual", "Business", "Data Breach"],
 };
 
 const inputCls = "w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors text-gray-800 placeholder-gray-400";
@@ -73,9 +113,7 @@ function ListEditor({
               onClick={() => onChange(values.filter((_, j) => j !== i))}
               className="text-gray-300 hover:text-red-400 transition-colors flex-shrink-0"
             >
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-4 h-4" />
             </button>
           </div>
         ))}
@@ -142,9 +180,7 @@ export default function PolicyForm({ providers, initialData, onSubmit, saving, e
     <form onSubmit={handleSubmit} className="space-y-5">
       {error && (
         <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-          <svg className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
-            <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
-          </svg>
+          <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
           <p className="text-red-600 text-sm">{error}</p>
         </div>
       )}
@@ -208,7 +244,7 @@ export default function PolicyForm({ providers, initialData, onSubmit, saving, e
               className={inputCls}
             >
               {CATEGORIES.map(c => (
-                <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1)} Insurance</option>
+                <option key={c} value={c}>{CAT_LABELS[c] ?? c}</option>
               ))}
             </select>
           </div>
@@ -378,10 +414,7 @@ export default function PolicyForm({ providers, initialData, onSubmit, saving, e
         >
           {saving ? (
             <>
-              <svg className="w-4 h-4 animate-spin" fill="none" viewBox="0 0 24 24">
-                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-              </svg>
+              <Loader2 className="w-4 h-4 animate-spin" />
               Saving...
             </>
           ) : submitLabel}

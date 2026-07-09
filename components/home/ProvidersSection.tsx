@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRef } from "react";
 import BgDecorations from "./BgDecorations";
+import { ChevronRight } from "lucide-react";
 
 interface Provider {
   id: number;
@@ -14,16 +15,16 @@ interface Provider {
 }
 
 const AVATAR_COLORS = [
-  "from-blue-500 to-indigo-600",
-  "from-emerald-500 to-teal-600",
-  "from-orange-500 to-amber-600",
-  "from-violet-500 to-purple-600",
-  "from-rose-500 to-pink-600",
-  "from-cyan-500 to-blue-600",
-  "from-green-500 to-emerald-600",
-  "from-indigo-500 to-violet-600",
-  "from-amber-500 to-orange-600",
-  "from-sky-500 to-cyan-600",
+  "from-blue-500 to-blue-700",
+  "from-green-500 to-green-700",
+  "from-blue-600 to-blue-800",
+  "from-green-600 to-green-800",
+  "from-blue-400 to-blue-600",
+  "from-green-400 to-green-600",
+  "from-blue-500 to-blue-700",
+  "from-green-500 to-green-700",
+  "from-blue-600 to-blue-800",
+  "from-green-400 to-green-600",
 ];
 
 const CAT_HREF: Record<string, string> = {
@@ -51,7 +52,7 @@ export default function ProvidersSection({ providers }: { providers: Provider[] 
           </p>
           <h2 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight mb-4">
             India&apos;s Top{" "}
-            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
               Insurance Brands
             </span>
           </h2>
@@ -126,9 +127,7 @@ export default function ProvidersSection({ providers }: { providers: Provider[] 
             className="inline-flex items-center gap-2 text-blue-600 font-semibold text-sm border-2 border-blue-100 bg-blue-50 hover:bg-blue-100 hover:border-blue-200 px-6 py-3 rounded-xl transition-all duration-200"
           >
             View All Providers
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-            </svg>
+            <ChevronRight className="w-4 h-4" />
           </Link>
         </div>
       </div>

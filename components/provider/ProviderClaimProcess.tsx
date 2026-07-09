@@ -1,4 +1,5 @@
 import { Provider } from "@prisma/client";
+import { Check, Phone, Mail } from "lucide-react";
 
 interface Props {
   provider: Provider;
@@ -99,7 +100,7 @@ export default function ProviderClaimProcess({ provider, category }: Props) {
                   <li key={step.number} className="flex gap-4">
                     {/* Step number + dashed connector */}
                     <div className="flex flex-col items-center">
-                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-sm shadow-md">
+                      <div className="flex-shrink-0 w-10 h-10 rounded-full bg-gradient-to-br from-blue-500 to-blue-700 flex items-center justify-center text-white font-bold text-sm shadow-md">
                         {step.number}
                       </div>
                       {!isLast && (
@@ -134,21 +135,7 @@ export default function ProviderClaimProcess({ provider, category }: Props) {
                   <li key={doc} className="flex items-start gap-3">
                     {/* Checkbox-style icon */}
                     <span className="flex-shrink-0 mt-0.5 w-5 h-5 rounded border-2 border-blue-500 bg-blue-50 flex items-center justify-center">
-                      <svg
-                        className="w-3 h-3 text-blue-600"
-                        viewBox="0 0 12 12"
-                        fill="none"
-                        xmlns="http://www.w3.org/2000/svg"
-                        aria-hidden="true"
-                      >
-                        <path
-                          d="M2 6l3 3 5-5"
-                          stroke="currentColor"
-                          strokeWidth="1.8"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                        />
-                      </svg>
+                      <Check className="w-3 h-3 text-blue-600" />
                     </span>
                     <span className="text-sm text-gray-700">{doc}</span>
                   </li>
@@ -157,7 +144,7 @@ export default function ProviderClaimProcess({ provider, category }: Props) {
             </div>
 
             {/* Card B: Claim Helpline */}
-            <div className="rounded-2xl p-6 bg-gradient-to-br from-blue-600 to-indigo-700 text-white">
+            <div className="rounded-2xl p-6 bg-gradient-to-br from-blue-600 to-blue-800 text-white">
               <p className="text-xs font-semibold uppercase tracking-widest text-blue-200 mb-1">
                 24x7 Claim Support
               </p>
@@ -167,18 +154,7 @@ export default function ProviderClaimProcess({ provider, category }: Props) {
                 {/* Phone */}
                 <div className="flex items-center gap-3">
                   <span className="flex-shrink-0 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                    <svg
-                      className="w-4 h-4 text-white"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M6.62 10.79a15.053 15.053 0 006.59 6.59l2.2-2.2a1 1 0 011.01-.24 11.47 11.47 0 003.58.57 1 1 0 011 1V20a1 1 0 01-1 1C10.18 21 3 13.82 3 5a1 1 0 011-1h3.5a1 1 0 011 1c0 1.25.2 2.45.57 3.58a1 1 0 01-.25 1.01l-2.2 2.2z"
-                        fill="currentColor"
-                      />
-                    </svg>
+                    <Phone className="w-4 h-4 text-white" />
                   </span>
                   <span className="text-sm font-medium">
                     1800-XXX-XXXX (Toll Free)
@@ -188,18 +164,7 @@ export default function ProviderClaimProcess({ provider, category }: Props) {
                 {/* Email */}
                 <div className="flex items-center gap-3">
                   <span className="flex-shrink-0 w-8 h-8 rounded-full bg-white/20 flex items-center justify-center">
-                    <svg
-                      className="w-4 h-4 text-white"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      xmlns="http://www.w3.org/2000/svg"
-                      aria-hidden="true"
-                    >
-                      <path
-                        d="M20 4H4a2 2 0 00-2 2v12a2 2 0 002 2h16a2 2 0 002-2V6a2 2 0 00-2-2zm0 2l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"
-                        fill="currentColor"
-                      />
-                    </svg>
+                    <Mail className="w-4 h-4 text-white" />
                   </span>
                   <span className="text-sm font-medium break-all">
                     {claimsEmail}

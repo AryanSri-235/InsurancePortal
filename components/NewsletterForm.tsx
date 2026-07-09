@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Check } from "lucide-react";
 
 export default function NewsletterForm({
   source = "other",
@@ -32,7 +33,7 @@ export default function NewsletterForm({
   if (state === "done") {
     return (
       <p className="text-sm font-semibold text-emerald-400 flex items-center gap-2">
-        <span className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-white text-xs">✓</span>
+        <span className="w-5 h-5 bg-emerald-500 rounded-full flex items-center justify-center text-white"><Check className="w-5 h-5" /></span>
         You&apos;re subscribed!
       </p>
     );

@@ -1,4 +1,4 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import { getUserSession } from "@/lib/user/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
@@ -6,6 +6,7 @@ import LogoutButton from "@/components/user/LogoutButton";
 import QuickQuoteButton from "@/components/user/QuickQuoteButton";
 import RenewalRequestButton from "@/components/user/RenewalRequestButton";
 import ContactSupportForm from "@/components/user/ContactSupportForm";
+import { Home, Calendar, FileText, User, MessageSquare, ExternalLink, AlertTriangle, Clipboard, Copy, type LucideIcon } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -60,14 +61,6 @@ const STATUS_CONFIG: Record<string, { label: string; bg: string; text: string; b
   lost:      { label: "Closed",    bg: "#FFF1F2", text: "#9F1239", border: "#FECDD3" },
 };
 
-function NavIcon({ path }: { path: string }) {
-  return (
-    <svg width="15" height="15" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={1.8} strokeLinecap="round" strokeLinejoin="round">
-      <path d={path} />
-    </svg>
-  );
-}
-
 export default async function AccountPage() {
   const session = await getUserSession();
   if (!session) redirect("/login");
@@ -93,7 +86,7 @@ export default async function AccountPage() {
       .acct-logout:hover { color:#F87171 !important; }
     `}</style>
 
-      {/* ── Sidebar ── */}
+      {/* â”€â”€ Sidebar â”€â”€ */}
       <aside style={{
         width: 220, flexShrink: 0, background: "#0B1120",
         display: "flex", flexDirection: "column",
@@ -101,13 +94,10 @@ export default async function AccountPage() {
       }}>
         {/* Logo */}
         <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", gap: 8, textDecoration: "none" }}>
-            <div style={{ width: 28, height: 28, background: "#1E54D0", borderRadius: 7, display: "flex", alignItems: "center", justifyContent: "center" }}>
-              <span style={{ color: "#fff", fontWeight: 900, fontSize: 10, letterSpacing: "-0.5px" }}>IP</span>
+          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
+            <div style={{ background: "#fff", borderRadius: 8, padding: "4px 8px" }}>
+              <img src="/logo-zoomed.png" alt="NPS Insurance.Life" style={{ height: 36, width: "auto", objectFit: "contain", display: "block" }} />
             </div>
-            <span style={{ color: "#fff", fontWeight: 700, fontSize: 14, letterSpacing: "-0.3px" }}>
-              Insurance<span style={{ color: "#4D80F0" }}>Portal</span>
-            </span>
           </Link>
         </div>
 
@@ -128,15 +118,17 @@ export default async function AccountPage() {
         {/* Nav */}
         <nav style={{ padding: "12px 10px", flex: 1 }}>
           <p style={{ color: "#3A4A60", fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "0 10px", marginBottom: 6 }}>Menu</p>
-          {[
-            { label: "Overview",  href: "#overview",  icon: "M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" },
-            { label: "Renewals",  href: "#renewals",  icon: "M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" },
-            { label: "Quotes",    href: "#quotes",    icon: "M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" },
-            { label: "Profile",   href: "#profile",   icon: "M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" },
-            { label: "Contact",   href: "#contact",   icon: "M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" },
-          ].map((item) => (
+          {(
+            [
+              { label: "Overview",  href: "#overview",  Icon: Home },
+              { label: "Renewals",  href: "#renewals",  Icon: Calendar },
+              { label: "Quotes",    href: "#quotes",    Icon: FileText },
+              { label: "Profile",   href: "#profile",   Icon: User },
+              { label: "Contact",   href: "#contact",   Icon: MessageSquare },
+            ] as { label: string; href: string; Icon: LucideIcon }[]
+          ).map((item) => (
             <a key={item.label} href={item.href} className="acct-nav-link">
-              <NavIcon path={item.icon} />
+              <item.Icon width={15} height={15} strokeWidth={1.8} />
               {item.label}
             </a>
           ))}
@@ -154,14 +146,14 @@ export default async function AccountPage() {
         {/* Bottom links */}
         <div style={{ padding: "12px 16px 16px", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 4 }}>
           <Link href="/" style={{ color: "#5C6B84", fontSize: 11, fontWeight: 500, textDecoration: "none", display: "flex", alignItems: "center", gap: 6, padding: "5px 0" }}>
-            <svg width="12" height="12" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}><path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" /></svg>
+            <ExternalLink width={12} height={12} strokeWidth={2} />
             Back to site
           </Link>
           <LogoutButton />
         </div>
       </aside>
 
-      {/* ── Main ── */}
+      {/* â”€â”€ Main â”€â”€ */}
       <main style={{ flex: 1, overflowY: "auto", padding: "32px 36px", maxHeight: "100vh" }}>
         <div style={{ maxWidth: 740, margin: "0 auto" }}>
 
@@ -171,14 +163,14 @@ export default async function AccountPage() {
               My Account
             </p>
             <h1 style={{ fontSize: 24, fontWeight: 800, color: "#0B1120", letterSpacing: "-0.6px", lineHeight: 1.2 }}>
-              Hello, {user.name.split(" ")[0]} 👋
+              Hello, {user.name.split(" ")[0]}
             </h1>
             <p style={{ color: "#5C6B84", fontSize: 13, marginTop: 4 }}>
               Here's a summary of your insurance activity.
             </p>
           </div>
 
-          {/* ── Stats row ── */}
+          {/* â”€â”€ Stats row â”€â”€ */}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 14, marginBottom: 28 }}>
             {[
               { label: "Quote Requests", value: quoteRequests.length, accent: "#1E54D0", note: "submitted by you" },
@@ -193,14 +185,12 @@ export default async function AccountPage() {
             ))}
           </div>
 
-          {/* ── Urgent alert ── */}
+          {/* â”€â”€ Urgent alert â”€â”€ */}
           {upcomingDueDates.length > 0 && (
             <div style={{ background: "#FFFBEB", border: "1px solid #FDE68A", borderRadius: 12, padding: "16px 20px", marginBottom: 28 }}>
               <div style={{ display: "flex", alignItems: "flex-start", gap: 12 }}>
                 <div style={{ width: 32, height: 32, borderRadius: 8, background: "#FEF3C7", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0 }}>
-                  <svg width="16" height="16" fill="none" stroke="#D97706" viewBox="0 0 24 24" strokeWidth={2}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.962-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                  </svg>
+                  <AlertTriangle width={16} height={16} stroke="#D97706" strokeWidth={2} />
                 </div>
                 <div style={{ flex: 1 }}>
                   <p style={{ fontWeight: 700, color: "#92400E", fontSize: 13, marginBottom: 10 }}>
@@ -213,7 +203,7 @@ export default async function AccountPage() {
                         <div key={d.id} style={{ background: "#fff", borderRadius: 8, padding: "10px 14px", display: "flex", alignItems: "center", justifyContent: "space-between", border: "1px solid #FDE68A" }}>
                           <div>
                             <p style={{ fontSize: 13, fontWeight: 600, color: "#0B1120" }}>{d.policyNumber ?? "Policy"}</p>
-                            {d.policy && <p style={{ fontSize: 11, color: "#8899B4", marginTop: 1 }}>{d.policy.provider.name} · {d.policy.name}</p>}
+                            {d.policy && <p style={{ fontSize: 11, color: "#8899B4", marginTop: 1 }}>{d.policy.provider.name} Â· {d.policy.name}</p>}
                           </div>
                           <div style={{ textAlign: "right" }}>
                             <p style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{t.label}</p>
@@ -228,13 +218,11 @@ export default async function AccountPage() {
             </div>
           )}
 
-          {/* ── Renewals ── */}
+          {/* â”€â”€ Renewals â”€â”€ */}
           <div id="renewals" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", marginBottom: 20, overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid #F1F5F9" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <svg width="15" height="15" fill="none" stroke="#1E54D0" viewBox="0 0 24 24" strokeWidth={1.8}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                </svg>
+                <Calendar width={15} height={15} stroke="#1E54D0" strokeWidth={1.8} />
                 <span style={{ fontWeight: 700, fontSize: 13, color: "#0B1120" }}>Policy Renewals</span>
               </div>
               <span style={{ fontSize: 11, color: "#8899B4", background: "#F1F5F9", padding: "2px 8px", borderRadius: 20, fontWeight: 600 }}>{allDueDates.length} total</span>
@@ -243,9 +231,7 @@ export default async function AccountPage() {
             {allDueDates.length === 0 ? (
               <div style={{ padding: "52px 20px", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 12, background: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="20" height="20" fill="none" stroke="#94A3B8" viewBox="0 0 24 24" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
-                  </svg>
+                  <Clipboard width={20} height={20} stroke="#94A3B8" strokeWidth={1.5} />
                 </div>
                 <p style={{ fontSize: 13, fontWeight: 600, color: "#334155" }}>No renewals tracked yet</p>
                 <p style={{ fontSize: 12, color: "#94A3B8", textAlign: "center", maxWidth: 260 }}>Our advisors will add your policy renewal dates after you request a quote.</p>
@@ -275,7 +261,7 @@ export default async function AccountPage() {
                           {d.policyNumber ?? "Policy Renewal"}
                         </p>
                         {d.policy && (
-                          <p style={{ fontSize: 11, color: "#8899B4", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{d.policy.provider.name} · {d.policy.name}</p>
+                          <p style={{ fontSize: 11, color: "#8899B4", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{d.policy.provider.name} Â· {d.policy.name}</p>
                         )}
                       </div>
                       {/* Date + countdown */}
@@ -303,13 +289,11 @@ export default async function AccountPage() {
             )}
           </div>
 
-          {/* ── Quotes ── */}
+          {/* â”€â”€ Quotes â”€â”€ */}
           <div id="quotes" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", marginBottom: 20, overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "16px 20px", borderBottom: "1px solid #F1F5F9" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <svg width="15" height="15" fill="none" stroke="#1E54D0" viewBox="0 0 24 24" strokeWidth={1.8}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
-                </svg>
+                <FileText width={15} height={15} stroke="#1E54D0" strokeWidth={1.8} />
                 <span style={{ fontWeight: 700, fontSize: 13, color: "#0B1120" }}>Quote Requests</span>
               </div>
               <span style={{ fontSize: 11, color: "#8899B4", background: "#F1F5F9", padding: "2px 8px", borderRadius: 20, fontWeight: 600 }}>{quoteRequests.length}</span>
@@ -318,9 +302,7 @@ export default async function AccountPage() {
             {quoteRequests.length === 0 ? (
               <div style={{ padding: "52px 20px", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 12, background: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center" }}>
-                  <svg width="20" height="20" fill="none" stroke="#94A3B8" viewBox="0 0 24 24" strokeWidth={1.5}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
-                  </svg>
+                  <Copy width={20} height={20} stroke="#94A3B8" strokeWidth={1.5} />
                 </div>
                 <p style={{ fontSize: 13, fontWeight: 600, color: "#334155" }}>No quote requests yet</p>
                 <p style={{ fontSize: 12, color: "#94A3B8" }}>Request a quote and an expert will call you within 30 minutes.</p>
@@ -344,7 +326,7 @@ export default async function AccountPage() {
                           {catLabel} Quote
                         </p>
                         {lead.policy && (
-                          <p style={{ fontSize: 11, color: "#8899B4" }}>{lead.policy.provider.name} · {lead.policy.name}</p>
+                          <p style={{ fontSize: 11, color: "#8899B4" }}>{lead.policy.provider.name} Â· {lead.policy.name}</p>
                         )}
                       </div>
                       <p style={{ fontSize: 11, color: "#94A3B8", flexShrink: 0 }}>
@@ -360,24 +342,22 @@ export default async function AccountPage() {
             )}
           </div>
 
-          {/* ── Profile ── */}
+          {/* â”€â”€ Profile â”€â”€ */}
           <div id="profile" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", overflow: "hidden" }}>
             <div style={{ padding: "16px 20px", borderBottom: "1px solid #F1F5F9", display: "flex", alignItems: "center", gap: 8 }}>
-              <svg width="15" height="15" fill="none" stroke="#1E54D0" viewBox="0 0 24 24" strokeWidth={1.8}>
-                <path strokeLinecap="round" strokeLinejoin="round" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-              </svg>
+              <User width={15} height={15} stroke="#1E54D0" strokeWidth={1.8} />
               <span style={{ fontWeight: 700, fontSize: 13, color: "#0B1120" }}>Profile</span>
             </div>
             <div style={{ padding: "20px", display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "18px 24px" }}>
               {[
                 { label: "Full Name",    value: user.name },
                 { label: "Mobile",       value: `+91 ${user.phone}` },
-                { label: "Email",        value: user.email ?? "—" },
-                { label: "City",         value: user.city ?? "—" },
-                { label: "Gender",       value: user.gender ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1) : "—" },
-                { label: "Date of Birth",value: user.dob ? new Date(user.dob).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "—" },
+                { label: "Email",        value: user.email ?? "â€”" },
+                { label: "City",         value: user.city ?? "â€”" },
+                { label: "Gender",       value: user.gender ? user.gender.charAt(0).toUpperCase() + user.gender.slice(1) : "â€”" },
+                { label: "Date of Birth",value: user.dob ? new Date(user.dob).toLocaleDateString("en-IN", { day: "numeric", month: "long", year: "numeric" }) : "â€”" },
                 { label: "Member Since", value: new Date(user.createdAt).toLocaleDateString("en-IN", { month: "long", year: "numeric" }) },
-                { label: "Last Login",   value: user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "—" },
+                { label: "Last Login",   value: user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "â€”" },
               ].map((f) => (
                 <div key={f.label}>
                   <p style={{ fontSize: 9, fontWeight: 700, color: "#94A3B8", letterSpacing: "0.12em", textTransform: "uppercase", marginBottom: 4 }}>{f.label}</p>
@@ -387,13 +367,11 @@ export default async function AccountPage() {
             </div>
           </div>
 
-          {/* ── Contact / Support ── */}
+          {/* â”€â”€ Contact / Support â”€â”€ */}
           <div id="contact" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", marginTop: 20, overflow: "hidden" }}>
             <div style={{ padding: "16px 20px", borderBottom: "1px solid #F1F5F9", display: "flex", alignItems: "center", justifyContent: "space-between" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-                <svg width="15" height="15" fill="none" stroke="#1E54D0" viewBox="0 0 24 24" strokeWidth={1.8}>
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
-                </svg>
+                <MessageSquare width={15} height={15} stroke="#1E54D0" strokeWidth={1.8} />
                 <span style={{ fontWeight: 700, fontSize: 13, color: "#0B1120" }}>Contact & Support</span>
               </div>
               <span style={{ fontSize: 11, color: "#8899B4" }}>We&apos;ll call you back</span>
@@ -408,3 +386,5 @@ export default async function AccountPage() {
     </div>
   );
 }
+
+

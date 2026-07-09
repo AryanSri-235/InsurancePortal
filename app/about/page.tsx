@@ -1,23 +1,24 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { type LucideIcon, SmilePlus, Handshake, ClipboardList, BadgeCheck, Target, Lock, Phone, Award, Shield } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "About Us | InsurancePortal",
   description: "Learn about InsurancePortal — India's trusted IRDAI-registered insurance comparison platform.",
 };
 
-const stats = [
-  { value: "1L+", label: "Happy Customers", icon: "😊", bg: "bg-blue-50 border-blue-100", color: "text-blue-600" },
-  { value: "50+", label: "Insurance Partners", icon: "🤝", bg: "bg-indigo-50 border-indigo-100", color: "text-indigo-600" },
-  { value: "200+", label: "Plans Available", icon: "📋", bg: "bg-emerald-50 border-emerald-100", color: "text-emerald-600" },
-  { value: "99%", label: "Claim Support Rate", icon: "✅", bg: "bg-violet-50 border-violet-100", color: "text-violet-600" },
+const stats: { value: string; label: string; icon: LucideIcon; bg: string; color: string }[] = [
+  { value: "1L+", label: "Happy Customers", icon: SmilePlus, bg: "bg-blue-50 border-blue-100", color: "text-blue-600" },
+  { value: "50+", label: "Insurance Partners", icon: Handshake, bg: "bg-indigo-50 border-indigo-100", color: "text-indigo-600" },
+  { value: "200+", label: "Plans Available", icon: ClipboardList, bg: "bg-emerald-50 border-emerald-100", color: "text-emerald-600" },
+  { value: "99%", label: "Claim Support Rate", icon: BadgeCheck, bg: "bg-violet-50 border-violet-100", color: "text-violet-600" },
 ];
 
-const values = [
-  { icon: "🎯", title: "Truly Unbiased", desc: "We never push a plan for commission. Our only goal is your best interest.", from: "#3b82f6", to: "#6366f1", accent: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80", iconBg: "bg-blue-50" },
-  { icon: "🔐", title: "Privacy First", desc: "Your data is never sold. 256-bit encryption on every interaction.", from: "#10b981", to: "#14b8a6", accent: "border-emerald-200 hover:border-emerald-300 hover:shadow-emerald-100/80", iconBg: "bg-emerald-50" },
-  { icon: "📞", title: "Always There", desc: "Expert advisors available Mon–Sat 9 AM–7 PM. Claim support 24×7.", from: "#f97316", to: "#f59e0b", accent: "border-orange-200 hover:border-orange-300 hover:shadow-orange-100/80", iconBg: "bg-orange-50" },
-  { icon: "🏆", title: "IRDAI Compliant", desc: "Fully licensed IRDAI Web Aggregator. Every recommendation is regulation-compliant.", from: "#8b5cf6", to: "#a855f7", accent: "border-violet-200 hover:border-violet-300 hover:shadow-violet-100/80", iconBg: "bg-violet-50" },
+const values: { icon: LucideIcon; title: string; desc: string; from: string; to: string; accent: string; iconBg: string }[] = [
+  { icon: Target, title: "Truly Unbiased", desc: "We never push a plan for commission. Our only goal is your best interest.", from: "#3b82f6", to: "#6366f1", accent: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80", iconBg: "bg-blue-50" },
+  { icon: Lock, title: "Privacy First", desc: "Your data is never sold. 256-bit encryption on every interaction.", from: "#10b981", to: "#14b8a6", accent: "border-emerald-200 hover:border-emerald-300 hover:shadow-emerald-100/80", iconBg: "bg-emerald-50" },
+  { icon: Phone, title: "Always There", desc: "Expert advisors available Mon–Sat 9 AM–7 PM. Claim support 24×7.", from: "#f97316", to: "#f59e0b", accent: "border-orange-200 hover:border-orange-300 hover:shadow-orange-100/80", iconBg: "bg-orange-50" },
+  { icon: Award, title: "IRDAI Compliant", desc: "Fully licensed IRDAI Web Aggregator. Every recommendation is regulation-compliant.", from: "#8b5cf6", to: "#a855f7", accent: "border-violet-200 hover:border-violet-300 hover:shadow-violet-100/80", iconBg: "bg-violet-50" },
 ];
 
 const team = [
@@ -61,14 +62,19 @@ export default function AboutPage() {
       <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {stats.map((s, i) => (
-              <div key={s.label} style={{ animationDelay: `${i * 0.08}s` }}
-                className={`animate-fade-in-up group border-2 rounded-2xl p-6 text-center card-hover ${s.bg}`}>
-                <div className="text-2xl mb-2 group-hover:scale-110 transition-transform duration-300">{s.icon}</div>
-                <p className={`text-3xl font-black mb-1 ${s.color}`}>{s.value}</p>
-                <p className="text-gray-500 text-xs font-medium">{s.label}</p>
-              </div>
-            ))}
+            {stats.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <div key={s.label} style={{ animationDelay: `${i * 0.08}s` }}
+                  className={`animate-fade-in-up group border-2 rounded-2xl p-6 text-center card-hover ${s.bg}`}>
+                  <div className="mb-2 group-hover:scale-110 transition-transform duration-300">
+                    <Icon className={`w-6 h-6 mx-auto ${s.color}`} />
+                  </div>
+                  <p className={`text-3xl font-black mb-1 ${s.color}`}>{s.value}</p>
+                  <p className="text-gray-500 text-xs font-medium">{s.label}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -96,7 +102,7 @@ export default function AboutPage() {
               </Link>
             </div>
             <div className="bg-gradient-to-br from-blue-50 to-indigo-50 border-2 border-blue-100 rounded-3xl p-10 text-center card-hover">
-              <div className="text-6xl mb-5">🛡️</div>
+              <Shield className="w-16 h-16 text-blue-600 mb-5 mx-auto" />
               <p className="text-2xl font-black text-gray-900 mb-2">IRDAI Registered</p>
               <p className="text-gray-500 text-sm mb-1">Web Aggregator License No.</p>
               <p className="text-blue-600 font-bold">WBA000000</p>
@@ -120,18 +126,21 @@ export default function AboutPage() {
             </h2>
           </div>
           <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {values.map((v, i) => (
-              <div key={v.title} style={{ animationDelay: `${i * 0.08}s` }}
-                className={`animate-fade-in-up group bg-white border-2 rounded-3xl p-7 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-default ${v.accent}`}>
-                <div className={`w-14 h-14 rounded-2xl ${v.iconBg} flex items-center justify-center text-2xl mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3`}>
-                  {v.icon}
+            {values.map((v, i) => {
+              const Icon = v.icon;
+              return (
+                <div key={v.title} style={{ animationDelay: `${i * 0.08}s` }}
+                  className={`animate-fade-in-up group bg-white border-2 rounded-3xl p-7 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-default ${v.accent}`}>
+                  <div className={`w-14 h-14 rounded-2xl ${v.iconBg} flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3`}>
+                    <Icon className="w-7 h-7" style={{ color: v.from }} />
+                  </div>
+                  <div className="h-0.5 w-10 rounded-full mb-4 transition-all duration-300 group-hover:w-16"
+                    style={{ background: `linear-gradient(to right, ${v.from}, ${v.to})` }} />
+                  <h3 className="font-bold text-gray-900 text-lg mb-2">{v.title}</h3>
+                  <p className="text-sm text-gray-500 leading-relaxed">{v.desc}</p>
                 </div>
-                <div className="h-0.5 w-10 rounded-full mb-4 transition-all duration-300 group-hover:w-16"
-                  style={{ background: `linear-gradient(to right, ${v.from}, ${v.to})` }} />
-                <h3 className="font-bold text-gray-900 text-lg mb-2">{v.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{v.desc}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

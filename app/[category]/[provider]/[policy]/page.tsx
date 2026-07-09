@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";
+import { ChevronLeft, Star } from "lucide-react";
 import { db } from "@/lib/db";
 import { isValidCategory, resolveCategory, categoryLabel } from "@/lib/utils";
 import PolicyTabs from "@/components/policy/PolicyTabs";
@@ -112,8 +113,8 @@ export default async function PolicyDetailPage({ params }: Props) {
                   {categoryLabel(category)}
                 </span>
                 {policy.isFeatured && (
-                  <span className="bg-yellow-400/20 text-yellow-300 text-xs font-semibold px-3 py-1 rounded-full">
-                    ⭐ Featured Plan
+                  <span className="bg-green-400/20 text-green-300 text-xs font-semibold px-3 py-1 rounded-full">
+                    <Star className="w-3 h-3 fill-current inline" /> Featured Plan
                   </span>
                 )}
               </div>
@@ -179,9 +180,7 @@ export default async function PolicyDetailPage({ params }: Props) {
             href={`/${category}-insurance/${providerSlug}`}
             className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline"
           >
-            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
-            </svg>
+            <ChevronLeft className="w-4 h-4" />
             Back to {policy.provider.name} Plans
           </Link>
         </div>

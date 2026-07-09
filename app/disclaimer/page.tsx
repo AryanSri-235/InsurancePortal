@@ -1,15 +1,17 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Landmark, ClipboardList, Shield, Handshake, CircleDollarSign, AlertTriangle } from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 
 export const metadata: Metadata = { title: "Disclaimer | InsurancePortal" };
 
-const sections = [
-  { icon: "🏛️", title: "IRDAI Registration", body: "InsurancePortal is registered with the Insurance Regulatory and Development Authority of India (IRDAI) as a Web Aggregator under License No. WBA000000. Our registration authorises us to facilitate the solicitation and purchase of insurance products from IRDAI-registered insurers." },
-  { icon: "📋", title: "Nature of Information", body: "The content on this website — including premium estimates, plan comparisons, claim ratios, and editorial content — is for general informational purposes only. It does not constitute professional insurance, financial, legal, or tax advice. Premium estimates are indicative and may vary based on underwriting decisions by insurers." },
-  { icon: "🛡️", title: "No Guarantee of Coverage", body: "Displaying a plan on InsurancePortal does not guarantee that you will be offered that plan or approved for coverage. All policies are subject to the insurer's underwriting process, terms and conditions, and applicable laws." },
-  { icon: "🤝", title: "Third-Party Insurers", body: "Insurance policies featured on this platform are products of third-party IRDAI-registered insurers. InsurancePortal is not responsible for the terms, conditions, exclusions, or claim decisions of any insurer. Please read the policy brochure carefully before purchase." },
-  { icon: "💰", title: "Commission Disclosure", body: "InsurancePortal receives commission from insurance companies for referrals. This is in accordance with IRDAI regulations and is borne by the insurer — it does not increase the premium paid by the policyholder." },
-  { icon: "⚠️", title: "Statutory Warning", body: "Insurance is the subject matter of solicitation. Please read all documents carefully. The purchase of an insurance product should be based on your individual needs and the advice of a qualified professional where necessary." },
+const sections: { icon: LucideIcon; title: string; body: string }[] = [
+  { icon: Landmark, title: "IRDAI Registration", body: "InsurancePortal is registered with the Insurance Regulatory and Development Authority of India (IRDAI) as a Web Aggregator under License No. WBA000000. Our registration authorises us to facilitate the solicitation and purchase of insurance products from IRDAI-registered insurers." },
+  { icon: ClipboardList, title: "Nature of Information", body: "The content on this website — including premium estimates, plan comparisons, claim ratios, and editorial content — is for general informational purposes only. It does not constitute professional insurance, financial, legal, or tax advice. Premium estimates are indicative and may vary based on underwriting decisions by insurers." },
+  { icon: Shield, title: "No Guarantee of Coverage", body: "Displaying a plan on InsurancePortal does not guarantee that you will be offered that plan or approved for coverage. All policies are subject to the insurer's underwriting process, terms and conditions, and applicable laws." },
+  { icon: Handshake, title: "Third-Party Insurers", body: "Insurance policies featured on this platform are products of third-party IRDAI-registered insurers. InsurancePortal is not responsible for the terms, conditions, exclusions, or claim decisions of any insurer. Please read the policy brochure carefully before purchase." },
+  { icon: CircleDollarSign, title: "Commission Disclosure", body: "InsurancePortal receives commission from insurance companies for referrals. This is in accordance with IRDAI regulations and is borne by the insurer — it does not increase the premium paid by the policyholder." },
+  { icon: AlertTriangle, title: "Statutory Warning", body: "Insurance is the subject matter of solicitation. Please read all documents carefully. The purchase of an insurance product should be based on your individual needs and the advice of a qualified professional where necessary." },
 ];
 
 export default function DisclaimerPage() {
@@ -29,26 +31,29 @@ export default function DisclaimerPage() {
       <section className="py-20 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="space-y-4 mb-10">
-            {sections.map((s, i) => (
-              <div key={i} style={{ animationDelay: `${i * 0.05}s` }}
-                className="animate-fade-in-up bg-white border-2 border-gray-100 rounded-3xl p-7 hover:border-blue-100 hover:shadow-lg transition-all duration-300">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-blue-50 border-2 border-blue-100 rounded-2xl flex items-center justify-center text-2xl flex-shrink-0">
-                    {s.icon}
-                  </div>
-                  <div>
-                    <h2 className="font-black text-gray-900 text-lg mb-2">{s.title}</h2>
-                    <p className="text-gray-500 leading-relaxed text-sm">{s.body}</p>
+            {sections.map((s, i) => {
+              const Icon = s.icon;
+              return (
+                <div key={i} style={{ animationDelay: `${i * 0.05}s` }}
+                  className="animate-fade-in-up bg-white border-2 border-gray-100 rounded-3xl p-7 hover:border-blue-100 hover:shadow-lg transition-all duration-300">
+                  <div className="flex items-start gap-4">
+                    <div className="w-12 h-12 bg-blue-50 border-2 border-blue-100 rounded-2xl flex items-center justify-center flex-shrink-0">
+                      <Icon className="w-6 h-6 text-blue-600" />
+                    </div>
+                    <div>
+                      <h2 className="font-black text-gray-900 text-lg mb-2">{s.title}</h2>
+                      <p className="text-gray-500 leading-relaxed text-sm">{s.body}</p>
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
 
           {/* Statutory box */}
           <div className="bg-amber-50 border-2 border-amber-200 rounded-3xl p-7 mb-10">
             <div className="flex items-start gap-4">
-              <span className="text-3xl flex-shrink-0">⚠️</span>
+              <AlertTriangle className="w-8 h-8 text-amber-600 flex-shrink-0" />
               <div>
                 <p className="font-black text-gray-900 mb-2">Statutory Disclaimer</p>
                 <p className="text-sm text-amber-800 leading-relaxed">

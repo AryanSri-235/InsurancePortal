@@ -13,6 +13,8 @@ export interface AdminPayload {
   email: string;
   name: string;
   role: string;
+  bankName?: string | null;
+  maxPolicies?: number | null;
 }
 
 export async function signToken(payload: AdminPayload): Promise<string> {

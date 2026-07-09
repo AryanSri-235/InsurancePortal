@@ -1,6 +1,7 @@
 import { db } from "@/lib/db";
 import Link from "next/link";
 import PhoneLookup from "./PhoneLookup";
+import { Search, Users } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
@@ -105,9 +106,7 @@ export default async function RegisteredUsersPage({
       {/* Search */}
       <form method="get" className="flex gap-3">
         <div className="relative flex-1 max-w-md">
-          <svg className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-          </svg>
+          <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
           <input
             name="q"
             defaultValue={search}
@@ -136,9 +135,7 @@ export default async function RegisteredUsersPage({
 
         {users.length === 0 ? (
           <div className="py-16 flex flex-col items-center text-gray-400">
-            <svg className="w-10 h-10 mb-3 opacity-30" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0z" />
-            </svg>
+            <Users className="w-10 h-10 mb-3 opacity-30" />
             <p className="text-sm">No users found{search ? ` for "${search}"` : ""}</p>
           </div>
         ) : (

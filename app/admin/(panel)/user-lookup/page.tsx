@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { Search, AlertTriangle } from "lucide-react";
 
 export default function UserLookupPage() {
   const [phone, setPhone] = useState("");
@@ -31,9 +32,7 @@ export default function UserLookupPage() {
         {/* Header */}
         <div className="bg-gradient-to-r from-slate-800 to-slate-700 px-6 py-6 text-center">
           <div className="w-12 h-12 bg-white/10 rounded-full flex items-center justify-center mx-auto mb-3">
-            <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.8} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-            </svg>
+            <Search className="w-6 h-6 text-white" />
           </div>
           <h1 className="text-white font-bold text-lg">User Lookup</h1>
           <p className="text-slate-400 text-sm mt-1">Find any registered user by their mobile number</p>
@@ -59,9 +58,7 @@ export default function UserLookupPage() {
             </div>
             {error && (
               <p className="mt-2 text-sm text-red-500 flex items-center gap-1.5">
-                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.962-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                </svg>
+                <AlertTriangle className="w-4 h-4 flex-shrink-0" />
                 {error}
               </p>
             )}
@@ -82,9 +79,7 @@ export default function UserLookupPage() {
               </>
             ) : (
               <>
-                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
+                <Search className="w-4 h-4" />
                 Find User
               </>
             )}

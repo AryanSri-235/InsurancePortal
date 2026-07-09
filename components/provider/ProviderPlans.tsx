@@ -3,6 +3,7 @@
 import { Policy, Provider } from "@prisma/client";
 import Link from "next/link";
 import { useState, useMemo } from "react";
+import { Star, Check, Search } from "lucide-react";
 
 type PolicyWithProvider = Policy & {
   provider: Pick<Provider, "name" | "slug" | "claimSettlementRatio" | "logoUrl">;
@@ -35,16 +36,13 @@ function getCoverageTier(coverAmount: string): "upto-50l" | "50l-1cr" | "1cr-plu
 
 function getCategoryGradient(category: string): string {
   switch (category.toLowerCase()) {
-    case "term":
-      return "from-blue-500 to-indigo-600";
     case "health":
-      return "from-emerald-500 to-teal-600";
-    case "motor":
-      return "from-orange-500 to-amber-600";
     case "life":
-      return "from-violet-500 to-purple-600";
+      return "from-green-500 to-green-600";
+    case "term":
+    case "motor":
     default:
-      return "from-blue-500 to-indigo-600";
+      return "from-blue-500 to-blue-600";
   }
 }
 
@@ -172,8 +170,8 @@ export default function ProviderPlans({ policies, category, providerName }: Prop
                 {/* Featured Badge */}
                 {(policy as any).isFeatured && (
                   <div className="absolute top-4 right-4">
-                    <span className="inline-flex items-center gap-1 bg-amber-100 text-amber-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-amber-200">
-                      ⭐ Top Pick
+                    <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-green-200">
+                      <Star className="w-3 h-3 fill-current" /> Top Pick
                     </span>
                   </div>
                 )}
@@ -226,7 +224,7 @@ export default function ProviderPlans({ policies, category, providerName }: Prop
                     <ul className="mb-4 space-y-1.5">
                       {((policy as any).keyBenefits as string[]).slice(0, 2).map((benefit, idx) => (
                         <li key={idx} className="flex items-start gap-2 text-sm text-gray-600">
-                          <span className="mt-0.5 text-emerald-500 flex-shrink-0">✓</span>
+                          <Check className="w-3 h-3 mt-0.5 text-green-500 flex-shrink-0" />
                           <span>{benefit}</span>
                         </li>
                       ))}
@@ -258,7 +256,7 @@ export default function ProviderPlans({ policies, category, providerName }: Prop
         ) : (
           /* Empty State */
           <div className="flex flex-col items-center justify-center py-20 text-center">
-            <div className="text-5xl mb-4">🔍</div>
+            <Search className="w-10 h-10 text-gray-300 mb-4" />
             <h3 className="text-xl font-bold text-gray-800 mb-2">No plans match your filters</h3>
             <p className="text-gray-500 mb-6">Try adjusting your coverage filter or sort option.</p>
             <button

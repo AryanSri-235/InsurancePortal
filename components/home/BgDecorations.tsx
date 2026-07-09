@@ -122,15 +122,15 @@ const configs: Record<Variant, IconPlacement[]> = {
   hero: [
     { Icon: Shield,      color: "text-blue-500",   size: "w-24 h-24", pos: "top-12 right-[6%]",      anim: "animate-float-slow",    delay: "delay-0" },
     { Icon: Heart,       color: "text-rose-400",   size: "w-16 h-16", pos: "top-[30%] left-[3%]",    anim: "animate-float-reverse", delay: "delay-300" },
-    { Icon: Umbrella,    color: "text-indigo-400", size: "w-20 h-20", pos: "bottom-16 right-[12%]",  anim: "animate-float-drift",   delay: "delay-600" },
-    { Icon: Car,         color: "text-orange-400", size: "w-28 h-16", pos: "bottom-8 left-[8%]",     anim: "animate-float",         delay: "delay-200" },
+    { Icon: Umbrella,    color: "text-blue-400", size: "w-20 h-20", pos: "bottom-16 right-[12%]",  anim: "animate-float-drift",   delay: "delay-600" },
+    { Icon: Car,         color: "text-blue-300", size: "w-28 h-16", pos: "bottom-8 left-[8%]",     anim: "animate-float",         delay: "delay-200" },
     { Icon: RingDecor,   color: "text-blue-400",   size: "w-48 h-48", pos: "-top-10 -left-10",       anim: "animate-spin-slow",     delay: "delay-0" },
-    { Icon: RingDecor,   color: "text-purple-400", size: "w-64 h-64", pos: "-bottom-16 -right-16",   anim: "animate-spin-slow",     delay: "delay-500" },
+    { Icon: RingDecor,   color: "text-green-400", size: "w-64 h-64", pos: "-bottom-16 -right-16",   anim: "animate-spin-slow",     delay: "delay-500" },
   ],
   categories: [
     { Icon: Shield,      color: "text-blue-400",   size: "w-20 h-20", pos: "top-6 left-[2%]",       anim: "animate-float",         delay: "delay-100" },
-    { Icon: Coin,        color: "text-amber-400",  size: "w-16 h-16", pos: "top-10 right-[4%]",     anim: "animate-float-reverse", delay: "delay-400" },
-    { Icon: RingDecor,   color: "text-indigo-300", size: "w-40 h-40", pos: "bottom-0 left-[40%]",   anim: "animate-spin-slow",     delay: "delay-200" },
+    { Icon: Coin,        color: "text-green-400",  size: "w-16 h-16", pos: "top-10 right-[4%]",     anim: "animate-float-reverse", delay: "delay-400" },
+    { Icon: RingDecor,   color: "text-blue-300", size: "w-40 h-40", pos: "bottom-0 left-[40%]",   anim: "animate-spin-slow",     delay: "delay-200" },
   ],
   providers: [
     { Icon: CheckBadge,  color: "text-emerald-400", size: "w-20 h-20", pos: "top-8 right-[5%]",     anim: "animate-float-slow",    delay: "delay-200" },
@@ -138,15 +138,15 @@ const configs: Record<Variant, IconPlacement[]> = {
     { Icon: RingDecor,   color: "text-blue-200",    size: "w-56 h-56", pos: "-top-8 -right-8",      anim: "animate-spin-slow",     delay: "delay-300" },
   ],
   howItWorks: [
-    { Icon: Document,    color: "text-violet-400", size: "w-18 h-20", pos: "top-10 left-[4%]",      anim: "animate-float-drift",   delay: "delay-100" },
+    { Icon: Document,    color: "text-green-400", size: "w-18 h-20", pos: "top-10 left-[4%]",      anim: "animate-float-drift",   delay: "delay-100" },
     { Icon: Stethoscope, color: "text-emerald-400",size: "w-20 h-20", pos: "top-14 right-[6%]",     anim: "animate-float-slow",    delay: "delay-400" },
-    { Icon: RingDecor,   color: "text-purple-200", size: "w-44 h-44", pos: "bottom-4 left-[30%]",   anim: "animate-spin-slow",     delay: "delay-0" },
+    { Icon: RingDecor,   color: "text-green-200", size: "w-44 h-44", pos: "bottom-4 left-[30%]",   anim: "animate-spin-slow",     delay: "delay-0" },
   ],
   calculator: [
-    { Icon: Coin,        color: "text-amber-400",  size: "w-20 h-20", pos: "top-8 left-[5%]",       anim: "animate-float-slow",    delay: "delay-200" },
+    { Icon: Coin,        color: "text-green-400",  size: "w-20 h-20", pos: "top-8 left-[5%]",       anim: "animate-float-slow",    delay: "delay-200" },
     { Icon: Document,    color: "text-blue-400",   size: "w-16 h-20", pos: "top-12 right-[3%]",     anim: "animate-float",         delay: "delay-500" },
-    { Icon: Car,         color: "text-orange-300", size: "w-32 h-20", pos: "bottom-16 left-[2%]",   anim: "animate-float-reverse", delay: "delay-100" },
-    { Icon: RingDecor,   color: "text-indigo-200", size: "w-48 h-48", pos: "-bottom-12 -right-12",  anim: "animate-spin-slow",     delay: "delay-0" },
+    { Icon: Car,         color: "text-blue-300", size: "w-32 h-20", pos: "bottom-16 left-[2%]",   anim: "animate-float-reverse", delay: "delay-100" },
+    { Icon: RingDecor,   color: "text-blue-200", size: "w-48 h-48", pos: "-bottom-12 -right-12",  anim: "animate-spin-slow",     delay: "delay-0" },
   ],
   policies: [
     { Icon: Shield,      color: "text-blue-400",   size: "w-18 h-18", pos: "top-16 right-[4%]",     anim: "animate-float",         delay: "delay-300" },
@@ -154,7 +154,7 @@ const configs: Record<Variant, IconPlacement[]> = {
     { Icon: RingDecor,   color: "text-blue-200",    size: "w-52 h-52", pos: "bottom-0 left-[45%]",  anim: "animate-spin-slow",     delay: "delay-400" },
   ],
   whyUs: [
-    { Icon: Umbrella,    color: "text-indigo-400", size: "w-20 h-20", pos: "top-10 left-[5%]",      anim: "animate-float-slow",    delay: "delay-200" },
+    { Icon: Umbrella,    color: "text-blue-400", size: "w-20 h-20", pos: "top-10 left-[5%]",      anim: "animate-float-slow",    delay: "delay-200" },
     { Icon: Heart,       color: "text-rose-400",   size: "w-16 h-16", pos: "top-14 right-[5%]",     anim: "animate-float-reverse", delay: "delay-500" },
     { Icon: RingDecor,   color: "text-rose-200",   size: "w-44 h-44", pos: "-top-8 -left-8",        anim: "animate-spin-slow",     delay: "delay-0" },
   ],
@@ -165,8 +165,8 @@ const configs: Record<Variant, IconPlacement[]> = {
   ],
   faq: [
     { Icon: Shield,      color: "text-blue-300",   size: "w-16 h-16", pos: "top-10 right-[5%]",     anim: "animate-float-drift",   delay: "delay-200" },
-    { Icon: Document,    color: "text-violet-300", size: "w-14 h-18", pos: "bottom-12 left-[4%]",   anim: "animate-float-reverse", delay: "delay-0" },
-    { Icon: RingDecor,   color: "text-indigo-200", size: "w-40 h-40", pos: "top-0 left-[35%]",      anim: "animate-spin-slow",     delay: "delay-300" },
+    { Icon: Document,    color: "text-green-300", size: "w-14 h-18", pos: "bottom-12 left-[4%]",   anim: "animate-float-reverse", delay: "delay-0" },
+    { Icon: RingDecor,   color: "text-blue-200", size: "w-40 h-40", pos: "top-0 left-[35%]",      anim: "animate-spin-slow",     delay: "delay-300" },
   ],
 };
 

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Receipt, CircleDollarSign, Check } from "lucide-react";
 
 type LifeTab = "whole" | "endowment" | "ulip" | "moneyback" | "child";
 
@@ -143,8 +144,8 @@ export default function LifeSpecific() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
                   activeTab === tab.id
-                    ? "bg-violet-600 text-white shadow"
-                    : "bg-gray-100 text-gray-600 hover:bg-violet-50 hover:text-violet-600"
+                    ? "bg-green-600 text-white shadow"
+                    : "bg-gray-100 text-gray-600 hover:bg-green-50 hover:text-green-600"
                 }`}
               >
                 {tab.label}
@@ -153,18 +154,18 @@ export default function LifeSpecific() {
           </div>
 
           {/* Tab panel */}
-          <div className="bg-violet-50 border border-violet-100 rounded-2xl p-6 md:p-8">
+          <div className="bg-green-50 border border-green-100 rounded-2xl p-6 md:p-8">
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
                 <p className="text-gray-600 mb-5 leading-relaxed">{content.description}</p>
-                <div className="bg-white rounded-xl px-5 py-4 border border-violet-100 mb-4">
-                  <p className="text-xs font-semibold text-violet-600 uppercase tracking-wide mb-1">
+                <div className="bg-white rounded-xl px-5 py-4 border border-green-100 mb-4">
+                  <p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">
                     Best For
                   </p>
                   <p className="text-sm text-gray-700">{content.bestFor}</p>
                 </div>
-                <div className="bg-white rounded-xl px-5 py-4 border border-violet-100">
-                  <p className="text-xs font-semibold text-violet-600 uppercase tracking-wide mb-1">
+                <div className="bg-white rounded-xl px-5 py-4 border border-green-100">
+                  <p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">
                     Example Plan
                   </p>
                   <p className="text-sm text-gray-700">{content.examplePlan}</p>
@@ -175,7 +176,7 @@ export default function LifeSpecific() {
                 <ul className="space-y-2">
                   {content.features.map((f, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                      <span className="text-violet-500 mt-0.5 flex-shrink-0">✓</span>
+                      <Check className="w-3 h-3" />
                       {f}
                     </li>
                   ))}
@@ -199,17 +200,17 @@ export default function LifeSpecific() {
             {paymentModes.map((mode) => (
               <div
                 key={mode.id}
-                className="bg-white rounded-2xl border border-gray-200 p-6 hover:border-violet-300 transition-colors"
+                className="bg-white rounded-2xl border border-gray-200 p-6 hover:border-green-300 transition-colors"
               >
                 <h3 className="text-base font-bold text-gray-900 mb-3">{mode.label}</h3>
                 <p className="text-sm text-gray-500 mb-4 leading-relaxed">{mode.description}</p>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-xs font-semibold text-emerald-600 uppercase tracking-wide mb-1">Pros</p>
+                    <p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">Pros</p>
                     <ul className="space-y-1">
                       {mode.pros.map((p, i) => (
                         <li key={i} className="flex gap-2 text-xs text-gray-600">
-                          <span className="text-emerald-500 flex-shrink-0">+</span>{p}
+                          <span className="text-green-500 flex-shrink-0">+</span>{p}
                         </li>
                       ))}
                     </ul>
@@ -238,12 +239,12 @@ export default function LifeSpecific() {
       </section>
 
       {/* SECTION C — Tax Benefits Callout */}
-      <section className="bg-gradient-to-br from-violet-600 to-purple-700 py-12 text-white">
+      <section className="bg-gradient-to-br from-green-600 to-green-700 py-12 text-white">
         <div className="max-w-5xl mx-auto px-4">
           <h2 className="text-2xl font-bold mb-2 text-center">
             Tax Benefits Under Two Sections
           </h2>
-          <p className="text-violet-200 text-center mb-10">
+          <p className="text-green-200 text-center mb-10">
             Life insurance remains one of the most tax-efficient financial instruments in India.
           </p>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
@@ -251,19 +252,17 @@ export default function LifeSpecific() {
             <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 14l6-6m-5.5.5h.01m4.99 5h.01M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16l3.5-2 3.5 2 3.5-2 3.5 2z" />
-                  </svg>
+                  <Receipt className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-xl font-black">Section 80C</span>
               </div>
               <p className="text-white font-semibold text-lg mb-2">
                 Premium Deduction up to ₹1.5 Lakh/year
               </p>
-              <p className="text-violet-200 text-sm leading-relaxed">
+              <p className="text-green-200 text-sm leading-relaxed">
                 Premiums paid towards life insurance policies are eligible for deduction under Section 80C of the Income Tax Act, up to a combined limit of ₹1,50,000 per financial year. This reduces your taxable income directly.
               </p>
-              <div className="mt-4 bg-white/10 rounded-xl px-4 py-3 text-xs text-violet-200">
+              <div className="mt-4 bg-white/10 rounded-xl px-4 py-3 text-xs text-green-200">
                 Applicable under Old Tax Regime only. Not available if you opt for the New Tax Regime.
               </div>
             </div>
@@ -272,19 +271,17 @@ export default function LifeSpecific() {
             <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-2xl p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                  <svg className="w-5 h-5 text-white" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                  <CircleDollarSign className="w-5 h-5 text-white" />
                 </div>
                 <span className="text-xl font-black">Section 10(10D)</span>
               </div>
               <p className="text-white font-semibold text-lg mb-2">
                 Maturity Proceeds Fully Tax-Free
               </p>
-              <p className="text-violet-200 text-sm leading-relaxed">
+              <p className="text-green-200 text-sm leading-relaxed">
                 The maturity amount received from a life insurance policy is completely exempt from income tax under Section 10(10D). This includes death benefits received by the nominee, which are always tax-free.
               </p>
-              <div className="mt-4 bg-white/10 rounded-xl px-4 py-3 text-xs text-violet-200">
+              <div className="mt-4 bg-white/10 rounded-xl px-4 py-3 text-xs text-green-200">
                 Conditions apply: annual premium must not exceed 10% of sum assured (policies issued after Apr 2012). ULIPs with premium above ₹2.5L/yr are now taxable.
               </div>
             </div>
@@ -293,7 +290,7 @@ export default function LifeSpecific() {
           <div className="text-center">
             <a
               href="/calculator?type=life"
-              className="inline-flex items-center gap-2 bg-white text-violet-700 font-semibold px-8 py-3 rounded-full hover:bg-violet-50 transition-colors text-sm"
+              className="inline-flex items-center gap-2 bg-white text-green-700 font-semibold px-8 py-3 rounded-full hover:bg-green-50 transition-colors text-sm"
             >
               Calculate Your Tax Savings
               <span aria-hidden>→</span>

@@ -2,6 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
+import { Search, X, Frown, CheckCircle } from "lucide-react";
 
 const STATUS_OPTIONS = ["new", "contacted", "converted", "lost"];
 
@@ -161,9 +162,7 @@ export default function LeadsPage() {
         <div className="flex flex-wrap items-end gap-3">
           <FilterInput label="Search">
             <div className="relative">
-              <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Name, phone, or email..."
@@ -205,9 +204,7 @@ export default function LeadsPage() {
               onClick={() => setFilters({ status: "", category: "", search: "", page: 1 })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-3.5 h-3.5" />
               Clear filters
             </button>
           )}
@@ -244,9 +241,7 @@ export default function LeadsPage() {
                 <tr>
                   <td colSpan={7}>
                     <div className="flex flex-col items-center justify-center py-14 text-gray-400">
-                      <svg className="w-8 h-8 mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
-                      </svg>
+                      <Frown className="w-8 h-8 mb-2 opacity-40" />
                       <p className="text-sm font-medium">No leads found</p>
                       {hasFilters && <p className="text-xs mt-1">Try adjusting your filters</p>}
                     </div>
@@ -334,9 +329,7 @@ export default function LeadsPage() {
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
             <div className="bg-emerald-50 border-b border-emerald-100 px-5 py-4 flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
-                <svg className="w-4 h-4 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
+                <CheckCircle className="w-4 h-4 text-emerald-600" />
               </div>
               <div>
                 <p className="font-bold text-gray-900 text-sm">Mark as Converted</p>

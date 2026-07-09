@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Car, Bike } from "lucide-react";
 
 interface CalculatorWidgetProps {
   category: string;
@@ -284,7 +285,7 @@ function MotorCalculator() {
               onClick={() => setVehicleType(v)}
               className={`flex-1 py-3 rounded-xl text-sm font-semibold border-2 transition-all ${vehicleType === v ? "bg-blue-600 border-blue-600 text-white" : "border-gray-200 text-gray-600 hover:border-blue-300"}`}
             >
-              {v === "Car" ? "🚗 Car" : "🏍 Bike"}
+              {v === "Car" ? <><Car className="w-4 h-4 inline mr-1" />Car</> : <><Bike className="w-4 h-4 inline mr-1" />Bike</>}
             </button>
           ))}
         </div>

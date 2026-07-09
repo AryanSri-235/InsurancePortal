@@ -1,6 +1,7 @@
 import { Provider } from "@prisma/client";
 import Link from "next/link";
 import { categoryLabel } from "@/lib/utils";
+import { Download } from "lucide-react";
 
 interface Props {
   provider: Provider;
@@ -10,16 +11,16 @@ interface Props {
 
 const categoryGradient: Record<string, string> = {
   term: "from-blue-500 to-blue-700",
-  health: "from-emerald-500 to-emerald-700",
-  motor: "from-orange-500 to-orange-700",
-  life: "from-violet-500 to-violet-700",
+  health: "from-green-500 to-green-700",
+  motor: "from-blue-500 to-blue-700",
+  life: "from-green-500 to-green-700",
 };
 
 const categoryInitialColor: Record<string, string> = {
   term: "text-blue-50",
-  health: "text-emerald-50",
-  motor: "text-orange-50",
-  life: "text-violet-50",
+  health: "text-green-50",
+  motor: "text-blue-50",
+  life: "text-green-50",
 };
 
 export default function ProviderHero({ provider, category, policyCount }: Props) {
@@ -119,14 +120,14 @@ export default function ProviderHero({ provider, category, policyCount }: Props)
           )}
           {showNetworkHospitals && (
             <div>
-              <p className="text-xl font-black text-purple-600">
+              <p className="text-xl font-black text-blue-600">
                 {provider.networkHospitals!.toLocaleString("en-IN")}+
               </p>
               <p className="text-xs text-gray-400 mt-0.5">Network Hospitals</p>
             </div>
           )}
           <div>
-            <p className="text-xl font-black text-orange-500">{policyCount}</p>
+            <p className="text-xl font-black text-blue-600">{policyCount}</p>
             <p className="text-xs text-gray-400 mt-0.5">Plans Available</p>
           </div>
           {provider.irdaiRegNo != null && (
@@ -143,7 +144,7 @@ export default function ProviderHero({ provider, category, policyCount }: Props)
         <div className="flex gap-3 flex-wrap">
           <a
             href="#plans"
-            className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:from-blue-700 hover:to-indigo-700 transition-all"
+            className="bg-gradient-to-r from-blue-600 to-blue-700 text-white px-6 py-3 rounded-xl font-bold shadow-lg hover:from-blue-700 hover:to-blue-800 transition-all"
           >
             View All Plans
           </a>
@@ -157,21 +158,7 @@ export default function ProviderHero({ provider, category, policyCount }: Props)
             href={(provider as Record<string, unknown>).brochureUrl as string ?? "#"}
             className="border-2 border-gray-200 text-gray-600 px-6 py-3 rounded-xl font-medium hover:border-gray-300 transition-colors flex items-center gap-2"
           >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
+            <Download className="w-4 h-4" />
             Download Brochure
           </a>
         </div>

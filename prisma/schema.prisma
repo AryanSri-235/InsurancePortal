@@ -117,6 +117,7 @@ model DueDate {
   policyId         Int?
   policy           Policy?  @relation(fields: [policyId], references: [id])
   policyNumber     String?
+  bankName         String?
   dueDate          DateTime
   status           String   @default("pending")
   notes            String?
@@ -149,7 +150,9 @@ model AdminUser {
   name         String
   email        String    @unique
   passwordHash String
-  role         String    @default("VIEWER")
+  role         String    @default("superadmin")
+  bankName     String?
+  maxPolicies  Int?
   isActive     Boolean   @default(true)
   lastLoginAt  DateTime?
   createdAt    DateTime  @default(now())

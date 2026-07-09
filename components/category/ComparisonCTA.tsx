@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { Check } from "lucide-react";
 
 interface ComparisonCTAProps {
   category: string;
@@ -20,7 +21,7 @@ export default function ComparisonCTA({ category }: ComparisonCTAProps) {
   return (
     <section className="py-16 bg-white w-full">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-10 text-white relative overflow-hidden">
+        <div className="bg-gradient-to-br from-blue-600 to-green-700 rounded-3xl p-10 text-white relative overflow-hidden">
           {/* Decorative rings */}
           <div className="absolute -top-16 -right-16 w-64 h-64 rounded-full border-[40px] border-white/10 pointer-events-none" />
           <div className="absolute -bottom-20 -left-20 w-80 h-80 rounded-full border-[50px] border-white/10 pointer-events-none" />
@@ -41,16 +42,7 @@ export default function ComparisonCTA({ category }: ComparisonCTAProps) {
                   "Find your best match instantly",
                 ].map((feature) => (
                   <li key={feature} className="flex items-center gap-3 text-base font-medium text-white/90">
-                    <svg
-                      className="w-5 h-5 flex-shrink-0 text-white"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={2.5}
-                      viewBox="0 0 24 24"
-                      aria-hidden="true"
-                    >
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
+                    <Check className="w-5 h-5 flex-shrink-0 text-white" strokeWidth={2.5} />
                     {feature}
                   </li>
                 ))}

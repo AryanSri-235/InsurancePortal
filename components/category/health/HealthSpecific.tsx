@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { CheckCircle, Receipt, Check } from "lucide-react";
 
 type PlanTab = "individual" | "family" | "senior";
 
@@ -109,8 +110,8 @@ export default function HealthSpecific() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
                   activeTab === tab.id
-                    ? "bg-emerald-500 text-white shadow"
-                    : "bg-gray-100 text-gray-600 hover:bg-emerald-50 hover:text-emerald-600"
+                    ? "bg-green-500 text-white shadow"
+                    : "bg-gray-100 text-gray-600 hover:bg-green-50 hover:text-green-600"
                 }`}
               >
                 {tab.label}
@@ -119,7 +120,7 @@ export default function HealthSpecific() {
           </div>
 
           {/* Tab panel */}
-          <div className="bg-emerald-50 border border-emerald-100 rounded-2xl p-6 md:p-8">
+          <div className="bg-green-50 border border-green-100 rounded-2xl p-6 md:p-8">
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
@@ -129,13 +130,13 @@ export default function HealthSpecific() {
                   {content.description}
                 </p>
                 {content.caveat && (
-                  <div className="bg-amber-50 border border-amber-200 rounded-lg px-4 py-3 text-sm text-amber-800 mb-3">
+                  <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800 mb-3">
                     {content.caveat}
                   </div>
                 )}
                 <div className="flex items-center gap-2 mt-4">
                   <span className="text-sm text-gray-500">Typical premium:</span>
-                  <span className="font-semibold text-emerald-700 text-sm bg-emerald-100 px-3 py-1 rounded-full">
+                  <span className="font-semibold text-green-700 text-sm bg-green-100 px-3 py-1 rounded-full">
                     {content.premium}
                   </span>
                 </div>
@@ -147,7 +148,7 @@ export default function HealthSpecific() {
                 <ul className="space-y-2">
                   {content.highlights.map((h, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                      <span className="text-emerald-500 mt-0.5 flex-shrink-0">✓</span>
+                      <Check className="w-3 h-3" />
                       {h}
                     </li>
                   ))}
@@ -171,10 +172,8 @@ export default function HealthSpecific() {
             {/* Cashless */}
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-emerald-100 rounded-full flex items-center justify-center">
-                  <svg className="w-5 h-5 text-emerald-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                  </svg>
+                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-5 h-5 text-green-600" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">Cashless Claims</h3>
               </div>
@@ -183,11 +182,11 @@ export default function HealthSpecific() {
               </p>
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs font-semibold text-emerald-600 uppercase tracking-wide mb-1">Pros</p>
+                  <p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">Pros</p>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li className="flex gap-2"><span className="text-emerald-500">+</span>No upfront payment required</li>
-                    <li className="flex gap-2"><span className="text-emerald-500">+</span>Fast and hassle-free process</li>
-                    <li className="flex gap-2"><span className="text-emerald-500">+</span>Ideal for planned surgeries</li>
+                    <li className="flex gap-2"><span className="text-green-500">+</span>No upfront payment required</li>
+                    <li className="flex gap-2"><span className="text-green-500">+</span>Fast and hassle-free process</li>
+                    <li className="flex gap-2"><span className="text-green-500">+</span>Ideal for planned surgeries</li>
                   </ul>
                 </div>
                 <div>
@@ -204,9 +203,7 @@ export default function HealthSpecific() {
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
               <div className="flex items-center gap-3 mb-4">
                 <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                  <svg className="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" strokeWidth={2} viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M16 15v-1a4 4 0 00-4-4H8m0 0l3 3m-3-3l3-3m9 14V5a2 2 0 00-2-2H6a2 2 0 00-2 2v16l4-2 2 2 2-2 2 2 2-2 4 2z" />
-                  </svg>
+                  <Receipt className="w-5 h-5 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">Reimbursement Claims</h3>
               </div>
@@ -215,10 +212,10 @@ export default function HealthSpecific() {
               </p>
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs font-semibold text-emerald-600 uppercase tracking-wide mb-1">Pros</p>
+                  <p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">Pros</p>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li className="flex gap-2"><span className="text-emerald-500">+</span>Freedom to choose any hospital</li>
-                    <li className="flex gap-2"><span className="text-emerald-500">+</span>Useful in emergencies at non-network facilities</li>
+                    <li className="flex gap-2"><span className="text-green-500">+</span>Freedom to choose any hospital</li>
+                    <li className="flex gap-2"><span className="text-green-500">+</span>Useful in emergencies at non-network facilities</li>
                   </ul>
                 </div>
                 <div>

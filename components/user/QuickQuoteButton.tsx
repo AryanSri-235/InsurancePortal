@@ -17,12 +17,12 @@ export default function QuickQuoteButton({ name, phone, email, city, small, side
       title: "What are you looking for?",
       input: "select",
       inputOptions: {
-        term:   "🛡️  Term Insurance",
-        health: "🏥  Health Insurance",
-        motor:  "🚗  Motor / Car Insurance",
-        life:   "💰  Life Insurance",
-        travel: "✈️  Travel Insurance",
-        home:   "🏠  Home Insurance",
+        term:   "Term Insurance",
+        health: "Health Insurance",
+        motor:  "Motor / Car Insurance",
+        life:   "Life Insurance",
+        travel: "Travel Insurance",
+        home:   "Home Insurance",
       },
       inputPlaceholder: "Select insurance type",
       showCancelButton: true,
@@ -47,7 +47,7 @@ export default function QuickQuoteButton({ name, phone, email, city, small, side
 
       Swal.fire({
         icon: "success",
-        title: "Quote Requested! 🎉",
+        title: "Quote Requested!",
         html: `Our <b>${getCategoryLabel(category)}</b> advisor will call you at <b>+91 ${phone}</b> within 30 minutes.`,
         confirmButtonColor: "#2563eb",
         confirmButtonText: "Got it!",

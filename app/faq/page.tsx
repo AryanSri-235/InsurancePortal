@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { Plus, Phone } from "lucide-react";
 
 const faqs = [
   { q: "What is term insurance and why do I need it?", a: "Term insurance is a pure life cover that pays a lump sum to your family if you pass away during the policy term. It's the most affordable way to ensure your family's financial security. A ₹1 Crore cover can cost as low as ₹490/month for a 30-year-old.", category: "Term Insurance" },
@@ -81,9 +82,7 @@ export default function FaqPage() {
                     <span className="font-bold text-gray-900 text-sm md:text-base">{faq.q}</span>
                   </div>
                   <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 transition-all duration-300 ${open === i ? "bg-blue-600 text-white rotate-45" : "bg-gray-100 text-gray-500"}`}>
-                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M12 4v16m8-8H4" />
-                    </svg>
+                    <Plus className="w-4 h-4" />
                   </div>
                 </button>
                 <div className={`overflow-hidden transition-all duration-300 ${open === i ? "max-h-96" : "max-h-0"}`}>
@@ -101,7 +100,7 @@ export default function FaqPage() {
             <p className="text-blue-100 mb-7">Our advisors are available Mon–Sat, 9 AM – 7 PM — free of charge.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
               <a href="tel:1800XXXXXXX" className="bg-white text-blue-600 font-bold px-6 py-3 rounded-2xl hover:bg-blue-50 transition-colors shadow-xl">
-                📞 Call Free: 1800-XXX-XXXX
+                <Phone className="w-4 h-4 inline" /> Call Free: 1800-XXX-XXXX
               </a>
               <Link href="/contact" className="border-2 border-white/30 text-white font-bold px-6 py-3 rounded-2xl hover:bg-white/10 transition-colors">
                 Send a Message

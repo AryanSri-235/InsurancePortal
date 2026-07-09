@@ -4,16 +4,17 @@ import Link from "next/link";
 import { useRef } from "react";
 import { Policy, Provider } from "@prisma/client";
 import BgDecorations from "./BgDecorations";
+import { Check } from "lucide-react";
 
 type PolicyWithProvider = Policy & {
   provider: Pick<Provider, "name" | "slug" | "logoUrl" | "claimSettlementRatio">;
 };
 
 const CAT: Record<string, { label: string; pill: string; grad: string; border: string; shadow: string }> = {
-  term:   { label: "Term",   pill: "bg-blue-100 text-blue-700",       grad: "from-blue-600 to-indigo-600",    border: "group-hover:border-blue-200",    shadow: "group-hover:shadow-blue-100/60" },
-  health: { label: "Health", pill: "bg-emerald-100 text-emerald-700", grad: "from-emerald-600 to-teal-600",   border: "group-hover:border-emerald-200", shadow: "group-hover:shadow-emerald-100/60" },
-  motor:  { label: "Motor",  pill: "bg-orange-100 text-orange-700",   grad: "from-orange-500 to-amber-500",   border: "group-hover:border-orange-200",  shadow: "group-hover:shadow-orange-100/60" },
-  life:   { label: "Life",   pill: "bg-violet-100 text-violet-700",   grad: "from-violet-600 to-purple-600",  border: "group-hover:border-violet-200",  shadow: "group-hover:shadow-violet-100/60" },
+  term:   { label: "Term",   pill: "bg-blue-100 text-blue-700",  grad: "from-blue-600 to-blue-700",   border: "group-hover:border-blue-200",  shadow: "group-hover:shadow-blue-100/60"  },
+  health: { label: "Health", pill: "bg-green-100 text-green-700", grad: "from-green-600 to-green-700", border: "group-hover:border-green-200", shadow: "group-hover:shadow-green-100/60" },
+  motor:  { label: "Motor",  pill: "bg-blue-100 text-blue-700",  grad: "from-blue-600 to-blue-700",   border: "group-hover:border-blue-200",  shadow: "group-hover:shadow-blue-100/60"  },
+  life:   { label: "Life",   pill: "bg-green-100 text-green-700", grad: "from-green-600 to-green-700", border: "group-hover:border-green-200", shadow: "group-hover:shadow-green-100/60" },
 };
 
 const CARD_W = 300; // px — keeps cards consistent
@@ -32,7 +33,7 @@ export default function FeaturedPolicies({ policies }: { policies: PolicyWithPro
     <section className="py-20 bg-white relative overflow-hidden">
       <BgDecorations variant="policies" />
       <div className="absolute top-0 right-0 w-96 h-96 bg-blue-50 rounded-full -translate-y-1/2 translate-x-1/2 opacity-60 pointer-events-none" />
-      <div className="absolute bottom-0 left-0 w-64 h-64 bg-indigo-50 rounded-full translate-y-1/2 -translate-x-1/2 opacity-60 pointer-events-none" />
+      <div className="absolute bottom-0 left-0 w-64 h-64 bg-blue-50 rounded-full translate-y-1/2 -translate-x-1/2 opacity-60 pointer-events-none" />
 
       <div className="relative">
         {/* Header */}
@@ -132,7 +133,7 @@ export default function FeaturedPolicies({ policies }: { policies: PolicyWithPro
                       <ul className="space-y-1 mb-4 flex-1">
                         {policy.keyBenefits.slice(0, 3).map((b, idx) => (
                           <li key={idx} className="flex items-start gap-2 text-[11px] text-gray-600">
-                            <span className="w-3.5 h-3.5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5 text-[8px] font-black">✓</span>
+                            <span className="w-3.5 h-3.5 rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center flex-shrink-0 mt-0.5"><Check className="w-3 h-3" /></span>
                             <span className="line-clamp-1">{b}</span>
                           </li>
                         ))}

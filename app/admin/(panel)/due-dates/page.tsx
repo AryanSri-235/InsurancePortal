@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
+import { Plus, X, Search, Calendar, AlertTriangle } from "lucide-react";
 import Swal from "sweetalert2";
 
 interface DueDate {
@@ -141,9 +142,7 @@ export default function DueDatesPage() {
           onClick={() => setShowForm(!showForm)}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
         >
-          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-          </svg>
+          <Plus className="w-4 h-4" />
           Add Entry
         </button>
       </div>
@@ -165,7 +164,7 @@ export default function DueDatesPage() {
               onClick={() => setFilters(f => ({ ...f, urgency: f.urgency === "critical" ? "" : "critical", status: "" }))}
               className={`flex items-center gap-2 text-sm font-semibold px-4 py-2 rounded-lg border transition-all ${filters.urgency === "critical" ? "bg-orange-600 text-white border-orange-600" : "bg-orange-50 text-orange-700 border-orange-200 hover:bg-orange-100"}`}
             >
-              ⚠️ {criticalCount} Due within 7 days
+              <AlertTriangle className="w-3.5 h-3.5" /> {criticalCount} Due within 7 days
             </button>
           )}
         </div>
@@ -176,15 +175,11 @@ export default function DueDatesPage() {
         <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 bg-gray-50/60">
             <h2 className="font-semibold text-gray-900 text-sm flex items-center gap-2">
-              <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-              </svg>
+              <Plus className="w-4 h-4 text-gray-400" />
               New Renewal Entry
             </h2>
             <button onClick={() => setShowForm(false)} className="text-gray-400 hover:text-gray-600 transition-colors">
-              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-4 h-4" />
             </button>
           </div>
           <form onSubmit={handleAdd} className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -244,9 +239,7 @@ export default function DueDatesPage() {
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Search</span>
             <div className="relative">
-              <svg className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-              </svg>
+              <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 pointer-events-none" />
               <input
                 type="text"
                 placeholder="Name, phone, or policy #..."
@@ -291,9 +284,7 @@ export default function DueDatesPage() {
               onClick={() => setFilters({ search: "", status: "", urgency: "" })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
-              <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
+              <X className="w-3.5 h-3.5" />
               Clear
             </button>
           )}
@@ -334,9 +325,7 @@ export default function DueDatesPage() {
                 <tr>
                   <td colSpan={7}>
                     <div className="flex flex-col items-center justify-center py-14 text-gray-400">
-                      <svg className="w-8 h-8 mb-2 opacity-40" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
-                      </svg>
+                      <Calendar className="w-8 h-8 mb-2 opacity-40" />
                       <p className="text-sm font-medium">
                         {items.length === 0 ? "No entries yet" : "No entries match filters"}
                       </p>

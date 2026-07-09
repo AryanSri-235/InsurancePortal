@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { Heart, ShieldCheck, CircleDollarSign, Check, BadgeCheck } from "lucide-react";
 
 const coverageOptions = [
   {
@@ -41,21 +42,7 @@ const riders = [
     title: "Critical Illness Rider",
     description:
       "Get lump sum payout on 34 critical illnesses. Extra: ~₹150/mo",
-    icon: (
-      <svg
-        className="w-6 h-6 text-blue-500"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
-        />
-      </svg>
-    ),
+    icon: <Heart className="w-6 h-6 text-blue-500" />,
     extra: "~₹150/mo",
   },
   {
@@ -63,21 +50,7 @@ const riders = [
     title: "Accidental Death Benefit",
     description:
       "2× sum assured on accidental death. Extra: ~₹80/mo",
-    icon: (
-      <svg
-        className="w-6 h-6 text-blue-500"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-        />
-      </svg>
-    ),
+    icon: <ShieldCheck className="w-6 h-6 text-blue-500" />,
     extra: "~₹80/mo",
   },
   {
@@ -85,21 +58,7 @@ const riders = [
     title: "Waiver of Premium",
     description:
       "Future premiums waived on disability. Extra: ~₹60/mo",
-    icon: (
-      <svg
-        className="w-6 h-6 text-blue-500"
-        fill="none"
-        stroke="currentColor"
-        strokeWidth={2}
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-        />
-      </svg>
-    ),
+    icon: <CircleDollarSign className="w-6 h-6 text-blue-500" />,
     extra: "~₹60/mo",
   },
 ];
@@ -127,7 +86,7 @@ const comparisonRows = [
   },
   {
     feature: "Our Recommendation",
-    pureTerm: "✅ Recommended for most",
+    pureTerm: <><BadgeCheck className="w-4 h-4 inline" /> Recommended for most</>,
     rop: "Only if budget allows",
   },
 ];
@@ -242,19 +201,7 @@ export default function TermSpecific() {
                       }`}
                     >
                       {isChecked && (
-                        <svg
-                          className="w-3 h-3 text-white"
-                          fill="none"
-                          stroke="currentColor"
-                          strokeWidth={3}
-                          viewBox="0 0 24 24"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            d="M5 13l4 4L19 7"
-                          />
-                        </svg>
+                        <Check className="w-3 h-3 text-white" strokeWidth={3} />
                       )}
                     </div>
                   </div>

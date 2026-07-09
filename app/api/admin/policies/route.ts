@@ -16,6 +16,10 @@ export async function GET(req: NextRequest) {
       where: {
         ...(category ? { category } : {}),
         ...(search ? { name: { contains: search, mode: "insensitive" as const } } : {}),
+        // RAM users only see policies from their own provider (matched by bankName)
+        ...(session.role === "ram" && session.bankName
+          ? { provider: { name: { contains: session.bankName, mode: "insensitive" as const } } }
+          : {}),
       },
       include: { provider: { select: { name: true } } },
       orderBy: [{ category: "asc" }, { name: "asc" }],
@@ -30,7 +34,7 @@ const policySchema = z.object({
   name: z.string().min(2),
   slug: z.string().min(2),
   providerId: z.number(),
-  category: z.enum(["term", "life", "health", "motor"]),
+  category: z.enum(["term", "life", "health", "motor", "travel", "home", "personal-accident", "fire", "marine", "pension", "commercial", "crop", "cyber"]),
   subCategory: z.string().optional(),
   description: z.string().optional(),
   premiumStartsFrom: z.number().optional(),
@@ -72,6 +76,18 @@ export async function PATCH(req: NextRequest) {
   try {
     const { id, ...data } = await req.json();
     if (!id) return NextResponse.json({ error: "ID required" }, { status: 422 });
+
+    // RAM users can only modify policies belonging to their provider
+    if (session.role === "ram" && session.bankName) {
+      const existing = await db.policy.findUnique({
+        where: { id },
+        include: { provider: { select: { name: true } } },
+      });
+      if (!existing || !existing.provider.name.toLowerCase().includes(session.bankName.toLowerCase())) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+    }
+
     const policy = await db.policy.update({ where: { id }, data });
     return NextResponse.json({ success: true, data: policy });
   } catch {

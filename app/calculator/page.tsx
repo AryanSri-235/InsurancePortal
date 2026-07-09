@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import { type LucideIcon, Shield, HeartPulse, Car, TrendingUp, AlertTriangle } from "lucide-react";
 
-const types = [
-  { key: "term", label: "Term Insurance", icon: "🛡️", from: "#3b82f6", to: "#6366f1", activeBg: "bg-blue-50 border-blue-300 text-blue-700" },
-  { key: "health", label: "Health Insurance", icon: "🏥", from: "#10b981", to: "#14b8a6", activeBg: "bg-emerald-50 border-emerald-300 text-emerald-700" },
-  { key: "motor", label: "Motor Insurance", icon: "🚗", from: "#f97316", to: "#f59e0b", activeBg: "bg-orange-50 border-orange-300 text-orange-700" },
-  { key: "life", label: "Life Insurance", icon: "💰", from: "#8b5cf6", to: "#a855f7", activeBg: "bg-violet-50 border-violet-300 text-violet-700" },
+const types: { key: string; label: string; icon: LucideIcon; from: string; to: string; activeBg: string }[] = [
+  { key: "term", label: "Term Insurance", icon: Shield, from: "#3b82f6", to: "#6366f1", activeBg: "bg-blue-50 border-blue-300 text-blue-700" },
+  { key: "health", label: "Health Insurance", icon: HeartPulse, from: "#10b981", to: "#14b8a6", activeBg: "bg-emerald-50 border-emerald-300 text-emerald-700" },
+  { key: "motor", label: "Motor Insurance", icon: Car, from: "#f97316", to: "#f59e0b", activeBg: "bg-orange-50 border-orange-300 text-orange-700" },
+  { key: "life", label: "Life Insurance", icon: TrendingUp, from: "#8b5cf6", to: "#a855f7", activeBg: "bg-violet-50 border-violet-300 text-violet-700" },
 ];
 
 function TermCalc() {
@@ -30,7 +31,7 @@ function TermCalc() {
           {(["male", "female"] as const).map(g => (
             <button key={g} onClick={() => setGender(g)}
               className={`py-2.5 rounded-xl font-bold text-sm border-2 capitalize transition-all duration-200 ${gender === g ? "bg-blue-600 border-blue-600 text-white" : "border-gray-200 text-gray-600 hover:border-blue-200"}`}>
-              {g === "male" ? "👨 Male" : "👩 Female"}
+              {g === "male" ? "Male" : "Female"}
             </button>
           ))}
         </div>
@@ -83,7 +84,7 @@ function TermCalc() {
           </Link>
         </div>
         <div className="bg-amber-50 border-2 border-amber-100 rounded-2xl p-4">
-          <p className="text-xs text-amber-700 font-medium">⚠️ Estimates are indicative. Actual premiums depend on medical underwriting, smoker status, and insurer pricing.</p>
+          <p className="text-xs text-amber-700 font-medium"><AlertTriangle className="w-4 h-4 inline mr-1" /> Estimates are indicative. Actual premiums depend on medical underwriting, smoker status, and insurer pricing.</p>
         </div>
       </div>
     </div>
@@ -118,7 +119,7 @@ export default function CalculatorPage() {
                 className={`group flex flex-col items-center gap-2 border-2 rounded-2xl p-5 transition-all duration-200 font-bold text-sm card-hover ${
                   active === t.key ? t.activeBg : "border-gray-100 bg-white text-gray-500 hover:border-gray-200 hover:shadow-lg"
                 }`}>
-                <span className={`text-3xl transition-transform duration-300 ${active === t.key ? "scale-110" : "group-hover:scale-105"}`}>{t.icon}</span>
+                <t.icon className={`w-8 h-8 transition-transform duration-300 ${active === t.key ? "scale-110" : "group-hover:scale-105"}`} />
                 <span>{t.label}</span>
                 {active === t.key && (
                   <div className="w-6 h-1 rounded-full" style={{ background: `linear-gradient(to right, ${t.from}, ${t.to})` }} />
@@ -130,9 +131,9 @@ export default function CalculatorPage() {
           {/* Calculator panel */}
           <div className="bg-white border-2 border-gray-100 rounded-3xl p-8 shadow-xl shadow-gray-100/60">
             <div className="flex items-center gap-3 mb-8 pb-6 border-b border-gray-100">
-              <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl shadow-md"
+              <div className="w-12 h-12 rounded-2xl flex items-center justify-center shadow-md"
                 style={{ background: `linear-gradient(135deg, ${activeType.from}, ${activeType.to})` }}>
-                {activeType.icon}
+                <activeType.icon className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h2 className="text-xl font-black text-gray-900">{activeType.label} Calculator</h2>
@@ -144,9 +145,9 @@ export default function CalculatorPage() {
               <TermCalc />
             ) : (
               <div className="text-center py-16">
-                <div className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center text-4xl mb-5 shadow-lg"
+                <div className="w-20 h-20 mx-auto rounded-3xl flex items-center justify-center mb-5 shadow-lg"
                   style={{ background: `linear-gradient(135deg, ${activeType.from}, ${activeType.to})` }}>
-                  {activeType.icon}
+                  <activeType.icon className="w-10 h-10 text-white" />
                 </div>
                 <h3 className="text-2xl font-black text-gray-900 mb-3">{activeType.label} Calculator</h3>
                 <p className="text-gray-500 mb-8 max-w-sm mx-auto">This calculator is coming soon. Our advisors can give you an instant quote right now.</p>

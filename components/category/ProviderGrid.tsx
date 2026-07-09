@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { Provider } from "@prisma/client";
 import { useState, useMemo } from "react";
+import { Search } from "lucide-react";
 
 interface Props {
   providers: Provider[];
@@ -10,17 +11,17 @@ interface Props {
 }
 
 const CAT_ACCENT: Record<string, { border: string; avatarBg: string; avatarText: string; statBg: string; statText: string; btnFrom: string; btnTo: string; shadow: string }> = {
-  term:   { border: "hover:border-blue-200 hover:shadow-blue-100/80",   avatarBg: "bg-blue-50 border-blue-100",    avatarText: "text-blue-600",   statBg: "bg-blue-50 border-blue-100",   statText: "text-blue-700",   btnFrom: "from-blue-600",   btnTo: "to-indigo-600", shadow: "shadow-blue-200" },
-  health: { border: "hover:border-emerald-200 hover:shadow-emerald-100/80", avatarBg: "bg-emerald-50 border-emerald-100", avatarText: "text-emerald-600", statBg: "bg-emerald-50 border-emerald-100", statText: "text-emerald-700", btnFrom: "from-emerald-600", btnTo: "to-teal-600", shadow: "shadow-emerald-200" },
-  motor:  { border: "hover:border-orange-200 hover:shadow-orange-100/80", avatarBg: "bg-orange-50 border-orange-100",  avatarText: "text-orange-600",  statBg: "bg-orange-50 border-orange-100",  statText: "text-orange-700",  btnFrom: "from-orange-500",  btnTo: "to-amber-500",  shadow: "shadow-orange-200" },
-  life:   { border: "hover:border-violet-200 hover:shadow-violet-100/80", avatarBg: "bg-violet-50 border-violet-100",  avatarText: "text-violet-600",  statBg: "bg-violet-50 border-violet-100",  statText: "text-violet-700",  btnFrom: "from-violet-600",  btnTo: "to-purple-600", shadow: "shadow-violet-200" },
+  term:   { border: "hover:border-blue-200 hover:shadow-blue-100/80",   avatarBg: "bg-blue-50 border-blue-100",   avatarText: "text-blue-600",  statBg: "bg-blue-50 border-blue-100",  statText: "text-blue-700",  btnFrom: "from-blue-600",  btnTo: "to-blue-700",  shadow: "shadow-blue-200"  },
+  health: { border: "hover:border-green-200 hover:shadow-green-100/80", avatarBg: "bg-green-50 border-green-100", avatarText: "text-green-600", statBg: "bg-green-50 border-green-100", statText: "text-green-700", btnFrom: "from-green-600", btnTo: "to-green-700", shadow: "shadow-green-200" },
+  motor:  { border: "hover:border-blue-200 hover:shadow-blue-100/80",   avatarBg: "bg-blue-50 border-blue-100",   avatarText: "text-blue-600",  statBg: "bg-blue-50 border-blue-100",  statText: "text-blue-700",  btnFrom: "from-blue-600",  btnTo: "to-blue-700",  shadow: "shadow-blue-200"  },
+  life:   { border: "hover:border-green-200 hover:shadow-green-100/80", avatarBg: "bg-green-50 border-green-100", avatarText: "text-green-600", statBg: "bg-green-50 border-green-100", statText: "text-green-700", btnFrom: "from-green-600", btnTo: "to-green-700", shadow: "shadow-green-200" },
 };
 
 const BAR_GRAD: Record<string, string> = {
-  term: "from-blue-500 to-indigo-500",
-  health: "from-emerald-500 to-teal-500",
-  motor: "from-orange-500 to-amber-500",
-  life: "from-violet-500 to-purple-500",
+  term:   "from-blue-500 to-blue-600",
+  health: "from-green-500 to-green-600",
+  motor:  "from-blue-500 to-blue-600",
+  life:   "from-green-500 to-green-600",
 };
 
 type SortOption = "popularity" | "csr-desc" | "csr-asc";
@@ -45,7 +46,7 @@ export default function ProviderGrid({ providers, category }: Props) {
 
   const catKey = category.replace("-insurance", "");
   const accent = CAT_ACCENT[catKey] ?? CAT_ACCENT.term;
-  const bar = BAR_GRAD[catKey] ?? "from-blue-500 to-indigo-500";
+  const bar = BAR_GRAD[catKey] ?? "from-blue-500 to-blue-600";
 
   const filteredProviders = useMemo(() => {
     let result = [...providers];
@@ -81,7 +82,7 @@ export default function ProviderGrid({ providers, category }: Props) {
   if (providers.length === 0) {
     return (
       <div className="text-center py-16 bg-white border-2 border-gray-100 rounded-3xl">
-        <div className="text-5xl mb-4">🔍</div>
+        <Search className="w-10 h-10 text-gray-300" />
         <p className="text-gray-400 font-medium">No providers found. Please check back soon.</p>
       </div>
     );
@@ -140,7 +141,7 @@ export default function ProviderGrid({ providers, category }: Props) {
       {/* Grid */}
       {filteredProviders.length === 0 ? (
         <div className="text-center py-16 bg-white border-2 border-gray-100 rounded-3xl">
-          <div className="text-5xl mb-4">🔍</div>
+          <Search className="w-10 h-10 text-gray-300" />
           <p className="text-gray-400 font-medium">No providers match the selected filter.</p>
         </div>
       ) : (
@@ -171,9 +172,9 @@ export default function ProviderGrid({ providers, category }: Props) {
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-3 mb-5">
                   {p.claimSettlementRatio && (
-                    <div className="bg-emerald-50 border-2 border-emerald-100 rounded-2xl p-3">
+                    <div className="bg-green-50 border-2 border-green-100 rounded-2xl p-3">
                       <p className="text-xs text-gray-400 mb-1">Claim Ratio</p>
-                      <p className="text-base font-black text-emerald-700">{p.claimSettlementRatio}%</p>
+                      <p className="text-base font-black text-green-700">{p.claimSettlementRatio}%</p>
                     </div>
                   )}
                   {p.solvencyRatio && (
@@ -183,9 +184,9 @@ export default function ProviderGrid({ providers, category }: Props) {
                     </div>
                   )}
                   {p.networkHospitals && (
-                    <div className="bg-purple-50 border-2 border-purple-100 rounded-2xl p-3 col-span-2">
+                    <div className="bg-blue-50 border-2 border-blue-100 rounded-2xl p-3 col-span-2">
                       <p className="text-xs text-gray-400 mb-1">Network Hospitals</p>
-                      <p className="text-base font-black text-purple-700">{p.networkHospitals.toLocaleString("en-IN")}+</p>
+                      <p className="text-base font-black text-blue-700">{p.networkHospitals.toLocaleString("en-IN")}+</p>
                     </div>
                   )}
                 </div>
