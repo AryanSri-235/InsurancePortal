@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Link from "next/link";
 import { db } from "@/lib/db";
 import NewsletterForm from "@/components/NewsletterForm";
 
@@ -76,11 +75,10 @@ export default async function BlogPage() {
           {/* Posts grid */}
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
             {posts.map((post, i) => (
-              <Link
+              <div
                 key={post.id}
-                href={`/blog/${post.slug}`}
                 style={{ animationDelay: `${i * 0.07}s` }}
-                className="animate-fade-in-up group bg-white border-2 border-gray-100 rounded-3xl overflow-hidden hover:border-blue-100 hover:shadow-2xl hover:shadow-blue-50/80 hover:-translate-y-1.5 transition-all duration-300 flex flex-col"
+                className="animate-fade-in-up bg-white border-2 border-gray-100 rounded-3xl overflow-hidden flex flex-col hover:border-blue-100 hover:shadow-2xl hover:shadow-blue-50/80 hover:-translate-y-1.5 transition-all duration-300"
               >
                 {/* Colour bar */}
                 <div className={`h-1.5 bg-gradient-to-r ${catBar[post.category] ?? "from-blue-500 to-indigo-500"}`} />
@@ -89,7 +87,7 @@ export default async function BlogPage() {
                   <span className={`self-start text-xs font-bold px-3 py-1 rounded-full mb-5 ${catColors[post.category] ?? "bg-gray-100 text-gray-600"}`}>
                     {post.category}
                   </span>
-                  <h2 className="font-black text-gray-900 text-xl leading-snug mb-3 group-hover:text-blue-600 transition-colors duration-200">
+                  <h2 className="font-black text-gray-900 text-xl leading-snug mb-3">
                     {post.title}
                   </h2>
                   <p className="text-sm text-gray-500 leading-relaxed flex-1">{post.excerpt}</p>
@@ -98,10 +96,9 @@ export default async function BlogPage() {
                       <p className="text-xs font-bold text-gray-700">{post.author}</p>
                       <p className="text-xs text-gray-400">{new Date(post.publishedAt!).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</p>
                     </div>
-                    <span className="text-sm font-bold text-gray-300 group-hover:text-blue-600 group-hover:translate-x-1.5 transition-all duration-200 inline-block">→</span>
                   </div>
                 </div>
-              </Link>
+              </div>
             ))}
           </div>
         </div>

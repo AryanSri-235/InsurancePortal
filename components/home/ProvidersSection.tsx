@@ -32,6 +32,18 @@ const CAT_HREF: Record<string, string> = {
   motor: "/motor-insurance", life: "/life-insurance",
 };
 
+// Logos that need a visual zoom to fill the card better
+const ZOOM_SLUGS = new Set([
+  "star", "bajaj", "icici", "birla", "new-india",
+  "digit", "care", "royal", "tata", "pnb", "sbi", "niva",
+]);
+
+function logoScale(url: string | null): string {
+  if (!url) return "";
+  const lower = url.toLowerCase();
+  return [...ZOOM_SLUGS].some(s => lower.includes(s)) ? "scale-125" : "";
+}
+
 export default function ProvidersSection({ providers }: { providers: Provider[] }) {
   const trackRef = useRef<HTMLDivElement>(null);
 
@@ -100,7 +112,7 @@ export default function ProvidersSection({ providers }: { providers: Provider[] 
                       <img
                         src={provider.logoUrl}
                         alt={provider.name}
-                        className="max-h-14 max-w-full w-auto object-contain group-hover:scale-105 transition-transform duration-300"
+                        className={`max-h-14 max-w-full w-auto object-contain transition-transform duration-300 group-hover:scale-110 ${logoScale(provider.logoUrl)}`}
                       />
                     </div>
                   ) : (
