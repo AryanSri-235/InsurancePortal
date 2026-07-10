@@ -26,7 +26,7 @@ export default function WhyChooseUs() {
         <div className="text-center mb-16">
           <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">Our Promise</p>
           <h2 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">
-            Why <span className="text-blue-600">NPS Insurance.Life?</span>
+            Why <span className="text-blue-600">NPS Insurance.in?</span>
           </h2>
           <p className="text-gray-500 mt-4 text-lg max-w-lg mx-auto">Built around your interests — not ours</p>
         </div>

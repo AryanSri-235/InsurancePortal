@@ -287,15 +287,6 @@ export default function LifeSpecific() {
             </div>
           </div>
 
-          <div className="text-center">
-            <a
-              href="/calculator?type=life"
-              className="inline-flex items-center gap-2 bg-white text-green-700 font-semibold px-8 py-3 rounded-full hover:bg-green-50 transition-colors text-sm"
-            >
-              Calculate Your Tax Savings
-              <span aria-hidden>→</span>
-            </a>
-          </div>
         </div>
       </section>
     </>

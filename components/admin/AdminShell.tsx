@@ -144,7 +144,7 @@ export default function AdminShell({ children, session }: Props) {
           </div>
           <p className="text-slate-500 text-[10px] font-medium">Admin Panel</p>
         </Link>
-        {/* Close button â€” mobile only */}
+        {/* Close button — mobile only */}
         <button
           onClick={closeSidebar}
           className="md:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
@@ -215,12 +215,12 @@ export default function AdminShell({ children, session }: Props) {
   return (
     <div className="flex min-h-screen bg-slate-100">
 
-      {/* â”€â”€ Desktop sidebar (always visible) â”€â”€ */}
+      {/* ── Desktop sidebar (always visible) ── */}
       <aside className="hidden md:flex w-56 h-screen sticky top-0 bg-slate-900 flex-col flex-shrink-0 overflow-hidden">
         {sidebarContent}
       </aside>
 
-      {/* â”€â”€ Mobile drawer overlay â”€â”€ */}
+      {/* ── Mobile drawer overlay ── */}
       {sidebarOpen && (
         <div
           className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
@@ -228,7 +228,7 @@ export default function AdminShell({ children, session }: Props) {
         />
       )}
 
-      {/* â”€â”€ Mobile drawer â”€â”€ */}
+      {/* ── Mobile drawer ── */}
       <aside
         className={`fixed inset-y-0 left-0 z-50 w-72 bg-slate-900 flex flex-col flex-shrink-0 overflow-hidden transition-transform duration-300 ease-in-out md:hidden ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
@@ -237,13 +237,13 @@ export default function AdminShell({ children, session }: Props) {
         {sidebarContent}
       </aside>
 
-      {/* â”€â”€ Main content area â”€â”€ */}
+      {/* ── Main content area ── */}
       <div className="flex-1 flex flex-col min-w-0">
 
         {/* Top bar */}
         <header className="bg-white border-b border-gray-200 px-4 sm:px-6 h-14 flex items-center justify-between flex-shrink-0 sticky top-0 z-30">
           <div className="flex items-center gap-3">
-            {/* Hamburger â€” mobile only */}
+            {/* Hamburger — mobile only */}
             <button
               onClick={() => setSidebarOpen(true)}
               className="md:hidden p-1.5 rounded-lg text-gray-500 hover:text-gray-900 hover:bg-gray-100 transition-colors"
@@ -264,7 +264,7 @@ export default function AdminShell({ children, session }: Props) {
               <p className="text-sm font-semibold text-gray-900 leading-tight">{session.name}</p>
               <p className="text-xs text-gray-400">
                 {ROLE_LABELS[session.role] ?? session.role}
-                {session.bankName && <span className="ml-1 text-blue-500">Â· {session.bankName}</span>}
+                {session.bankName && <span className="ml-1 text-blue-500">· {session.bankName}</span>}
               </p>
             </div>
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md shadow-blue-200 flex-shrink-0">

@@ -194,7 +194,7 @@ export default function RegisterPage() {
               </div>
 
               <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-xl transition-colors text-sm">
-                Continue â†’
+                Continue →
               </button>
 
               <p className="text-center text-sm text-gray-500">
@@ -270,7 +270,7 @@ export default function RegisterPage() {
                   onClick={() => setStep(1)}
                   className="flex-1 border border-gray-200 text-gray-600 hover:bg-gray-50 font-semibold py-3 rounded-xl transition-colors text-sm"
                 >
-                  â† Back
+                  ← Back
                 </button>
                 <button
                   type="submit"

@@ -36,59 +36,59 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     slug: "term",
     label: "Term Insurance",
     route: "/term-insurance",
-    emoji: "ðŸ›¡ï¸",
+    emoji: "🛡️",
     headline: "Best Term Insurance Plans in India 2024",
-    subheadline: "Get life cover up to â‚¹5 Crore at just â‚¹490/month. Compare 20+ term plans from top insurers.",
+    subheadline: "Get life cover up to ₹5 Crore at just ₹490/month. Compare 20+ term plans from top insurers.",
     color: {
       bg: "from-blue-700 to-blue-900",
       accent: "blue",
       badge: "bg-blue-100 text-blue-700",
       badgeText: "Term Insurance",
     },
-    trustBadges: ["Claim Settlement up to 99.5%", "Cover up to â‚¹5 Crore", "Tax benefit under 80C"],
+    trustBadges: ["Claim Settlement up to 99.5%", "Cover up to ₹5 Crore", "Tax benefit under 80C"],
     highlights: [
-      { icon: "ðŸ’°", label: "Lowest Premium", value: "From â‚¹490/mo" },
-      { icon: "ðŸ›¡ï¸", label: "Max Cover", value: "Up to â‚¹5 Crore" },
-      { icon: "ðŸ“…", label: "Policy Term", value: "Up to 40 years" },
-      { icon: "ðŸ†", label: "Claim Ratio", value: "Up to 99.5%" },
+      { icon: "💰", label: "Lowest Premium", value: "From ₹490/mo" },
+      { icon: "🛡️", label: "Max Cover", value: "Up to ₹5 Crore" },
+      { icon: "📅", label: "Policy Term", value: "Up to 40 years" },
+      { icon: "🏆", label: "Claim Ratio", value: "Up to 99.5%" },
     ],
     faqs: [
       {
         question: "What is term insurance and how does it work?",
-        answer: "Term insurance is a pure life cover plan that pays a death benefit to your nominees if you pass away during the policy term. Unlike endowment or ULIP plans, it has no maturity benefit â€” which is why premiums are very low.",
+        answer: "Term insurance is a pure life cover plan that pays a death benefit to your nominees if you pass away during the policy term. Unlike endowment or ULIP plans, it has no maturity benefit — which is why premiums are very low.",
       },
       {
         question: "How much term insurance cover do I need?",
-        answer: "The standard rule is 10â€“15Ã— your annual income. If you earn â‚¹10 lakh/year, aim for â‚¹1â€“1.5 Crore cover. Also factor in outstanding loans, your family's monthly expenses, and children's education goals.",
+        answer: "The standard rule is 10–15× your annual income. If you earn ₹10 lakh/year, aim for ₹1–1.5 Crore cover. Also factor in outstanding loans, your family's monthly expenses, and children's education goals.",
       },
       {
         question: "At what age should I buy term insurance?",
-        answer: "The earlier the better. Buying at 25â€“30 gives you the lowest premiums for the same cover amount. Premiums increase significantly with age. Most insurers accept applications up to age 65.",
+        answer: "The earlier the better. Buying at 25–30 gives you the lowest premiums for the same cover amount. Premiums increase significantly with age. Most insurers accept applications up to age 65.",
       },
       {
         question: "Is term insurance premium tax deductible?",
-        answer: "Yes. Premiums paid for term insurance are deductible under Section 80C of the Income Tax Act (up to â‚¹1.5 lakh/year). The death benefit received by nominees is fully tax-free under Section 10(10D).",
+        answer: "Yes. Premiums paid for term insurance are deductible under Section 80C of the Income Tax Act (up to ₹1.5 lakh/year). The death benefit received by nominees is fully tax-free under Section 10(10D).",
       },
       {
         question: "What happens if I stop paying premiums?",
-        answer: "If you miss a premium, most insurers offer a 30-day grace period. After that, the policy lapses. You can revive it within 2â€“5 years (varies by insurer) by paying outstanding premiums + interest.",
+        answer: "If you miss a premium, most insurers offer a 30-day grace period. After that, the policy lapses. You can revive it within 2–5 years (varies by insurer) by paying outstanding premiums + interest.",
       },
     ],
-    metaTitle: "Best Term Insurance Plans 2024 â€” Compare & Buy Online",
-    metaDescription: "Compare 20+ term insurance plans from LIC, HDFC Life, ICICI Prudential, and more. Get â‚¹1 Crore cover from â‚¹490/month. 100% free comparison.",
+    metaTitle: "Best Term Insurance Plans 2024 — Compare & Buy Online",
+    metaDescription: "Compare 20+ term insurance plans from LIC, HDFC Life, ICICI Prudential, and more. Get ₹1 Crore cover from ₹490/month. 100% free comparison.",
     explainerTitle: "What Is Term Insurance?",
     whoShouldBuy: [
-      { icon: "ðŸ‘¨â€ðŸ‘©â€ðŸ‘§", label: "Breadwinners with dependants" },
-      { icon: "ðŸ ", label: "Home loan borrowers" },
-      { icon: "ðŸŒ±", label: "First-time insurance buyers" },
+      { icon: "👨‍👩‍👧", label: "Breadwinners with dependants" },
+      { icon: "🏠", label: "Home loan borrowers" },
+      { icon: "🌱", label: "First-time insurance buyers" },
     ],
     keyFeatures: [
-      "Pure death benefit â€” maximum cover at lowest cost",
+      "Pure death benefit — maximum cover at lowest cost",
       "Tax deduction on premium under Section 80C",
       "Optional riders: Critical Illness, Accidental Death",
       "Whole life option available (cover up to age 99)",
       "Return of Premium variant refunds all premiums at maturity",
-      "Online purchase saves 10â€“15% vs offline",
+      "Online purchase saves 10–15% vs offline",
       "Nominee receives sum assured fully tax-free (Sec 10(10D))",
       "Grace period of 30 days for missed premiums",
     ],
@@ -98,7 +98,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     slug: "health",
     label: "Health Insurance",
     route: "/health-insurance",
-    emoji: "ðŸ¥",
+    emoji: "🏥",
     headline: "Best Health Insurance Plans in India 2024",
     subheadline: "Cashless treatment at 14,000+ hospitals. Compare family floater and individual health plans.",
     color: {
@@ -109,10 +109,10 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     },
     trustBadges: ["14,000+ Network Hospitals", "Cashless Claims", "No Room Rent Cap"],
     highlights: [
-      { icon: "ðŸ¥", label: "Network Hospitals", value: "14,000+" },
-      { icon: "ðŸ’Š", label: "Cover Starts", value: "From â‚¹3 Lakh" },
-      { icon: "âš¡", label: "Claim Settlement", value: "Within 4 hrs" },
-      { icon: "ðŸ”„", label: "Renewability", value: "Lifelong" },
+      { icon: "🏥", label: "Network Hospitals", value: "14,000+" },
+      { icon: "💊", label: "Cover Starts", value: "From ₹3 Lakh" },
+      { icon: "⚡", label: "Claim Settlement", value: "Within 4 hrs" },
+      { icon: "🔄", label: "Renewability", value: "Lifelong" },
     ],
     faqs: [
       {
@@ -121,7 +121,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         question: "What is the waiting period in health insurance?",
-        answer: "Most health plans have a 30-day initial waiting period (no claims except accidents), 2â€“4 year waiting period for pre-existing diseases, and 1â€“2 year waiting period for specific illnesses like hernia or cataract.",
+        answer: "Most health plans have a 30-day initial waiting period (no claims except accidents), 2–4 year waiting period for pre-existing diseases, and 1–2 year waiting period for specific illnesses like hernia or cataract.",
       },
       {
         question: "Should I buy individual or family floater plan?",
@@ -129,20 +129,20 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         question: "Does health insurance cover maternity?",
-        answer: "Some plans cover maternity after a waiting period of 2â€“4 years. Plans like Star Comprehensive offer maternity cover after 2 years of continuous coverage. Check sub-limits (usually â‚¹50,000â€“â‚¹1 lakh).",
+        answer: "Some plans cover maternity after a waiting period of 2–4 years. Plans like Star Comprehensive offer maternity cover after 2 years of continuous coverage. Check sub-limits (usually ₹50,000–₹1 lakh).",
       },
       {
         question: "What is a no-claim bonus in health insurance?",
-        answer: "If you don't make any claims in a policy year, your insurer increases your sum insured by 5â€“50% as a no-claim bonus at renewal â€” at no extra cost. Some plans offer up to 100% cumulative bonus.",
+        answer: "If you don't make any claims in a policy year, your insurer increases your sum insured by 5–50% as a no-claim bonus at renewal — at no extra cost. Some plans offer up to 100% cumulative bonus.",
       },
     ],
-    metaTitle: "Best Health Insurance Plans 2024 â€” Compare & Buy Online",
-    metaDescription: "Compare health insurance plans from Star Health, ICICI Lombard, Niva Bupa, and more. Cashless at 14,000+ hospitals. Family floater from â‚¹7,500/year.",
+    metaTitle: "Best Health Insurance Plans 2024 — Compare & Buy Online",
+    metaDescription: "Compare health insurance plans from Star Health, ICICI Lombard, Niva Bupa, and more. Cashless at 14,000+ hospitals. Family floater from ₹7,500/year.",
     explainerTitle: "What Is Health Insurance?",
     whoShouldBuy: [
-      { icon: "ðŸ‘¨â€ðŸ‘©â€ðŸ‘§", label: "Families with young children" },
-      { icon: "ðŸ‘´", label: "Senior citizens & parents" },
-      { icon: "ðŸ’¼", label: "Salaried professionals" },
+      { icon: "👨‍👩‍👧", label: "Families with young children" },
+      { icon: "👴", label: "Senior citizens & parents" },
+      { icon: "💼", label: "Salaried professionals" },
     ],
     keyFeatures: [
       "Cashless hospitalisation at 14,000+ network hospitals",
@@ -160,7 +160,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     slug: "motor",
     label: "Motor Insurance",
     route: "/motor-insurance",
-    emoji: "ðŸš—",
+    emoji: "🚗",
     headline: "Best Car & Bike Insurance in India 2024",
     subheadline: "Mandatory by law. Zero depreciation + 24x7 roadside assistance. Renew in 2 minutes.",
     color: {
@@ -171,15 +171,15 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     },
     trustBadges: ["Legally Mandatory", "4,000+ Cashless Garages", "Zero Depreciation Cover"],
     highlights: [
-      { icon: "ðŸ”§", label: "Cashless Garages", value: "4,000+" },
-      { icon: "ðŸ“±", label: "Instant Policy", value: "In 2 minutes" },
-      { icon: "ðŸ›£ï¸", label: "Roadside Assist", value: "24x7" },
-      { icon: "ðŸ’¸", label: "NCB Discount", value: "Up to 50%" },
+      { icon: "🔧", label: "Cashless Garages", value: "4,000+" },
+      { icon: "📱", label: "Instant Policy", value: "In 2 minutes" },
+      { icon: "🛣️", label: "Roadside Assist", value: "24x7" },
+      { icon: "💸", label: "NCB Discount", value: "Up to 50%" },
     ],
     faqs: [
       {
         question: "Is motor insurance mandatory in India?",
-        answer: "Yes. Under the Motor Vehicles Act, every vehicle plying on Indian roads must have at least a Third-Party (TP) insurance policy. Driving without valid insurance can result in a fine of â‚¹2,000 and/or 3 months imprisonment.",
+        answer: "Yes. Under the Motor Vehicles Act, every vehicle plying on Indian roads must have at least a Third-Party (TP) insurance policy. Driving without valid insurance can result in a fine of ₹2,000 and/or 3 months imprisonment.",
       },
       {
         question: "What is the difference between third-party and comprehensive motor insurance?",
@@ -198,18 +198,18 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
         answer: "In a standard claim, depreciation is deducted from parts (e.g., 50% for rubber parts). With zero depreciation (also called bumper-to-bumper) cover, your insurer pays the full cost of parts without any depreciation deduction.",
       },
     ],
-    metaTitle: "Best Car & Bike Insurance 2024 â€” Compare & Renew Online",
+    metaTitle: "Best Car & Bike Insurance 2024 — Compare & Renew Online",
     metaDescription: "Compare comprehensive and third-party motor insurance from Bajaj Allianz, ICICI Lombard, HDFC ERGO. Zero depreciation, cashless garages, instant policy.",
     explainerTitle: "What Is Motor Insurance?",
     whoShouldBuy: [
-      { icon: "ðŸš—", label: "New car and bike owners" },
-      { icon: "ðŸ¦", label: "Vehicle loan holders" },
-      { icon: "ðŸ¢", label: "Commercial vehicle operators" },
+      { icon: "🚗", label: "New car and bike owners" },
+      { icon: "🏦", label: "Vehicle loan holders" },
+      { icon: "🏢", label: "Commercial vehicle operators" },
     ],
     keyFeatures: [
       "Third-party liability cover mandatory by law",
       "Own damage cover for theft, fire, flood, accident",
-      "Zero depreciation add-on â€” full part replacement cost",
+      "Zero depreciation add-on — full part replacement cost",
       "NCB discount up to 50% for claim-free years",
       "24x7 roadside assistance and towing service",
       "Cashless repairs at 4,000+ network garages",
@@ -222,9 +222,9 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     slug: "life",
     label: "Life Insurance",
     route: "/life-insurance",
-    emoji: "ðŸ’°",
+    emoji: "💰",
     headline: "Best Life Insurance Plans in India 2024",
-    subheadline: "Build wealth while protecting your family. ULIP, endowment, whole life â€” compare all.",
+    subheadline: "Build wealth while protecting your family. ULIP, endowment, whole life — compare all.",
     color: {
       bg: "from-green-700 to-green-900",
       accent: "green",
@@ -233,15 +233,15 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     },
     trustBadges: ["Guaranteed Returns", "Tax Saving under 80C", "Maturity Benefit"],
     highlights: [
-      { icon: "ðŸ“ˆ", label: "Returns", value: "5â€“12% p.a." },
-      { icon: "ðŸ›¡ï¸", label: "Life Cover", value: "Included" },
-      { icon: "ðŸ’¸", label: "Tax Saved", value: "Up to â‚¹46,800" },
-      { icon: "â°", label: "Premium Paying", value: "5â€“20 years" },
+      { icon: "📈", label: "Returns", value: "5–12% p.a." },
+      { icon: "🛡️", label: "Life Cover", value: "Included" },
+      { icon: "💸", label: "Tax Saved", value: "Up to ₹46,800" },
+      { icon: "⏰", label: "Premium Paying", value: "5–20 years" },
     ],
     faqs: [
       {
         question: "What is the difference between term and life insurance?",
-        answer: "Term insurance provides only a death benefit â€” if you survive the term, nothing is paid back. Life insurance plans (endowment, ULIP, whole life) provide both a death benefit and a maturity/savings benefit, but premiums are higher.",
+        answer: "Term insurance provides only a death benefit — if you survive the term, nothing is paid back. Life insurance plans (endowment, ULIP, whole life) provide both a death benefit and a maturity/savings benefit, but premiums are higher.",
       },
       {
         question: "What is a ULIP?",
@@ -249,24 +249,24 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         question: "What is an endowment plan?",
-        answer: "An endowment plan is a traditional life insurance policy that guarantees a lump sum (sum assured + bonuses) at maturity, or pays the sum assured to nominees in case of death. Returns are typically 4â€“6% p.a. â€” conservative but predictable.",
+        answer: "An endowment plan is a traditional life insurance policy that guarantees a lump sum (sum assured + bonuses) at maturity, or pays the sum assured to nominees in case of death. Returns are typically 4–6% p.a. — conservative but predictable.",
       },
       {
         question: "How much life cover do I get with a savings plan?",
-        answer: "Traditional plans offer 10â€“25Ã— the annual premium as sum assured. ULIPs offer a minimum 10Ã— the annual premium. This is lower than a pure term plan â€” if high life cover is the priority, combine a term plan with a savings plan.",
+        answer: "Traditional plans offer 10–25× the annual premium as sum assured. ULIPs offer a minimum 10× the annual premium. This is lower than a pure term plan — if high life cover is the priority, combine a term plan with a savings plan.",
       },
       {
         question: "Are life insurance returns tax-free?",
-        answer: "The maturity proceeds from life insurance are tax-free under Section 10(10D) if the premium paid is less than 10% of the sum assured (for plans issued after April 2012). Premiums up to â‚¹1.5 lakh are deductible under Section 80C.",
+        answer: "The maturity proceeds from life insurance are tax-free under Section 10(10D) if the premium paid is less than 10% of the sum assured (for plans issued after April 2012). Premiums up to ₹1.5 lakh are deductible under Section 80C.",
       },
     ],
-    metaTitle: "Best Life Insurance Plans 2024 â€” ULIP, Endowment, Whole Life",
+    metaTitle: "Best Life Insurance Plans 2024 — ULIP, Endowment, Whole Life",
     metaDescription: "Compare life insurance plans from LIC, HDFC Life, SBI Life. Guaranteed returns, tax saving under 80C, maturity benefits. Get free advice from experts.",
     explainerTitle: "What Is Life Insurance?",
     whoShouldBuy: [
-      { icon: "ðŸ“ˆ", label: "Long-term wealth builders" },
-      { icon: "ðŸ’¸", label: "Tax-saving individuals" },
-      { icon: "ðŸ‘¶", label: "Parents planning child's future" },
+      { icon: "📈", label: "Long-term wealth builders" },
+      { icon: "💸", label: "Tax-saving individuals" },
+      { icon: "👶", label: "Parents planning child's future" },
     ],
     keyFeatures: [
       "Life cover + savings/investment in one plan",
@@ -285,7 +285,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     parentCategory: "motor",
     label: "Car Insurance",
     route: "/car-insurance",
-    emoji: "ðŸš—",
+    emoji: "🚗",
     headline: "Best Car Insurance Plans in India 2024",
     subheadline: "Compare comprehensive, third-party & own damage car insurance. Zero depreciation, cashless garages, instant policy.",
     color: {
@@ -340,15 +340,15 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         question: "What is the difference between third-party and comprehensive car insurance?",
         answer:
-          "Third-party insurance is mandatory by law and covers damages or injuries caused to a third party (another person, vehicle, or property) by your car. It does not cover your own vehicle's damage. Comprehensive insurance includes third-party cover plus own damage cover â€” protecting your car against accidents, theft, fire, natural calamities, and vandalism. Comprehensive plans can also be enhanced with add-ons like zero dep, engine protection, and roadside assistance.",
+          "Third-party insurance is mandatory by law and covers damages or injuries caused to a third party (another person, vehicle, or property) by your car. It does not cover your own vehicle's damage. Comprehensive insurance includes third-party cover plus own damage cover — protecting your car against accidents, theft, fire, natural calamities, and vandalism. Comprehensive plans can also be enhanced with add-ons like zero dep, engine protection, and roadside assistance.",
       },
       {
         question: "What should I do immediately after a car accident to file a claim?",
         answer:
-          "After an accident: (1) Ensure safety â€” move to a safe location and check for injuries. (2) Inform your insurer or call their 24x7 helpline immediately. (3) File an FIR at the nearest police station if there is injury or major damage. (4) Document the scene with photographs of the damage, vehicle number plates, and surroundings. (5) Do not move the vehicle until surveyed if possible. (6) Take the car to a network (cashless) garage for repairs. (7) Submit required documents â€” claim form, RC, driving licence, FIR copy, and repair estimate â€” to the insurer.",
+          "After an accident: (1) Ensure safety — move to a safe location and check for injuries. (2) Inform your insurer or call their 24x7 helpline immediately. (3) File an FIR at the nearest police station if there is injury or major damage. (4) Document the scene with photographs of the damage, vehicle number plates, and surroundings. (5) Do not move the vehicle until surveyed if possible. (6) Take the car to a network (cashless) garage for repairs. (7) Submit required documents — claim form, RC, driving licence, FIR copy, and repair estimate — to the insurer.",
       },
     ],
-    metaTitle: "Best Car Insurance Plans 2024 â€” Compare & Buy Online",
+    metaTitle: "Best Car Insurance Plans 2024 — Compare & Buy Online",
     metaDescription:
       "Compare best car insurance plans in India 2024. Get comprehensive, third-party & own damage cover with zero depreciation, cashless repairs at 4,000+ garages, and instant policy issuance. Save up to 70% on premium.",
     explainerTitle: "What Is Car Insurance?",
@@ -373,7 +373,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         title: "Cashless Repairs",
         description:
-          "Get your car repaired at 4,000+ network garages without paying out of pocket â€” the insurer settles bills directly.",
+          "Get your car repaired at 4,000+ network garages without paying out of pocket — the insurer settles bills directly.",
       },
       {
         title: "Zero Depreciation Cover",
@@ -393,7 +393,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         title: "No Claim Bonus (NCB)",
         description:
-          "Earn up to 50% discount on renewal premium for every claim-free year â€” a reward for safe driving.",
+          "Earn up to 50% discount on renewal premium for every claim-free year — a reward for safe driving.",
       },
       {
         title: "24x7 Roadside Assistance",
@@ -403,7 +403,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         title: "Engine & Gearbox Protection",
         description:
-          "Add-on cover for damage to the engine and gearbox due to water ingression or oil leakage â€” not covered in standard plans.",
+          "Add-on cover for damage to the engine and gearbox due to water ingression or oil leakage — not covered in standard plans.",
       },
       {
         title: "Personal Accident Cover",
@@ -418,7 +418,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     parentCategory: "motor",
     label: "Two Wheeler Insurance",
     route: "/two-wheeler-insurance",
-    emoji: "ðŸ›µ",
+    emoji: "🛵",
     headline: "Best Bike & Scooter Insurance in India 2024",
     subheadline: "Mandatory third-party cover + comprehensive protection for your bike. Renew in 2 minutes.",
     color: {
@@ -531,23 +531,23 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     parentCategory: "health",
     label: "Family Health Insurance",
     route: "/family-health-insurance",
-    emoji: "ðŸ‘¨â€ðŸ‘©â€ðŸ‘§",
+    emoji: "👨‍👩‍👧",
     headline: "Best Family Health Insurance Plans in India 2024",
-    subheadline: "One policy covers entire family. Cashless treatment at 14,000+ hospitals. Cover from â‚¹5 Lakh to â‚¹1 Crore.",
+    subheadline: "One policy covers entire family. Cashless treatment at 14,000+ hospitals. Cover from ₹5 Lakh to ₹1 Crore.",
     color: {
       gradient: "from-green-700 to-green-900",
       accent: "green",
     },
     trustBadges: [
       { label: "14,000+ Cashless Hospitals", icon: "hospital" },
-      { label: "Cover up to â‚¹1 Crore", icon: "shield" },
+      { label: "Cover up to ₹1 Crore", icon: "shield" },
       { label: "No Sub-limits on Room Rent", icon: "checkmark" },
       { label: "Instant Policy Issuance", icon: "bolt" },
     ],
     highlights: [
       {
         title: "Family Floater Coverage",
-        description: "One sum insured shared across all family members â€” spouse, children, and parents â€” under a single affordable premium.",
+        description: "One sum insured shared across all family members — spouse, children, and parents — under a single affordable premium.",
       },
       {
         title: "Restore Benefit",
@@ -559,13 +559,13 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         title: "Pre-Existing Disease Cover",
-        description: "Most plans cover pre-existing diseases after a waiting period of 2â€“4 years, with some insurers offering PED cover from day one.",
+        description: "Most plans cover pre-existing diseases after a waiting period of 2–4 years, with some insurers offering PED cover from day one.",
       },
     ],
     faqs: [
       {
         question: "What is a family floater health insurance plan?",
-        answer: "A family floater plan is a single health insurance policy that covers the entire family â€” typically you, your spouse, and dependent children â€” under one shared sum insured. The premium is lower than buying individual plans for each member, and any member can use the full sum insured in a given policy year.",
+        answer: "A family floater plan is a single health insurance policy that covers the entire family — typically you, your spouse, and dependent children — under one shared sum insured. The premium is lower than buying individual plans for each member, and any member can use the full sum insured in a given policy year.",
       },
       {
         question: "How does sum insured restoration work in family health plans?",
@@ -581,11 +581,11 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         question: "Can I add a new family member to my existing health insurance policy?",
-        answer: "Yes, most family floater plans allow you to add new members â€” such as a newborn, newly married spouse, or dependent parent â€” at the time of policy renewal. Some insurers allow mid-term addition of a newborn baby within 90 days of birth. Adding a new member may result in a revised premium based on the new member's age and health status.",
+        answer: "Yes, most family floater plans allow you to add new members — such as a newborn, newly married spouse, or dependent parent — at the time of policy renewal. Some insurers allow mid-term addition of a newborn baby within 90 days of birth. Adding a new member may result in a revised premium based on the new member's age and health status.",
       },
     ],
     metaTitle: "Best Family Health Insurance Plans in India 2024 | Compare & Buy Online",
-    metaDescription: "Compare the best family health insurance plans in India 2024. One policy for your entire family with cashless treatment at 14,000+ hospitals. Cover from â‚¹5 Lakh to â‚¹1 Crore. Get instant quotes and buy online.",
+    metaDescription: "Compare the best family health insurance plans in India 2024. One policy for your entire family with cashless treatment at 14,000+ hospitals. Cover from ₹5 Lakh to ₹1 Crore. Get instant quotes and buy online.",
     explainerTitle: "Why Family Health Insurance is the Smartest Choice for Your Family",
     whoShouldBuy: [
       {
@@ -604,15 +604,15 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     keyFeatures: [
       {
         title: "Shared Sum Insured",
-        description: "A single sum insured pool â€” ranging from â‚¹5 Lakh to â‚¹1 Crore â€” is available to all covered family members, maximising value per rupee of premium paid.",
+        description: "A single sum insured pool — ranging from ₹5 Lakh to ₹1 Crore — is available to all covered family members, maximising value per rupee of premium paid.",
       },
       {
         title: "Cashless Hospitalisation",
-        description: "Access cashless treatment at 14,000+ network hospitals across India. No upfront payment required â€” the insurer settles the bill directly with the hospital.",
+        description: "Access cashless treatment at 14,000+ network hospitals across India. No upfront payment required — the insurer settles the bill directly with the hospital.",
       },
       {
         title: "No Claim Bonus (NCB)",
-        description: "Earn a bonus increase in sum insured â€” typically 10â€“50% per claim-free year â€” rewarding healthy families with enhanced coverage at no extra cost.",
+        description: "Earn a bonus increase in sum insured — typically 10–50% per claim-free year — rewarding healthy families with enhanced coverage at no extra cost.",
       },
       {
         title: "Day Care Procedures",
@@ -642,7 +642,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     parentCategory: "health",
     label: "Employee Group Health Insurance",
     route: "/group-health-insurance",
-    emoji: "ðŸ¢",
+    emoji: "🏢",
     headline: "Best Group Health Insurance for Employees in India 2024",
     subheadline: "Cover your entire workforce. No waiting period, pre-existing diseases covered from day 1.",
     color: {
@@ -658,7 +658,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     ],
     highlights: [
       "Covers all employees regardless of age or medical history",
-      "Pre-existing diseases covered from day 1 â€” no exclusions",
+      "Pre-existing diseases covered from day 1 — no exclusions",
       "Zero waiting period for maternity, accidents, and illnesses",
       "Cashless hospitalisation at 10,000+ network hospitals across India",
       "Flexible top-up and super top-up options for employees",
@@ -673,12 +673,12 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         question: "Is there a minimum number of employees required to buy group health insurance?",
         answer:
-          "Most insurers in India require a minimum of 7 employees to issue a group health policy. Some insurers and aggregators offer plans starting from as few as 2â€“5 employees, especially for startups. There is generally no upper limit on group size.",
+          "Most insurers in India require a minimum of 7 employees to issue a group health policy. Some insurers and aggregators offer plans starting from as few as 2–5 employees, especially for startups. There is generally no upper limit on group size.",
       },
       {
         question: "Are pre-existing diseases covered under group health insurance?",
         answer:
-          "Yes. One of the biggest advantages of group health insurance is that pre-existing diseases (PEDs) are covered from the very first day of the policy. There are no waiting periods for PEDs, maternity, or most other conditions that would otherwise have a 2â€“4 year waiting period under individual plans.",
+          "Yes. One of the biggest advantages of group health insurance is that pre-existing diseases (PEDs) are covered from the very first day of the policy. There are no waiting periods for PEDs, maternity, or most other conditions that would otherwise have a 2–4 year waiting period under individual plans.",
       },
       {
         question: "Can employees add their family members to the group health policy?",
@@ -704,7 +704,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         persona: "Startups",
         reason:
-          "Even with a small team of 7â€“20 people, startups can access affordable group health plans with no waiting periods and PED coverage â€” giving employees enterprise-grade benefits from day one.",
+          "Even with a small team of 7–20 people, startups can access affordable group health plans with no waiting periods and PED coverage — giving employees enterprise-grade benefits from day one.",
       },
       {
         persona: "SMEs & Growing Businesses",
@@ -716,12 +716,12 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         title: "No Waiting Period",
         description:
-          "Employees are covered from the first day of the policy. No 30-day initial waiting period, no 2â€“4 year PED waiting period.",
+          "Employees are covered from the first day of the policy. No 30-day initial waiting period, no 2–4 year PED waiting period.",
       },
       {
         title: "Pre-existing Diseases Covered from Day 1",
         description:
-          "All pre-existing conditions including diabetes, hypertension, and heart disease are covered immediately â€” a benefit not available in most individual plans.",
+          "All pre-existing conditions including diabetes, hypertension, and heart disease are covered immediately — a benefit not available in most individual plans.",
       },
       {
         title: "Cashless Hospitalisation",
@@ -760,9 +760,9 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     slug: "travel",
     label: "Travel Insurance",
     route: "/travel-insurance",
-    emoji: "âœˆï¸",
+    emoji: "✈️",
     headline: "Best Travel Insurance Plans in India 2024",
-    subheadline: "Trip cancellation, medical emergencies abroad, lost baggage. Domestic & international coverage from â‚¹500.",
+    subheadline: "Trip cancellation, medical emergencies abroad, lost baggage. Domestic & international coverage from ₹500.",
     color: {
       bg: "from-blue-600 to-blue-800",
       accent: "blue",
@@ -772,30 +772,30 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     trustBadges: ["Medical Cover Abroad", "Trip Cancellation", "24x7 Global Assistance"],
     highlights: [
       {
-        icon: "ðŸ¥",
+        icon: "🏥",
         title: "Emergency Medical Cover",
-        description: "Cashless hospitalisation and medical evacuation coverage up to â‚¹1 crore when you fall ill or get injured abroad.",
+        description: "Cashless hospitalisation and medical evacuation coverage up to ₹1 crore when you fall ill or get injured abroad.",
       },
       {
-        icon: "ðŸ§³",
+        icon: "🧳",
         title: "Lost Baggage & Delay",
         description: "Compensation for lost, stolen, or delayed baggage so you're never stranded without essentials.",
       },
       {
-        icon: "ðŸš«",
+        icon: "🚫",
         title: "Trip Cancellation Protection",
         description: "Recover non-refundable travel costs if your trip is cancelled due to illness, natural disaster, or other covered reasons.",
       },
       {
-        icon: "ðŸŒ",
+        icon: "🌍",
         title: "Annual Multi-Trip Plans",
-        description: "One policy covers unlimited trips in a year â€” ideal for frequent flyers and business travellers.",
+        description: "One policy covers unlimited trips in a year — ideal for frequent flyers and business travellers.",
       },
     ],
     faqs: [
       {
         question: "Does travel insurance cover medical emergencies abroad?",
-        answer: "Yes. Most travel insurance plans provide emergency medical cover ranging from â‚¹25 lakh to â‚¹1 crore for hospitalisation, surgery, and emergency evacuation when you are travelling internationally. Some plans also offer cashless treatment at a network of overseas hospitals.",
+        answer: "Yes. Most travel insurance plans provide emergency medical cover ranging from ₹25 lakh to ₹1 crore for hospitalisation, surgery, and emergency evacuation when you are travelling internationally. Some plans also offer cashless treatment at a network of overseas hospitals.",
       },
       {
         question: "What is trip cancellation cover and when does it apply?",
@@ -803,7 +803,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         question: "Will my travel insurance cover lost or delayed baggage?",
-        answer: "Yes. If your checked baggage is lost, stolen, or delayed by the airline beyond a specified number of hours (usually 12 hours), your policy will pay a lump-sum benefit to purchase essential items or compensate for the loss. The payout limit varies by plan, typically between â‚¹10,000 and â‚¹1,00,000.",
+        answer: "Yes. If your checked baggage is lost, stolen, or delayed by the airline beyond a specified number of hours (usually 12 hours), your policy will pay a lump-sum benefit to purchase essential items or compensate for the loss. The payout limit varies by plan, typically between ₹10,000 and ₹1,00,000.",
       },
       {
         question: "Can I claim travel insurance if my visa is rejected?",
@@ -811,25 +811,25 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         question: "What is an annual multi-trip travel insurance plan and is it better than a single-trip plan?",
-        answer: "An annual multi-trip plan covers all trips you take within a 12-month period, each trip typically capped at 30, 45, or 60 days. It is more cost-effective than buying individual policies for each journey if you travel more than twice a year. Business travellers and frequent holidaymakers generally save 40â€“60% by opting for an annual plan over multiple single-trip purchases.",
+        answer: "An annual multi-trip plan covers all trips you take within a 12-month period, each trip typically capped at 30, 45, or 60 days. It is more cost-effective than buying individual policies for each journey if you travel more than twice a year. Business travellers and frequent holidaymakers generally save 40–60% by opting for an annual plan over multiple single-trip purchases.",
       },
     ],
     metaTitle: "Best Travel Insurance Plans in India 2024 | Compare & Buy Online",
-    metaDescription: "Compare travel insurance plans in India starting at â‚¹500. Get coverage for medical emergencies abroad, trip cancellation, lost baggage, and visa rejection. Buy online instantly.",
+    metaDescription: "Compare travel insurance plans in India starting at ₹500. Get coverage for medical emergencies abroad, trip cancellation, lost baggage, and visa rejection. Buy online instantly.",
     explainerTitle: "What Does Travel Insurance Cover?",
     whoShouldBuy: [
       {
-        icon: "âœˆï¸",
+        icon: "✈️",
         title: "International Travellers",
-        description: "Anyone travelling outside India needs medical cover â€” a single hospitalisation abroad can cost lakhs of rupees without insurance.",
+        description: "Anyone travelling outside India needs medical cover — a single hospitalisation abroad can cost lakhs of rupees without insurance.",
       },
       {
-        icon: "ðŸ’¼",
+        icon: "💼",
         title: "Frequent Business Flyers",
         description: "Professionals who travel multiple times a year benefit most from annual multi-trip plans that provide seamless cover at a lower cost.",
       },
       {
-        icon: "ðŸ–ï¸",
+        icon: "🏖️",
         title: "Leisure & Family Holidaymakers",
         description: "Families booking expensive international holidays should protect their non-refundable investments with trip cancellation and medical cover.",
       },
@@ -853,7 +853,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         title: "Flight Delay & Missed Connection",
-        description: "Daily allowance or lump-sum benefit if your flight is delayed by more than 6â€“8 hours due to airline operational reasons.",
+        description: "Daily allowance or lump-sum benefit if your flight is delayed by more than 6–8 hours due to airline operational reasons.",
       },
       {
         title: "Personal Accident Cover",
@@ -874,9 +874,9 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     slug: "home",
     label: "Home Insurance",
     route: "/home-insurance",
-    emoji: "ðŸ ",
+    emoji: "🏠",
     headline: "Best Home Insurance Plans in India 2024",
-    subheadline: "Protect your home from fire, flood, theft & natural disasters. Structure + contents coverage from â‚¹2,500/year.",
+    subheadline: "Protect your home from fire, flood, theft & natural disasters. Structure + contents coverage from ₹2,500/year.",
     color: {
       bg: "from-green-700 to-green-900",
       accent: "green",
@@ -884,12 +884,12 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       badgeText: "Home Insurance",
     },
     metaTitle: "Best Home Insurance Plans in India 2024 | Compare & Buy Online",
-    metaDescription: "Compare home insurance plans in India. Get coverage for fire, flood, theft, earthquakes & natural disasters. Structure + contents coverage starting from â‚¹2,500/year. Buy online instantly.",
+    metaDescription: "Compare home insurance plans in India. Get coverage for fire, flood, theft, earthquakes & natural disasters. Structure + contents coverage starting from ₹2,500/year. Buy online instantly.",
     trustBadges: [
       { icon: "shield-check", text: "IRDAI Approved Insurers" },
       { icon: "clock", text: "Quick Claim Settlement" },
       { icon: "lock", text: "Secure & Encrypted" },
-      { icon: "star", text: "4.8â˜… Rated Service" },
+      { icon: "star", text: "4.8★ Rated Service" },
     ],
     highlights: [
       {
@@ -921,7 +921,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         title: "Tenants & Renters",
-        description: "Renters can protect their personal belongings, furniture, and electronics with contents-only home insurance â€” even without owning the property.",
+        description: "Renters can protect their personal belongings, furniture, and electronics with contents-only home insurance — even without owning the property.",
       },
       {
         title: "Landlords & Property Investors",
@@ -969,7 +969,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         question: "How much does home insurance cost in India?",
-        answer: "Home insurance premiums in India start from as low as â‚¹2,500 per year depending on the property value, location, coverage type, and chosen add-ons. A standard plan for a mid-range home typically costs between â‚¹3,000â€“â‚¹10,000 annually. The premium is calculated based on the sum insured (reinstatement value of the property), not the market value or land price.",
+        answer: "Home insurance premiums in India start from as low as ₹2,500 per year depending on the property value, location, coverage type, and chosen add-ons. A standard plan for a mid-range home typically costs between ₹3,000–₹10,000 annually. The premium is calculated based on the sum insured (reinstatement value of the property), not the market value or land price.",
       },
       {
         question: "Is home insurance mandatory in India?",
@@ -981,7 +981,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         question: "How do I file a home insurance claim in India?",
-        answer: "To file a home insurance claim: (1) Notify your insurer immediately after the incident via their helpline or app. (2) Document the damage with photographs and videos. (3) File an FIR with police for theft or burglary cases. (4) Submit the claim form along with supporting documents including photos, purchase bills, and repair estimates. (5) A surveyor appointed by the insurer will assess the damage. (6) Once approved, the claim amount is settled via bank transfer. Most insurers aim to settle claims within 7â€“30 days.",
+        answer: "To file a home insurance claim: (1) Notify your insurer immediately after the incident via their helpline or app. (2) Document the damage with photographs and videos. (3) File an FIR with police for theft or burglary cases. (4) Submit the claim form along with supporting documents including photos, purchase bills, and repair estimates. (5) A surveyor appointed by the insurer will assess the damage. (6) Once approved, the claim amount is settled via bank transfer. Most insurers aim to settle claims within 7–30 days.",
       },
     ],
   },
@@ -991,9 +991,9 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     parentCategory: "term",
     label: "Term Insurance for Women",
     route: "/term-insurance-women",
-    emoji: "ðŸ‘©",
+    emoji: "👩",
     headline: "Best Term Insurance Plans for Women in India 2024",
-    subheadline: "Exclusive discounts for non-smoker women. Get â‚¹1 Crore cover from â‚¹390/month.",
+    subheadline: "Exclusive discounts for non-smoker women. Get ₹1 Crore cover from ₹390/month.",
     color: {
       primary: "#186874",
       secondary: "#d0ecef",
@@ -1008,7 +1008,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         title: "High Life Cover",
-        description: "Secure life cover of â‚¹50 Lakh to â‚¹5 Crore to protect your family's financial future against any eventuality.",
+        description: "Secure life cover of ₹50 Lakh to ₹5 Crore to protect your family's financial future against any eventuality.",
       },
       {
         title: "Maternity & Female-Specific Riders",
@@ -1022,7 +1022,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     faqs: [
       {
         question: "Why are term insurance premiums lower for women?",
-        answer: "Actuarial data shows that women in India have a longer average life expectancy than men. Because the probability of a claim is statistically lower during the policy term, insurers price premiums lower â€” typically 15â€“20% cheaper than equivalent plans for men.",
+        answer: "Actuarial data shows that women in India have a longer average life expectancy than men. Because the probability of a claim is statistically lower during the policy term, insurers price premiums lower — typically 15–20% cheaper than equivalent plans for men.",
       },
       {
         question: "Can women get term insurance with a maternity rider?",
@@ -1034,20 +1034,20 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         question: "Is term insurance useful for homemakers or non-working women?",
-        answer: "Yes. A homemaker's contribution â€” childcare, household management, elder care â€” has significant economic value. Term insurance ensures the family can hire help or manage financially if the homemaker passes away. Many insurers now offer special plans for homemakers based on the spouse's income.",
+        answer: "Yes. A homemaker's contribution — childcare, household management, elder care — has significant economic value. Term insurance ensures the family can hire help or manage financially if the homemaker passes away. Many insurers now offer special plans for homemakers based on the spouse's income.",
       },
       {
         question: "At what age should a woman buy term insurance?",
-        answer: "The earlier, the better. Buying in your 20s or early 30s locks in the lowest possible premium for the entire policy term. Women who buy before 30 can secure â‚¹1 Crore cover for as low as â‚¹390/month. Premiums rise significantly with age, so there is no benefit in delaying.",
+        answer: "The earlier, the better. Buying in your 20s or early 30s locks in the lowest possible premium for the entire policy term. Women who buy before 30 can secure ₹1 Crore cover for as low as ₹390/month. Premiums rise significantly with age, so there is no benefit in delaying.",
       },
     ],
     metaTitle: "Best Term Insurance for Women in India 2024 | Compare & Buy Online",
-    metaDescription: "Compare the best term insurance plans for women in India. Enjoy up to 20% lower premiums, maternity riders, and critical illness cover. Get â‚¹1 Crore cover from â‚¹390/month. Apply online in minutes.",
+    metaDescription: "Compare the best term insurance plans for women in India. Enjoy up to 20% lower premiums, maternity riders, and critical illness cover. Get ₹1 Crore cover from ₹390/month. Apply online in minutes.",
     explainerTitle: "Why Women Need Term Insurance",
     whoShouldBuy: [
       {
         title: "Working Women & Breadwinners",
-        description: "If your income supports your family, a term plan ensures they maintain their lifestyle and meet financial goals â€” EMIs, education, retirement â€” even in your absence.",
+        description: "If your income supports your family, a term plan ensures they maintain their lifestyle and meet financial goals — EMIs, education, retirement — even in your absence.",
       },
       {
         title: "Homemakers",
@@ -1064,12 +1064,12 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
         description: "Women pay significantly less than men for the same sum assured and tenure, making term insurance one of the most affordable financial protection tools available.",
       },
       {
-        title: "Sum Assured up to â‚¹5 Crore",
-        description: "Choose a life cover that aligns with your income, liabilities, and future financial goals â€” from â‚¹25 Lakh to â‚¹5 Crore or more.",
+        title: "Sum Assured up to ₹5 Crore",
+        description: "Choose a life cover that aligns with your income, liabilities, and future financial goals — from ₹25 Lakh to ₹5 Crore or more.",
       },
       {
         title: "Policy Terms up to 40 Years",
-        description: "Lock in low premiums early and stay covered for the long haul â€” most plans allow coverage up to age 75 or 85.",
+        description: "Lock in low premiums early and stay covered for the long haul — most plans allow coverage up to age 75 or 85.",
       },
       {
         title: "Female-Specific Critical Illness Rider",
@@ -1085,11 +1085,11 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         title: "Flexible Payout Options",
-        description: "Choose between lump-sum death benefit, monthly income payout, or a combination â€” ensuring your family receives funds in the most useful format.",
+        description: "Choose between lump-sum death benefit, monthly income payout, or a combination — ensuring your family receives funds in the most useful format.",
       },
       {
         title: "Tax Benefits under Section 80C & 10(10D)",
-        description: "Premiums paid qualify for deductions up to â‚¹1.5 Lakh under Section 80C, and the death benefit received by nominees is fully tax-exempt under Section 10(10D).",
+        description: "Premiums paid qualify for deductions up to ₹1.5 Lakh under Section 80C, and the death benefit received by nominees is fully tax-exempt under Section 10(10D).",
       },
     ],
   },
@@ -1099,7 +1099,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     parentCategory: "term",
     label: "Return of Premium Term Plans",
     route: "/return-of-premium-plans",
-    emoji: "ðŸ’°",
+    emoji: "💰",
     headline: "Best Return of Premium Term Plans in India 2024",
     subheadline: "Get all your premiums back at maturity if you survive the policy term. Life cover + guaranteed return.",
     color: {
@@ -1117,33 +1117,33 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     highlights: [
       "Get 100% of all premiums paid returned if you outlive the policy term",
       "Full life cover throughout the policy tenure for your family's financial security",
-      "Premiums qualify for tax deduction under Section 80C up to â‚¹1.5 lakh per year",
+      "Premiums qualify for tax deduction under Section 80C up to ₹1.5 lakh per year",
       "Death benefit paid to nominee if insured passes away during the term",
       "Available for policy terms ranging from 10 to 40 years",
       "Option to enhance coverage with critical illness and accidental death riders",
-      "Guaranteed maturity benefit â€” no market risk, no investment risk",
+      "Guaranteed maturity benefit — no market risk, no investment risk",
       "Ideal for disciplined savers who want insurance with a built-in savings component",
     ],
     faqs: [
       {
         question: "How does a Return of Premium (ROP) term plan work?",
         answer:
-          "A Return of Premium term plan works like a standard term insurance plan during the policy tenure â€” your family receives the full sum assured as a death benefit if you pass away. The key difference is the maturity benefit: if you survive the entire policy term, the insurer refunds 100% of all the premiums you paid over the years. You essentially get life cover at zero net cost if you outlive the term, though the premiums are higher than a pure term plan.",
+          "A Return of Premium term plan works like a standard term insurance plan during the policy tenure — your family receives the full sum assured as a death benefit if you pass away. The key difference is the maturity benefit: if you survive the entire policy term, the insurer refunds 100% of all the premiums you paid over the years. You essentially get life cover at zero net cost if you outlive the term, though the premiums are higher than a pure term plan.",
       },
       {
         question: "How much more expensive is an ROP plan compared to a pure term plan?",
         answer:
-          "ROP term plans typically cost 2x to 3x more than a comparable pure term plan for the same sum assured and tenure. For example, a pure term plan covering â‚¹1 crore for 30 years might cost around â‚¹10,000â€“â‚¹12,000 per year, while the equivalent ROP plan could cost â‚¹25,000â€“â‚¹35,000 per year. The higher premium accounts for the insurer's commitment to refund all premiums at maturity. Whether the extra cost is worthwhile depends on your financial goals and alternative investment opportunities.",
+          "ROP term plans typically cost 2x to 3x more than a comparable pure term plan for the same sum assured and tenure. For example, a pure term plan covering ₹1 crore for 30 years might cost around ₹10,000–₹12,000 per year, while the equivalent ROP plan could cost ₹25,000–₹35,000 per year. The higher premium accounts for the insurer's commitment to refund all premiums at maturity. Whether the extra cost is worthwhile depends on your financial goals and alternative investment opportunities.",
       },
       {
         question: "What is the maturity benefit in an ROP term plan?",
         answer:
-          "The maturity benefit in an ROP term plan is the total amount of premiums you have paid over the entire policy duration, returned as a lump sum when the policy matures and you are alive. For example, if you paid â‚¹30,000 per year for 30 years, you receive â‚¹9,00,000 at the end of the term. This refund is tax-free under Section 10(10D) of the Income Tax Act, provided the premium does not exceed 10% of the sum assured. No bonus or interest is added â€” it is purely a return of the base premiums paid.",
+          "The maturity benefit in an ROP term plan is the total amount of premiums you have paid over the entire policy duration, returned as a lump sum when the policy matures and you are alive. For example, if you paid ₹30,000 per year for 30 years, you receive ₹9,00,000 at the end of the term. This refund is tax-free under Section 10(10D) of the Income Tax Act, provided the premium does not exceed 10% of the sum assured. No bonus or interest is added — it is purely a return of the base premiums paid.",
       },
       {
         question: "What are the tax benefits available on ROP term plans?",
         answer:
-          "ROP term plans offer tax benefits at both the investment and maturity stages. The premiums paid are eligible for deduction under Section 80C of the Income Tax Act, up to a maximum of â‚¹1.5 lakh per financial year, reducing your taxable income. At maturity, the premium refund received is exempt from tax under Section 10(10D), provided the annual premium does not exceed 10% of the sum assured. In the event of a claim, the death benefit received by the nominee is also fully tax-free under Section 10(10D).",
+          "ROP term plans offer tax benefits at both the investment and maturity stages. The premiums paid are eligible for deduction under Section 80C of the Income Tax Act, up to a maximum of ₹1.5 lakh per financial year, reducing your taxable income. At maturity, the premium refund received is exempt from tax under Section 10(10D), provided the annual premium does not exceed 10% of the sum assured. In the event of a claim, the death benefit received by the nominee is also fully tax-free under Section 10(10D).",
       },
       {
         question: "Should I choose an ROP plan or a pure term plan and invest the difference?",
@@ -1181,12 +1181,12 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         title: "Comprehensive Life Cover",
         description:
-          "Your family receives the full sum assured â€” up to â‚¹10 crore or more â€” as a tax-free death benefit if you pass away during the policy term.",
+          "Your family receives the full sum assured — up to ₹10 crore or more — as a tax-free death benefit if you pass away during the policy term.",
       },
       {
         title: "Tax Deduction Under Section 80C",
         description:
-          "Annual premiums paid towards an ROP term plan are deductible up to â‚¹1.5 lakh per year under Section 80C, reducing your overall tax liability.",
+          "Annual premiums paid towards an ROP term plan are deductible up to ₹1.5 lakh per year under Section 80C, reducing your overall tax liability.",
       },
       {
         title: "Tax-Free Maturity Benefit Under 10(10D)",
@@ -1204,7 +1204,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
           "Enhance your coverage with add-on riders such as critical illness cover, accidental death benefit, waiver of premium on disability, and terminal illness benefit.",
       },
       {
-        title: "Guaranteed Benefit â€” No Market Risk",
+        title: "Guaranteed Benefit — No Market Risk",
         description:
           "Unlike ULIPs or endowment plans, the maturity benefit in an ROP plan is fixed and guaranteed from day one, with no exposure to equity or debt market fluctuations.",
       },
@@ -1221,9 +1221,9 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     parentCategory: "life",
     label: "Guaranteed Return Plans",
     route: "/guaranteed-return-plans",
-    emoji: "ðŸ“ˆ",
+    emoji: "📈",
     headline: "Best Guaranteed Return Plans in India 2024",
-    subheadline: "Fixed returns of 5â€“7% p.a. guaranteed by insurer. No market risk. Build corpus with life cover.",
+    subheadline: "Fixed returns of 5–7% p.a. guaranteed by insurer. No market risk. Build corpus with life cover.",
     color: {
       from: "from-green-700",
       to: "to-green-900",
@@ -1231,13 +1231,13 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     },
     trustBadges: ["Upto 7.4% Returns", "IRDAI Regulated", "Capital Guarantee"],
     highlights: [
-      "Returns fixed at policy inception â€” unaffected by market movements",
+      "Returns fixed at policy inception — unaffected by market movements",
       "Life cover included throughout the policy term",
       "Guaranteed maturity benefit payable as lump sum or income",
       "Tax-free maturity proceeds under Section 10(10D)",
       "Premium waiver benefit available on critical illness or disability",
       "Loan facility against policy surrender value",
-      "Flexible premium payment terms â€” single, limited, or regular pay",
+      "Flexible premium payment terms — single, limited, or regular pay",
       "Suitable for long-term goals: retirement, child education, home purchase",
     ],
     faqs: [
@@ -1254,7 +1254,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         question: "Are the maturity proceeds from these plans tax-free?",
         answer:
-          "Yes, subject to conditions. If the annual premium does not exceed 10% of the sum assured (or 15% for policies issued before April 2013), the maturity amount is completely exempt from income tax under Section 10(10D) of the Income Tax Act. Premiums paid are also eligible for deduction under Section 80C up to â‚¹1.5 lakh per year.",
+          "Yes, subject to conditions. If the annual premium does not exceed 10% of the sum assured (or 15% for policies issued before April 2013), the maturity amount is completely exempt from income tax under Section 10(10D) of the Income Tax Act. Premiums paid are also eligible for deduction under Section 80C up to ₹1.5 lakh per year.",
       },
       {
         question: "What happens if I surrender the policy early?",
@@ -1269,11 +1269,11 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     ],
     metaTitle: "Best Guaranteed Return Plans in India 2024 | Fixed Returns + Life Cover",
     metaDescription:
-      "Compare the best Guaranteed Return Plans in India. Get fixed returns of 5â€“7.4% p.a. with full capital protection and life cover. IRDAI regulated. Tax-free maturity under 10(10D).",
+      "Compare the best Guaranteed Return Plans in India. Get fixed returns of 5–7.4% p.a. with full capital protection and life cover. IRDAI regulated. Tax-free maturity under 10(10D).",
     explainerTitle: "What Are Guaranteed Return Plans?",
     whoShouldBuy: [
       "Risk-averse savers who want predictable, fixed returns without any exposure to equity or debt market volatility",
-      "Individuals with long-term financial goals â€” such as building a retirement corpus, funding a child's higher education, or saving for a home â€” who need both life protection and assured growth",
+      "Individuals with long-term financial goals — such as building a retirement corpus, funding a child's higher education, or saving for a home — who need both life protection and assured growth",
       "Taxpayers looking to maximise Section 80C deductions while also securing tax-free maturity income under Section 10(10D)",
     ],
     keyFeatures: [
@@ -1295,7 +1295,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         title: "Tax Benefits on Premium & Maturity",
         description:
-          "Premiums qualify for Section 80C deduction (up to â‚¹1.5 lakh p.a.) and maturity proceeds are tax-free under Section 10(10D).",
+          "Premiums qualify for Section 80C deduction (up to ₹1.5 lakh p.a.) and maturity proceeds are tax-free under Section 10(10D).",
       },
       {
         title: "Flexible Payout Options",
@@ -1305,17 +1305,17 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         title: "Multiple Premium Payment Terms",
         description:
-          "Pay premiums for the full policy term, a limited period (e.g., 5 or 10 years), or as a single lump-sum premium â€” offering flexibility to match your cash flow.",
+          "Pay premiums for the full policy term, a limited period (e.g., 5 or 10 years), or as a single lump-sum premium — offering flexibility to match your cash flow.",
       },
       {
         title: "Loan Against Policy",
         description:
-          "After the policy acquires a surrender value (typically after 2â€“3 years), you can avail a loan of up to 80â€“90% of the surrender value for liquidity needs without breaking the policy.",
+          "After the policy acquires a surrender value (typically after 2–3 years), you can avail a loan of up to 80–90% of the surrender value for liquidity needs without breaking the policy.",
       },
       {
         title: "IRDAI Regulated & Insurer-Backed",
         description:
-          "All guaranteed return plans are regulated by the Insurance Regulatory and Development Authority of India (IRDAI), and the guarantee is backed by the insurer's balance sheet â€” providing a high degree of safety.",
+          "All guaranteed return plans are regulated by the Insurance Regulatory and Development Authority of India (IRDAI), and the guarantee is backed by the insurer's balance sheet — providing a high degree of safety.",
       },
     ],
   },
@@ -1325,9 +1325,9 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     parentCategory: "life",
     label: "Child Savings Plans",
     route: "/child-savings-plans",
-    emoji: "ðŸ‘¶",
+    emoji: "👶",
     headline: "Best Child Insurance & Savings Plans in India 2024",
-    subheadline: "Secure your child's future â€” education, marriage, career goals. Waiver of premium if parent passes away.",
+    subheadline: "Secure your child's future — education, marriage, career goals. Waiver of premium if parent passes away.",
     color: {
       primary: "#15803D",
       secondary: "#DCFCE7",
@@ -1342,7 +1342,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       "Partial withdrawals allowed for education milestones",
       "Life cover for parent throughout the policy term",
       "Tax benefits under Section 80C and Section 10(10D)",
-      "Flexible payout options â€” lump sum or staggered",
+      "Flexible payout options — lump sum or staggered",
     ],
     faqs: [
       {
@@ -1353,7 +1353,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         question: "What is the premium waiver benefit in child plans?",
         answer:
-          "The premium waiver benefit is the most important feature of a child plan. If the parent or proposer dies during the policy term, the insurance company waives all future premiums on behalf of the family. The policy does not lapse â€” it continues as if premiums were being paid â€” and the child receives the full maturity corpus as planned. This ensures that the child's financial goals are protected even in the worst-case scenario.",
+          "The premium waiver benefit is the most important feature of a child plan. If the parent or proposer dies during the policy term, the insurance company waives all future premiums on behalf of the family. The policy does not lapse — it continues as if premiums were being paid — and the child receives the full maturity corpus as planned. This ensures that the child's financial goals are protected even in the worst-case scenario.",
       },
       {
         question: "At what age should I buy a child savings plan?",
@@ -1377,9 +1377,9 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     explainerTitle: "Why Every Parent Needs a Child Savings Plan",
     whoShouldBuy: [
       {
-        title: "Parents of young children (0â€“10 years)",
+        title: "Parents of young children (0–10 years)",
         description:
-          "Families who want to systematically build a dedicated corpus for their child's higher education or marriage expenses over the next 10â€“20 years, with the security that the goal won't be derailed if the breadwinner passes away.",
+          "Families who want to systematically build a dedicated corpus for their child's higher education or marriage expenses over the next 10–20 years, with the security that the goal won't be derailed if the breadwinner passes away.",
       },
       {
         title: "Single-income households",
@@ -1389,7 +1389,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         title: "Parents planning for milestone goals",
         description:
-          "Parents who have identified specific financial goals â€” undergraduate degree, MBA, MBBS, or wedding â€” and want a structured, disciplined savings vehicle that matures at the right time with a guaranteed payout amount.",
+          "Parents who have identified specific financial goals — undergraduate degree, MBA, MBBS, or wedding — and want a structured, disciplined savings vehicle that matures at the right time with a guaranteed payout amount.",
       },
     ],
     keyFeatures: [
@@ -1406,7 +1406,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         title: "Flexible Policy Term",
         description:
-          "Policy terms can typically be aligned to specific goals â€” a 15-year term to fund graduation, or a 20-year term for postgraduate studies. The maturity date is chosen to coincide with when the funds will be needed.",
+          "Policy terms can typically be aligned to specific goals — a 15-year term to fund graduation, or a 20-year term for postgraduate studies. The maturity date is chosen to coincide with when the funds will be needed.",
       },
       {
         title: "Partial Withdrawals for Education Milestones",
@@ -1421,7 +1421,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         title: "Tax Benefits Under Section 80C and 10(10D)",
         description:
-          "Premiums paid towards a child plan qualify for deduction under Section 80C (up to â‚¹1.5 lakh per year). The maturity proceeds and death benefits are tax-exempt under Section 10(10D), subject to applicable conditions.",
+          "Premiums paid towards a child plan qualify for deduction under Section 80C (up to ₹1.5 lakh per year). The maturity proceeds and death benefits are tax-exempt under Section 10(10D), subject to applicable conditions.",
       },
       {
         title: "Bonus Additions (Traditional Plans)",
@@ -1431,7 +1431,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       {
         title: "Systematic Savings Discipline",
         description:
-          "Regular premium commitments create a forced savings habit, ensuring parents consistently set aside money for their child's future rather than dipping into those funds for other expenses â€” unlike a regular savings account.",
+          "Regular premium commitments create a forced savings habit, ensuring parents consistently set aside money for their child's future rather than dipping into those funds for other expenses — unlike a regular savings account.",
       },
     ],
   },
@@ -1441,9 +1441,9 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     parentCategory: "life",
     label: "Retirement Plans",
     route: "/retirement-plans",
-    emoji: "ðŸ–ï¸",
+    emoji: "🏖️",
     headline: "Best Retirement Plans & Pension Plans in India 2024",
-    subheadline: "Guaranteed pension income for life. Annuity plans, NPS-linked, ULIP retirement â€” all compared.",
+    subheadline: "Guaranteed pension income for life. Annuity plans, NPS-linked, ULIP retirement — all compared.",
     color: {
       primary: "#186874",
       secondary: "#d0ecef",
@@ -1457,9 +1457,9 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     explainerTitle: "What Are Retirement Plans?",
     highlights: [
       "Guaranteed lifelong pension income after retirement",
-      "Tax deduction up to â‚¹1.5 lakh under Section 80C",
+      "Tax deduction up to ₹1.5 lakh under Section 80C",
       "Additional deduction under Section 80CCC for pension plans",
-      "Flexible annuity options â€” immediate or deferred",
+      "Flexible annuity options — immediate or deferred",
       "Corpus remains tax-free upon maturity in many plans",
       "NPS-linked options with market-linked growth potential",
       "Joint life annuity to secure spouse's income",
@@ -1475,7 +1475,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
         description: "Entrepreneurs and freelancers who lack employer-sponsored retirement benefits and need to build their own pension corpus.",
       },
       {
-        title: "Early Planners (25â€“40 Age Group)",
+        title: "Early Planners (25–40 Age Group)",
         description: "Young earners who want to leverage compounding over a long horizon to build a substantial retirement fund with minimal monthly contribution.",
       },
     ],
@@ -1490,7 +1490,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         title: "Tax Benefits Under 80C & 80CCC",
-        description: "Premiums paid towards pension plans are eligible for deductions up to â‚¹1.5 lakh under 80C and an additional â‚¹50,000 under 80CCD(1B) for NPS.",
+        description: "Premiums paid towards pension plans are eligible for deductions up to ₹1.5 lakh under 80C and an additional ₹50,000 under 80CCD(1B) for NPS.",
       },
       {
         title: "Deferred & Immediate Plans",
@@ -1524,15 +1524,15 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
       },
       {
         question: "How much pension will I receive from a retirement plan?",
-        answer: "The pension amount depends on the corpus accumulated, the annuity rate at vesting, and the annuity option chosen. As an example, a corpus of â‚¹1 crore with an annuity rate of 6% per annum would provide approximately â‚¹6 lakh per year or â‚¹50,000 per month. Annuity rates vary by insurer, age at vesting, and type of annuity selected.",
+        answer: "The pension amount depends on the corpus accumulated, the annuity rate at vesting, and the annuity option chosen. As an example, a corpus of ₹1 crore with an annuity rate of 6% per annum would provide approximately ₹6 lakh per year or ₹50,000 per month. Annuity rates vary by insurer, age at vesting, and type of annuity selected.",
       },
       {
         question: "Are retirement plan payouts tax-free?",
-        answer: "The pension (annuity) income received from a retirement plan is taxable as income in the year of receipt. However, up to one-third of the vesting corpus can be commuted (withdrawn as lump sum) tax-free. Premiums paid are eligible for deduction under Section 80C (up to â‚¹1.5 lakh) and Section 80CCC. For NPS, maturity corpus up to 60% is tax-free if used for annuity purchase.",
+        answer: "The pension (annuity) income received from a retirement plan is taxable as income in the year of receipt. However, up to one-third of the vesting corpus can be commuted (withdrawn as lump sum) tax-free. Premiums paid are eligible for deduction under Section 80C (up to ₹1.5 lakh) and Section 80CCC. For NPS, maturity corpus up to 60% is tax-free if used for annuity purchase.",
       },
       {
         question: "Can I surrender or exit a retirement plan before maturity?",
-        answer: "Yes, most retirement plans allow surrender after the lock-in period (typically 3â€“5 years). However, surrendering early results in a lower surrender value and potential loss of bonuses. The surrender proceeds may be taxable. It is strongly advisable to hold the plan until the vesting date to maximise the retirement corpus and pension benefit. Some plans allow partial withdrawals under specific conditions.",
+        answer: "Yes, most retirement plans allow surrender after the lock-in period (typically 3–5 years). However, surrendering early results in a lower surrender value and potential loss of bonuses. The surrender proceeds may be taxable. It is strongly advisable to hold the plan until the vesting date to maximise the retirement corpus and pension benefit. Some plans allow partial withdrawals under specific conditions.",
       },
     ],
   },

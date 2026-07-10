@@ -5,7 +5,6 @@ import CategoryHero from "./CategoryHero";
 import InsuranceExplainer from "./InsuranceExplainer";
 import ProviderGrid from "./ProviderGrid";
 import TopPoliciesTable from "./TopPoliciesTable";
-import CalculatorWidget from "./CalculatorWidget";
 import ComparisonCTA from "./ComparisonCTA";
 import CategoryFaq from "./CategoryFaq";
 import RelatedBlogs from "./RelatedBlogs";
@@ -111,12 +110,7 @@ export default async function CategoryPage({ config }: Props) {
         </>
       )}
 
-      {/* 6. CalculatorWidget */}
-      <CalculatorWidget category={themeSlug} />
-
-      <SectionDivider />
-
-      {/* 7. ComparisonCTA */}
+      {/* 6. ComparisonCTA */}
       <ComparisonCTA category={themeSlug} />
 
       <SectionDivider />

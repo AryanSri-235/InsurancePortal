@@ -9,7 +9,7 @@ import {
   Plane, UserCheck, RefreshCw, BarChart2, Baby,
   Umbrella, Building2, Home, Lock, FileText,
   AlertTriangle, Landmark, HelpCircle, PenLine,
-  Calculator, type LucideIcon,
+  type LucideIcon,
 } from "lucide-react";
 
 interface NavLink {
@@ -34,7 +34,7 @@ const PLAN_SECTIONS: PlanSection[] = [
       { label: "Term Insurance (Women)",   href: "/term-insurance-women",     icon: UserCheck,  desc: "Upto 20% cheaper for women" },
       { label: "Return of Premium Plans",  href: "/return-of-premium-plans",  icon: RefreshCw,  desc: "100% premium refund" },
       { label: "Life Insurance",           href: "/life-insurance",           icon: TrendingUp, desc: "Savings + life cover" },
-      { label: "Guaranteed Return Plans",  href: "/guaranteed-return-plans",  icon: BarChart2,  desc: "Fixed 5â€“7% returns" },
+      { label: "Guaranteed Return Plans",  href: "/guaranteed-return-plans",  icon: BarChart2,  desc: "Fixed 5–7% returns" },
       { label: "Child Savings Plans",      href: "/child-savings-plans",      icon: Baby,       desc: "Secure your child's future" },
       { label: "Retirement Plans",         href: "/retirement-plans",         icon: Umbrella,   desc: "Lifelong pension income" },
     ],
@@ -70,7 +70,6 @@ const COMPANY_LINKS: NavLink[] = [
   { label: "About Us",   href: "/about",      icon: Building2,  desc: "Our story & mission" },
   { label: "Contact",    href: "/contact",    icon: Phone,      desc: "Talk to our team" },
   { label: "Blog",       href: "/blog",       icon: PenLine,    desc: "Insurance guides & tips" },
-  { label: "Calculator", href: "/calculator", icon: Calculator, desc: "Estimate your premium" },
   { label: "FAQ",        href: "/faq",        icon: HelpCircle, desc: "Common questions answered" },
 ];
 
@@ -138,9 +137,9 @@ export default function Navbar() {
     <>
       {/* Announcement bar */}
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs py-2 text-center font-medium hidden md:block">
-        <span className="opacity-90">ðŸŽ‰ Compare 200+ plans from 50+ top insurers â€” 100% Free, No Spam</span>
+        <span className="opacity-90">✦ Compare 200+ plans from 50+ top insurers &mdash; 100% Free, No Spam</span>
         <span className="mx-4 opacity-40">|</span>
-        <span className="opacity-90">ðŸ“ž Expert helpline: <span className="font-bold">1800-XXX-XXXX</span> Â· Monâ€“Sat 9 AMâ€“7 PM</span>
+        <span className="opacity-90">☎ Expert helpline: <span className="font-bold">1800-XXX-XXXX</span> &middot; Mon&ndash;Sat 9 AM&ndash;7 PM</span>
       </div>
 
       <header
@@ -212,7 +211,7 @@ export default function Navbar() {
                   <div className="border-t border-gray-100 mt-4 pt-3 flex items-center justify-between">
                     <span className="text-xs text-gray-400">Not sure which plan suits you? Talk to a free expert.</span>
                     <a href="tel:1800XXXXXXX" className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">
-                      <Phone className="w-3 h-3" /> Call Free â€” 1800-XXX-XXXX
+                      <Phone className="w-3 h-3" /> Call Free &ndash; 1800-XXX-XXXX
                     </a>
                   </div>
                 </div>
@@ -296,7 +295,7 @@ export default function Navbar() {
                     );
                   })}
                   <div className="border-t border-gray-100 mt-1 pt-2 px-3 pb-1">
-                    <p className="text-[10px] text-gray-400">IRDAI Reg. No. WBA000000 Â· Â© 2026 InsurancePortal</p>
+                    <p className="text-[10px] text-gray-400">IRDAI Reg. No. WBA000000 &middot; &copy; 2026 InsurancePortal</p>
                   </div>
                 </div>
               </div>
@@ -477,7 +476,7 @@ export default function Navbar() {
                 onClick={() => setMenuOpen(false)}
                 className="mt-2 block bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-4 py-3 rounded-xl text-sm font-bold text-center shadow-md shadow-blue-200"
               >
-                Get Free Quote â†’
+                Get Free Quote &rarr;
               </Link>
             </div>
           </div>

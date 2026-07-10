@@ -1,16 +1,26 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
 import BgDecorations from "./BgDecorations";
 import QuoteForm from "@/components/QuoteForm";
-import { Shield, HeartPulse, Car, TrendingUp, Building2, BadgeCheck, Users, ShieldCheck } from "lucide-react";
+import { Shield, HeartPulse, Car, TrendingUp, Building2, BadgeCheck, Users, ShieldCheck, Bike, Plane, Home, UserCheck, RefreshCw, BarChart2, Baby, Umbrella, ChevronDown } from "lucide-react";
 
 const CATEGORIES = [
-  { value: "term",   label: "Term Insurance",   icon: Shield },
-  { value: "health", label: "Health Insurance",  icon: HeartPulse },
-  { value: "motor",  label: "Motor Insurance",   icon: Car },
-  { value: "life",   label: "Life Insurance",    icon: TrendingUp },
+  { label: "Term Insurance",          href: "/term-insurance",          icon: Shield },
+  { label: "Health Insurance",        href: "/health-insurance",        icon: HeartPulse },
+  { label: "Car Insurance",           href: "/car-insurance",           icon: Car },
+  { label: "Two Wheeler Insurance",   href: "/two-wheeler-insurance",   icon: Bike },
+  { label: "Life Insurance",          href: "/life-insurance",          icon: TrendingUp },
+  { label: "Family Health Insurance", href: "/family-health-insurance", icon: Users },
+  { label: "Travel Insurance",        href: "/travel-insurance",        icon: Plane },
+  { label: "Home Insurance",          href: "/home-insurance",          icon: Home },
+  { label: "Term for Women",          href: "/term-insurance-women",    icon: UserCheck },
+  { label: "Group Health Insurance",  href: "/group-health-insurance",  icon: Building2 },
+  { label: "Return of Premium",       href: "/return-of-premium-plans", icon: RefreshCw },
+  { label: "Child Savings Plans",     href: "/child-savings-plans",     icon: Baby },
+  { label: "Retirement Plans",        href: "/retirement-plans",        icon: Umbrella },
+  { label: "Guaranteed Returns",      href: "/guaranteed-return-plans", icon: BarChart2 },
 ];
 
 const TRUST = [
@@ -51,6 +61,67 @@ function StatBox({ stat, started }: { stat: typeof TRUST[0]; started: boolean })
   );
 }
 
+const MAIN = CATEGORIES.slice(0, 4);
+const MORE = CATEGORIES.slice(4);
+
+function CategoryPills() {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  const close = useCallback(() => setOpen(false), []);
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) close();
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [open, close]);
+
+  return (
+    <div className="flex flex-wrap gap-2.5 mb-12">
+      {MAIN.map((c) => (
+        <Link
+          key={c.href}
+          href={c.href}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50 hover:shadow-md text-sm font-semibold text-gray-700 hover:text-blue-700 transition-all duration-200 shadow-sm"
+        >
+          <c.icon className="w-4 h-4" />
+          <span>{c.label}</span>
+        </Link>
+      ))}
+
+      {/* More dropdown */}
+      <div className="relative" ref={ref}>
+        <button
+          onClick={() => setOpen((o) => !o)}
+          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50 hover:shadow-md text-sm font-semibold text-gray-700 hover:text-blue-700 transition-all duration-200 shadow-sm"
+        >
+          More Plans
+          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+        </button>
+
+        {open && (
+          <div className="absolute left-0 top-full mt-2 z-50 bg-white border border-gray-200 rounded-2xl shadow-xl shadow-blue-100/40 p-2 min-w-[220px]">
+            {MORE.map((c) => (
+              <Link
+                key={c.href}
+                href={c.href}
+                onClick={close}
+                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-150"
+              >
+                <c.icon className="w-4 h-4 flex-shrink-0" />
+                {c.label}
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 export default function HeroSection() {
   const [statsStarted, setStatsStarted] = useState(false);
   const statsRef = useRef<HTMLDivElement>(null);
@@ -67,18 +138,21 @@ export default function HeroSection() {
   }, []);
 
   return (
-    <section id="lead-form" className="relative overflow-hidden bg-gradient-to-br from-blue-50 via-white to-indigo-50 min-h-[88vh] flex items-center">
-      <BgDecorations variant="hero" />
-      <div className="absolute top-[-80px] left-[-80px] w-[420px] h-[420px] rounded-full opacity-40 blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, #bfdbfe, transparent)" }} />
-      <div className="absolute bottom-[-60px] right-[-60px] w-[360px] h-[360px] rounded-full opacity-30 blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, #c7d2fe, transparent)" }} />
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-3xl pointer-events-none" style={{ background: "radial-gradient(circle, #93c5fd, transparent)" }} />
-      <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: "radial-gradient(circle, #186874 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+    <section id="lead-form" className="relative bg-gradient-to-br from-blue-50 via-white to-indigo-50 min-h-[88vh] flex items-center">
+      {/* Decorative blobs — overflow clipped separately so dropdown isn't cut off */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <BgDecorations variant="hero" />
+        <div className="absolute top-[-80px] left-[-80px] w-[420px] h-[420px] rounded-full opacity-40 blur-3xl" style={{ background: "radial-gradient(circle, #bfdbfe, transparent)" }} />
+        <div className="absolute bottom-[-60px] right-[-60px] w-[360px] h-[360px] rounded-full opacity-30 blur-3xl" style={{ background: "radial-gradient(circle, #c7d2fe, transparent)" }} />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-3xl" style={{ background: "radial-gradient(circle, #93c5fd, transparent)" }} />
+        <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: "radial-gradient(circle, #186874 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
+      </div>
 
       <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
         <div className="grid lg:grid-cols-2 gap-14 items-center">
 
           {/* ── Left copy ── */}
-          <div className="animate-fade-in-up">
+          <div className="animate-fade-in-up relative z-10">
             <div className="inline-flex items-center gap-2 mb-7 px-4 py-2 rounded-full border border-blue-200 bg-blue-50 text-blue-700 text-sm font-semibold shadow-sm">
               <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
               India's #1 Insurance Comparison Platform
@@ -100,18 +174,7 @@ export default function HeroSection() {
               Compare 200+ plans from India's top insurers in seconds. Unbiased advice, guaranteed best price, and hassle-free claim support.
             </p>
 
-            <div className="flex flex-wrap gap-2.5 mb-12">
-              {CATEGORIES.map((c) => (
-                <Link
-                  key={c.value}
-                  href={`/${c.value}-insurance`}
-                  className="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50 hover:shadow-md text-sm font-semibold text-gray-700 hover:text-blue-700 transition-all duration-200 shadow-sm"
-                >
-                  <c.icon className="w-5 h-5" />
-                  <span>{c.label}</span>
-                </Link>
-              ))}
-            </div>
+            <CategoryPills />
           </div>
 
           {/* ── Right — Form card ── */}

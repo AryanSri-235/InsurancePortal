@@ -2,20 +2,30 @@
 
 import Link from "next/link";
 import NewsletterForm from "@/components/NewsletterForm";
-import { Phone, Shield, TrendingUp, HeartPulse, Car, Lock, BadgeCheck, Award, Users } from "lucide-react";
+import { useState } from "react";
+import { Phone, Shield, TrendingUp, HeartPulse, Car, Lock, BadgeCheck, Award, Users, Bike, Plane, Home, UserCheck, RefreshCw, BarChart2, Baby, Umbrella, Building2, ChevronDown } from "lucide-react";
 
 const insurance = [
-  { label: "Term Insurance",   href: "/term-insurance",   icon: Shield },
-  { label: "Life Insurance",   href: "/life-insurance",   icon: TrendingUp },
-  { label: "Health Insurance", href: "/health-insurance", icon: HeartPulse },
-  { label: "Motor Insurance",  href: "/motor-insurance",  icon: Car },
+  { label: "Term Insurance",          href: "/term-insurance",          icon: Shield },
+  { label: "Health Insurance",        href: "/health-insurance",        icon: HeartPulse },
+  { label: "Car Insurance",           href: "/car-insurance",           icon: Car },
+  { label: "Two Wheeler Insurance",   href: "/two-wheeler-insurance",   icon: Bike },
+  { label: "Life Insurance",          href: "/life-insurance",          icon: TrendingUp },
+  { label: "Family Health Insurance", href: "/family-health-insurance", icon: Users },
+  { label: "Travel Insurance",        href: "/travel-insurance",        icon: Plane },
+  { label: "Home Insurance",          href: "/home-insurance",          icon: Home },
+  { label: "Term for Women",          href: "/term-insurance-women",    icon: UserCheck },
+  { label: "Group Health Insurance",  href: "/group-health-insurance",  icon: Building2 },
+  { label: "Return of Premium",       href: "/return-of-premium-plans", icon: RefreshCw },
+  { label: "Child Savings Plans",     href: "/child-savings-plans",     icon: Baby },
+  { label: "Retirement Plans",        href: "/retirement-plans",        icon: Umbrella },
+  { label: "Guaranteed Returns",      href: "/guaranteed-return-plans", icon: BarChart2 },
 ];
 
 const company = [
   { label: "About Us", href: "/about" },
   { label: "Contact", href: "/contact" },
   { label: "Blog", href: "/blog" },
-  { label: "Calculator", href: "/calculator" },
   { label: "FAQ", href: "/faq" },
 ];
 
@@ -67,9 +77,55 @@ const socials = [
 const badges = [
   { icon: Lock,       label: "256-bit SSL" },
   { icon: BadgeCheck, label: "IRDAI Registered" },
-  { icon: Award,      label: "4.8â˜… Rated" },
+  { icon: Award,      label: "4.8★ Rated" },
   { icon: Users,      label: "1L+ Customers" },
 ];
+
+const MAIN_INSURANCE = insurance.slice(0, 4);
+const MORE_INSURANCE = insurance.slice(4);
+
+function InsuranceLinks() {
+  const [open, setOpen] = useState(false);
+  return (
+    <ul className="space-y-3">
+      {MAIN_INSURANCE.map((c) => {
+        const Icon = c.icon;
+        return (
+          <li key={c.href}>
+            <Link href={c.href} className="flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-all duration-200 group">
+              <Icon className="w-4 h-4" />
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity text-xs">→</span>
+              {c.label}
+            </Link>
+          </li>
+        );
+      })}
+
+      {open && MORE_INSURANCE.map((c) => {
+        const Icon = c.icon;
+        return (
+          <li key={c.href}>
+            <Link href={c.href} className="flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-all duration-200 group">
+              <Icon className="w-4 h-4" />
+              <span className="opacity-0 group-hover:opacity-100 transition-opacity text-xs">→</span>
+              {c.label}
+            </Link>
+          </li>
+        );
+      })}
+
+      <li>
+        <button
+          onClick={() => setOpen((o) => !o)}
+          className="flex items-center gap-1.5 text-sm text-blue-400 hover:text-blue-300 transition-colors font-semibold mt-1"
+        >
+          <ChevronDown className={`w-3.5 h-3.5 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
+          {open ? "Show less" : `+${MORE_INSURANCE.length} more`}
+        </button>
+      </li>
+    </ul>
+  );
+}
 
 export default function Footer() {
   return (
@@ -109,7 +165,7 @@ export default function Footer() {
             </Link>
 
             <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-xs">
-              India&apos;s trusted insurance comparison platform. Find the right policy at the best price â€” 100% free, no spam.
+              India&apos;s trusted insurance comparison platform. Find the right policy at the best price &mdash; 100% free, no spam.
             </p>
 
             {/* Trust badges */}
@@ -143,23 +199,7 @@ export default function Footer() {
           {/* Insurance links */}
           <div className="md:col-span-2">
             <h3 className="text-white font-bold mb-5 text-sm tracking-widest uppercase">Insurance</h3>
-            <ul className="space-y-3">
-              {insurance.map((c) => {
-                const Icon = c.icon;
-                return (
-                <li key={c.href}>
-                  <Link
-                    href={c.href}
-                    className="flex items-center gap-2 text-sm text-gray-500 hover:text-white transition-all duration-200 group"
-                  >
-                    <Icon className="w-4 h-4" />
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-xs">â†’</span>
-                    {c.label}
-                  </Link>
-                </li>
-                );
-              })}
-            </ul>
+            <InsuranceLinks />
           </div>
 
           {/* Company links */}
@@ -169,7 +209,7 @@ export default function Footer() {
               {company.map((c) => (
                 <li key={c.href}>
                   <Link href={c.href} className="text-sm text-gray-500 hover:text-white transition-colors duration-200 flex items-center gap-2 group">
-                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-xs">â†’</span>
+                    <span className="opacity-0 group-hover:opacity-100 transition-opacity text-xs">&rarr;</span>
                     {c.label}
                   </Link>
                 </li>
@@ -199,7 +239,7 @@ export default function Footer() {
                   href="/#lead-form"
                   className="text-center bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold px-4 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg shadow-blue-900/40 btn-shine"
                 >
-                  Get Free Quote â†’
+                  Get Free Quote &rarr;
                 </Link>
                 <a
                   href="tel:1800XXXXXXX"
@@ -216,7 +256,7 @@ export default function Footer() {
         {/* Bottom bar */}
         <div className="border-t border-gray-800/50 mt-14 pt-8 flex flex-col md:flex-row items-center justify-between gap-4">
           <p className="text-xs text-gray-600 order-2 md:order-1">
-            Â© 2026 InsurancePortal. All rights reserved.
+            &copy; 2026 InsurancePortal. All rights reserved.
           </p>
           <p className="text-xs text-gray-700 text-center max-w-lg order-1 md:order-2 leading-relaxed">
             Insurance is the subject matter of solicitation. Please read the policy brochure carefully before concluding the sale. IRDAI Reg. No. WBA000000
@@ -226,7 +266,7 @@ export default function Footer() {
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
               All systems operational
             </span>
-            <span className="text-gray-800">Â·</span>
+            <span className="text-gray-800">&middot;</span>
             <span>v2.0</span>
           </div>
         </div>
