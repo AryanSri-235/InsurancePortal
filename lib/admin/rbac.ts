@@ -2,9 +2,9 @@ export type AdminRole = "superadmin" | "ram" | "sales" | "renewal";
 
 // Which roles can access each panel page (by route segment)
 export const PAGE_ACCESS: Record<string, AdminRole[]> = {
-  dashboard:          ["superadmin", "ram"],
+  dashboard:          ["superadmin"],
   leads:              ["superadmin", "sales"],
-  "due-dates":        ["superadmin", "ram", "renewal"],
+  "due-dates":        ["superadmin", "renewal"],
   "contact-messages": ["superadmin"],
   newsletter:         ["superadmin"],
   policies:           ["superadmin", "ram"],
@@ -24,6 +24,7 @@ export function canAccess(role: string, page: string): boolean {
 export function defaultPage(role: string): string {
   if (role === "sales") return "/admin/leads";
   if (role === "renewal") return "/admin/due-dates";
+  if (role === "ram") return "/admin/policies";
   return "/admin/dashboard";
 }
 

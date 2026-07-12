@@ -154,7 +154,7 @@ export default function Navbar() {
 
             {/* Logo */}
             <Link href="/" className="flex items-center group flex-shrink-0">
-              <img src="/logo-zoomed.png" alt="NPS Insurance.Life" className="h-14 w-auto object-contain group-hover:opacity-90 transition-opacity" />
+              <img src="/logo-zoomed.png" alt="NPS Insurance.Life" className="h-14 w-auto object-contain group-hover:opacity-90 transition-opacity" style={{ mixBlendMode: "multiply" }} />
             </Link>
 
             {/* Desktop nav */}
@@ -311,11 +311,8 @@ export default function Navbar() {
 
               {!userSession && (
                 <>
-                  <Link href="/login" className="text-sm font-semibold text-gray-700 hover:text-blue-600 border border-gray-200 hover:border-blue-300 hover:bg-blue-50 px-4 py-2 rounded-xl transition-all duration-200">
-                    Login
-                  </Link>
-                  <Link href="/register" className="text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 px-4 py-2 rounded-xl transition-all duration-200">
-                    Register
+                  <Link href="/login" className="text-sm font-semibold text-white bg-gray-900 hover:bg-gray-800 px-4 py-2 rounded-xl transition-all duration-200">
+                    Login / Sign Up
                   </Link>
                 </>
               )}
@@ -447,11 +444,8 @@ export default function Navbar() {
 
               {!userSession ? (
                 <div className="flex gap-2 mt-2">
-                  <Link href="/login" onClick={() => setMenuOpen(false)} className="flex-1 border border-gray-200 text-gray-700 font-semibold text-sm text-center py-2.5 rounded-xl hover:bg-gray-50 transition-colors">
-                    Login
-                  </Link>
-                  <Link href="/register" onClick={() => setMenuOpen(false)} className="flex-1 bg-gray-900 text-white font-semibold text-sm text-center py-2.5 rounded-xl hover:bg-gray-800 transition-colors">
-                    Register
+                  <Link href="/login" onClick={() => setMenuOpen(false)} className="flex-1 bg-gray-900 text-white font-semibold text-sm text-center py-2.5 rounded-xl hover:bg-gray-800 transition-colors">
+                    Login / Sign Up
                   </Link>
                 </div>
               ) : (

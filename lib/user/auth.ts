@@ -1,9 +1,11 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET ?? "fallback-secret-change-in-prod"
-);
+function getSecret(): Uint8Array {
+  const raw = process.env.USER_JWT_SECRET ?? process.env.JWT_SECRET;
+  if (!raw) throw new Error("USER_JWT_SECRET is not set");
+  return new TextEncoder().encode(raw);
+}
 
 const COOKIE_NAME = "user_token";
 const EXPIRES_IN = 60 * 60 * 24 * 30; // 30 days
@@ -20,12 +22,12 @@ export async function signUserToken(payload: UserPayload): Promise<string> {
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
     .setExpirationTime(`${EXPIRES_IN}s`)
-    .sign(SECRET);
+    .sign(getSecret());
 }
 
 export async function verifyUserToken(token: string): Promise<UserPayload | null> {
   try {
-    const { payload } = await jwtVerify(token, SECRET);
+    const { payload } = await jwtVerify(token, getSecret());
     return payload as unknown as UserPayload;
   } catch {
     return null;

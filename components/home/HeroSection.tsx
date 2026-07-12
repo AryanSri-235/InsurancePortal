@@ -1,162 +1,111 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import Image from "next/image";
 import Link from "next/link";
-import BgDecorations from "./BgDecorations";
 import QuoteForm from "@/components/QuoteForm";
-import { Shield, HeartPulse, Car, TrendingUp, Building2, BadgeCheck, Users, ShieldCheck, Bike, Plane, Home, UserCheck, RefreshCw, BarChart2, Baby, Umbrella, ChevronDown } from "lucide-react";
 
-const CATEGORIES = [
-  { label: "Term Insurance",          href: "/term-insurance",          icon: Shield },
-  { label: "Health Insurance",        href: "/health-insurance",        icon: HeartPulse },
-  { label: "Car Insurance",           href: "/car-insurance",           icon: Car },
-  { label: "Two Wheeler Insurance",   href: "/two-wheeler-insurance",   icon: Bike },
-  { label: "Life Insurance",          href: "/life-insurance",          icon: TrendingUp },
-  { label: "Family Health Insurance", href: "/family-health-insurance", icon: Users },
-  { label: "Travel Insurance",        href: "/travel-insurance",        icon: Plane },
-  { label: "Home Insurance",          href: "/home-insurance",          icon: Home },
-  { label: "Term for Women",          href: "/term-insurance-women",    icon: UserCheck },
-  { label: "Group Health Insurance",  href: "/group-health-insurance",  icon: Building2 },
-  { label: "Return of Premium",       href: "/return-of-premium-plans", icon: RefreshCw },
-  { label: "Child Savings Plans",     href: "/child-savings-plans",     icon: Baby },
-  { label: "Retirement Plans",        href: "/retirement-plans",        icon: Umbrella },
-  { label: "Guaranteed Returns",      href: "/guaranteed-return-plans", icon: BarChart2 },
-];
+type Partner = { id: number; name: string; slug: string; logoUrl: string | null };
 
-const TRUST = [
-  { num: 50,  suffix: "+",    prefix: "",  label: "Insurers",       icon: Building2,   color: "from-blue-600 to-blue-700",   shadow: "shadow-blue-100"   },
-  { num: 500, suffix: "Cr+",  prefix: "₹", label: "Claims Settled", icon: BadgeCheck,  color: "from-indigo-600 to-indigo-700", shadow: "shadow-indigo-100" },
-  { num: 1,   suffix: "L+",   prefix: "",  label: "Customers",      icon: Users,       color: "from-blue-600 to-blue-700",   shadow: "shadow-blue-100"   },
-  { num: 99,  suffix: "%",    prefix: "",  label: "Claim Support",  icon: ShieldCheck, color: "from-indigo-600 to-indigo-700", shadow: "shadow-indigo-100" },
-];
 
-function useCountUp(target: number, duration = 1500, start = false) {
-  const [count, setCount] = useState(0);
-  useEffect(() => {
-    if (!start) return;
-    let startTime: number | null = null;
-    const step = (timestamp: number) => {
-      if (!startTime) startTime = timestamp;
-      const progress = Math.min((timestamp - startTime) / duration, 1);
-      setCount(Math.floor(progress * target));
-      if (progress < 1) requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [start, target, duration]);
-  return count;
-}
 
-function StatBox({ stat, started }: { stat: typeof TRUST[0]; started: boolean }) {
-  const count = useCountUp(stat.num, 1400, started);
-  const Icon = stat.icon;
-  return (
-    <div className={`group w-full bg-white border-2 border-gray-100 rounded-2xl px-6 py-5 text-center hover:shadow-xl ${stat.shadow} hover:-translate-y-1.5 hover:border-transparent transition-all duration-300 cursor-default relative overflow-hidden`}>
-      <div className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${stat.color} opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-t-2xl`} />
-      <div className="flex justify-center mb-2"><Icon className="w-6 h-6" /></div>
-      <div className={`text-3xl font-black bg-gradient-to-r ${stat.color} bg-clip-text text-transparent leading-none`}>
-        {stat.prefix}{count}{stat.suffix}
-      </div>
-      <div className="text-sm text-gray-400 font-medium mt-1">{stat.label}</div>
-    </div>
-  );
-}
+// ── Pinned partners with brand identity ──────────────────────────────────────
+const PINNED_SLUGS = ["hdfc-ergo", "lic", "tata-aig", "icici-lombard", "digit-insurance"];
 
-const MAIN = CATEGORIES.slice(0, 4);
-const MORE = CATEGORIES.slice(4);
+const BRAND: Record<string, { gradient: string; initials: string }> = {
+  "hdfc-ergo":       { gradient: "from-red-500 to-red-700",         initials: "HE"  },
+  "lic":             { gradient: "from-amber-400 to-orange-500",     initials: "LIC" },
+  "tata-aig":        { gradient: "from-blue-700 to-blue-900",        initials: "TA"  },
+  "icici-lombard":   { gradient: "from-orange-500 to-red-500",       initials: "IL"  },
+  "digit-insurance": { gradient: "from-violet-500 to-purple-700",    initials: "GD"  },
+};
 
-function CategoryPills() {
-  const [open, setOpen] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
+// Per-logo dimensions — tuned so each fills the card nicely
+const LOGO_SIZE: Record<string, { w: number; h: number; cls: string }> = {
+  "lic":             { w: 130, h: 52, cls: "max-h-[52px] w-auto scale-125" },
+  "tata-aig":        { w: 120, h: 52, cls: "max-h-[52px] w-auto scale-125" },
+  "icici-lombard":   { w: 140, h: 52, cls: "max-h-[52px] w-auto scale-125" },
+  "digit-insurance": { w: 120, h: 44, cls: "max-h-11 w-auto scale-125" },
+  "hdfc-ergo":       { w: 130, h: 52, cls: "max-h-[52px] w-auto scale-125" },
+};
 
-  const close = useCallback(() => setOpen(false), []);
+function PartnerStrip({ partners }: { partners: Partner[] }) {
+  const pinned = PINNED_SLUGS
+    .map(slug => partners.find(p => p.slug === slug))
+    .filter(Boolean) as Partner[];
 
-  useEffect(() => {
-    if (!open) return;
-    const handler = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) close();
-    };
-    document.addEventListener("mousedown", handler);
-    return () => document.removeEventListener("mousedown", handler);
-  }, [open, close]);
+  if (!pinned.length) return null;
+
+  const track = [...pinned, ...pinned, ...pinned];
 
   return (
-    <div className="flex flex-wrap gap-2.5 mb-12">
-      {MAIN.map((c) => (
-        <Link
-          key={c.href}
-          href={c.href}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50 hover:shadow-md text-sm font-semibold text-gray-700 hover:text-blue-700 transition-all duration-200 shadow-sm"
-        >
-          <c.icon className="w-4 h-4" />
-          <span>{c.label}</span>
-        </Link>
-      ))}
+    <div className="mt-10 pt-8 border-t border-blue-100/60">
+      <p className="text-[10px] font-bold tracking-[0.2em] text-gray-400 uppercase mb-4">
+        Trusted Partners
+      </p>
 
-      {/* More dropdown */}
-      <div className="relative" ref={ref}>
-        <button
-          onClick={() => setOpen((o) => !o)}
-          className="flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 border-gray-200 bg-white hover:border-blue-300 hover:bg-blue-50 hover:shadow-md text-sm font-semibold text-gray-700 hover:text-blue-700 transition-all duration-200 shadow-sm"
-        >
-          More Plans
-          <ChevronDown className={`w-4 h-4 transition-transform duration-200 ${open ? "rotate-180" : ""}`} />
-        </button>
+      <style>{`
+        @keyframes partner-scroll {
+          0%   { transform: translateX(0); }
+          100% { transform: translateX(calc(-100% / 3)); }
+        }
+        .partner-track {
+          animation: partner-scroll 14s linear infinite;
+          will-change: transform;
+        }
+        .partner-track:hover { animation-play-state: paused; }
+      `}</style>
 
-        {open && (
-          <div className="absolute left-0 top-full mt-2 z-50 bg-white border border-gray-200 rounded-2xl shadow-xl shadow-blue-100/40 p-2 min-w-[220px]">
-            {MORE.map((c) => (
+      <div className="relative overflow-hidden">
+        <div className="absolute left-0 inset-y-0 w-8 bg-gradient-to-r from-slate-50 to-transparent z-10 pointer-events-none" />
+        <div className="absolute right-0 inset-y-0 w-8 bg-gradient-to-l from-indigo-50/60 to-transparent z-10 pointer-events-none" />
+
+        <div className="partner-track flex items-center gap-3 w-max">
+          {track.map((p, i) => {
+            const brand = BRAND[p.slug] ?? { gradient: "from-blue-500 to-blue-700", initials: p.name.slice(0, 2).toUpperCase() };
+            return (
               <Link
-                key={c.href}
-                href={c.href}
-                onClick={close}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-semibold text-gray-700 hover:bg-blue-50 hover:text-blue-700 transition-colors duration-150"
+                key={`${p.id}-${i}`}
+                href={`/${p.slug}`}
+                title={p.name}
+                className="flex-shrink-0 flex items-center gap-3 bg-white border border-gray-100 rounded-xl px-4 py-3 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
               >
-                <c.icon className="w-4 h-4 flex-shrink-0" />
-                {c.label}
+                {p.logoUrl ? (
+                  <Image
+                    src={p.logoUrl}
+                    alt={p.name}
+                    width={LOGO_SIZE[p.slug]?.w  ?? 100}
+                    height={LOGO_SIZE[p.slug]?.h ?? 40}
+                    className={`object-contain ${LOGO_SIZE[p.slug]?.cls ?? "max-h-10 w-auto"}`}
+                  />
+                ) : (
+                  <>
+                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${brand.gradient} flex items-center justify-center text-white text-xs font-black flex-shrink-0`}>
+                      {brand.initials}
+                    </div>
+                    <span className="text-sm font-bold text-gray-700 whitespace-nowrap">{p.name}</span>
+                  </>
+                )}
               </Link>
-            ))}
-          </div>
-        )}
+            );
+          })}
+        </div>
       </div>
     </div>
   );
 }
 
-export default function HeroSection() {
-  const [statsStarted, setStatsStarted] = useState(false);
-  const statsRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const el = statsRef.current;
-    if (!el) return;
-    const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) { setStatsStarted(true); observer.disconnect(); } },
-      { threshold: 0.3 }
-    );
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, []);
+export default function HeroSection({ partners = [] }: { partners?: Partner[] }) {
 
   return (
-    <section id="lead-form" className="relative bg-gradient-to-br from-blue-50 via-white to-indigo-50 min-h-[88vh] flex items-center">
-      {/* Decorative blobs — overflow clipped separately so dropdown isn't cut off */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <BgDecorations variant="hero" />
-        <div className="absolute top-[-80px] left-[-80px] w-[420px] h-[420px] rounded-full opacity-40 blur-3xl" style={{ background: "radial-gradient(circle, #bfdbfe, transparent)" }} />
-        <div className="absolute bottom-[-60px] right-[-60px] w-[360px] h-[360px] rounded-full opacity-30 blur-3xl" style={{ background: "radial-gradient(circle, #c7d2fe, transparent)" }} />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-3xl" style={{ background: "radial-gradient(circle, #93c5fd, transparent)" }} />
-        <div className="absolute inset-0 opacity-[0.035]" style={{ backgroundImage: "radial-gradient(circle, #186874 1px, transparent 1px)", backgroundSize: "32px 32px" }} />
-      </div>
-
-      <div className="relative w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
-        <div className="grid lg:grid-cols-2 gap-14 items-center">
+    <section id="lead-form" className="bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60">
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 lg:pt-16 lg:pb-20">
+        <div className="grid lg:grid-cols-2 gap-14 items-start">
 
           {/* ── Left copy ── */}
           <div className="animate-fade-in-up relative z-10">
             <div className="inline-flex items-center gap-2 mb-7 px-4 py-2 rounded-full border border-blue-200 bg-blue-50 text-blue-700 text-sm font-semibold shadow-sm">
               <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
-              India's #1 Insurance Comparison Platform
-            </div>
+                    India’s Leading Insurance Service Provider            </div>
 
             <h1 className="text-5xl lg:text-6xl font-black text-gray-900 leading-[1.07] tracking-tight mb-6">
               Protect What{" "}
@@ -170,11 +119,10 @@ export default function HeroSection() {
               {" "}Most.
             </h1>
 
-            <p className="text-gray-500 text-lg leading-relaxed mb-10 max-w-md">
-              Compare 200+ plans from India's top insurers in seconds. Unbiased advice, guaranteed best price, and hassle-free claim support.
-            </p>
+            <p className="text-gray-500 text-lg leading-relaxed mb-0 max-w-md">
+                India's Most Trusted Insurance Partner for 35 Years — Honest Advice, Guaranteed Best Price, Real Claim Support.             </p>
 
-            <CategoryPills />
+            <PartnerStrip partners={partners} />
           </div>
 
           {/* ── Right — Form card ── */}
@@ -201,13 +149,6 @@ export default function HeroSection() {
             </div>
           </div>
 
-        </div>
-
-        {/* ── Full-width stats strip below the grid ── */}
-        <div ref={statsRef} className="grid grid-cols-2 sm:grid-cols-4 gap-4 mt-12 pt-10 border-t border-blue-100/60">
-          {TRUST.map((t) => (
-            <StatBox key={t.label} stat={t} started={statsStarted} />
-          ))}
         </div>
 
       </div>

@@ -194,6 +194,22 @@ async function main() {
       irdaiRegNo: "132", claimSettlementRatio: 97.3, solvencyRatio: 1.65, networkHospitals: 6100,
       categories: ["motor", "health", "travel", "home"],
     },
+    {
+      slug: "aic",
+      name: "Agriculture Insurance Company of India (AIC)",
+      tagline: "Insuring Agriculture, Securing Farmers",
+      about: "AIC is India's premier agriculture insurance company, implementing PMFBY and other government crop insurance schemes for millions of farmers across India.",
+      irdaiRegNo: "129", claimSettlementRatio: 85.0, solvencyRatio: 1.50,
+      categories: ["crop"],
+    },
+    {
+      slug: "icici-prudential",
+      name: "ICICI Prudential Life Insurance",
+      tagline: "Zimmedaar Kadam",
+      about: "ICICI Prudential Life Insurance is one of India's leading private life insurers offering comprehensive protection and savings solutions including term, ULIP and pension plans.",
+      irdaiRegNo: "105", claimSettlementRatio: 98.56, solvencyRatio: 2.01,
+      categories: ["term", "life", "pension"],
+    },
   ];
 
   const providers: Record<string, { id: number }> = {};
@@ -564,7 +580,7 @@ async function main() {
     //  TRAVEL INSURANCE
     // ══════════════════════════════════════════════════
     {
-      slug: "icici-travel-shield", providerId: pid("icici-lombard"), name: "ICICI Lombard Travel Shield", category: "motor", subCategory: "travel",
+      slug: "icici-travel-shield", providerId: pid("icici-lombard"), name: "ICICI Lombard Travel Shield", category: "travel",
       description: "Comprehensive international and domestic travel insurance covering medical emergencies, trip cancellation, and loss of baggage.",
       premiumStartsFrom: 350, coverAmount: "₹1 Lakh – $5,00,000 (international)", policyTerm: "Per trip / Annual", eligibilityAge: "3 months – 70 years",
       keyBenefits: ["Emergency medical expenses covered", "Trip cancellation and interruption", "Loss of baggage and passport", "Flight delay compensation", "24×7 travel assistance helpline"],
@@ -573,7 +589,7 @@ async function main() {
       isFeatured: true,
     },
     {
-      slug: "tata-aig-travel-guard", providerId: pid("tata-aig"), name: "Tata AIG Travel Guard", category: "motor", subCategory: "travel",
+      slug: "tata-aig-travel-guard", providerId: pid("tata-aig"), name: "Tata AIG Travel Guard", category: "travel",
       description: "Feature-rich travel plan with missed flight connection cover, medical evacuation, and hijack distress allowance.",
       premiumStartsFrom: 420, coverAmount: "Up to $2,50,000 medical", policyTerm: "Per trip", eligibilityAge: "6 months – 70 years",
       keyBenefits: ["Missed connection cover", "Medical evacuation and repatriation", "Hijack distress allowance", "Personal liability cover", "Home burglary while travelling"],
@@ -582,7 +598,7 @@ async function main() {
       isFeatured: false,
     },
     {
-      slug: "digit-travel-insurance", providerId: pid("digit-insurance"), name: "Digit Travel Insurance", category: "motor", subCategory: "travel",
+      slug: "digit-travel-insurance", providerId: pid("digit-insurance"), name: "Digit Travel Insurance", category: "travel",
       description: "Simple, transparent travel insurance from Digit for international trips with instant digital policy.",
       premiumStartsFrom: 280, coverAmount: "Up to $1,50,000 medical", policyTerm: "Per trip", eligibilityAge: "3 months – 70 years",
       keyBenefits: ["Instant policy on app in 2 minutes", "Cashless hospitalisation abroad", "Trip cancellation and delay cover", "Loss of baggage and passport", "Emergency dental cover"],
@@ -595,7 +611,7 @@ async function main() {
     //  HOME INSURANCE
     // ══════════════════════════════════════════════════
     {
-      slug: "tata-aig-home-secure", providerId: pid("tata-aig"), name: "Tata AIG Home Secure", category: "motor", subCategory: "home",
+      slug: "tata-aig-home-secure", providerId: pid("tata-aig"), name: "Tata AIG Home Secure", category: "home",
       description: "Complete home protection covering structure, contents, valuables, and liability with a single annual premium.",
       premiumStartsFrom: 1800, coverAmount: "₹5 Lakh – ₹5 Crore", policyTerm: "1 year (renewable)", eligibilityAge: "Any residential property",
       keyBenefits: ["Structure + contents covered", "Burglary and theft protection", "Fire, flood, and natural calamity cover", "Jewellery and valuables cover", "Landlord liability cover available"],
@@ -604,7 +620,7 @@ async function main() {
       isFeatured: true,
     },
     {
-      slug: "hdfc-ergo-home-insurance", providerId: pid("hdfc-ergo"), name: "HDFC ERGO Home Shield", category: "motor", subCategory: "home",
+      slug: "hdfc-ergo-home-insurance", providerId: pid("hdfc-ergo"), name: "HDFC ERGO Home Shield", category: "home",
       description: "Comprehensive home insurance covering structure, contents, and personal accident with flexible sum insured options.",
       premiumStartsFrom: 1500, coverAmount: "₹5 Lakh – ₹10 Crore", policyTerm: "1 year (renewable)", eligibilityAge: "Any owned/rented property",
       keyBenefits: ["Structure damage from fire, flood, earthquake", "All contents insured under one plan", "Personal accident cover for family", "Temporary accommodation expenses", "24×7 repair helpline"],
@@ -613,7 +629,7 @@ async function main() {
       isFeatured: false,
     },
     {
-      slug: "new-india-home-insurance", providerId: pid("new-india-assurance"), name: "New India Householder's Insurance", category: "motor", subCategory: "home",
+      slug: "new-india-home-insurance", providerId: pid("new-india-assurance"), name: "New India Householder's Insurance", category: "home",
       description: "Classic householder's insurance from the government-backed New India Assurance covering building and household items.",
       premiumStartsFrom: 1200, coverAmount: "As per declared value", policyTerm: "1 year (renewable)", eligibilityAge: "Any residential property",
       keyBenefits: ["Building + contents under one policy", "Fire, cyclone, flood, landslide cover", "Burglary and robbery protection", "Plate glass breakage included", "All-risk for electronic equipment"],
@@ -704,6 +720,277 @@ async function main() {
       keyBenefits: ["Guaranteed additions @ 5% per year", "Lump sum payout at maturity", "Life cover for entire term", "Flexible premium payment — 5 / 8 / 10 years"],
       exclusions: ["Suicide in first year"],
       documentsRequired: ["Aadhaar", "PAN", "Income proof"],
+      isFeatured: false,
+    },
+
+    // ══════════════════════════════════════════════════
+    //  PERSONAL ACCIDENT
+    // ══════════════════════════════════════════════════
+    {
+      slug: "bajaj-personal-guard", providerId: pid("bajaj-allianz"), name: "Bajaj Allianz Personal Guard", category: "personal-accident",
+      description: "Comprehensive personal accident cover providing financial protection against accidental death, permanent disability, and temporary disability — worldwide.",
+      premiumStartsFrom: 1500, coverAmount: "₹5 Lakh – ₹1 Crore", policyTerm: "1 year (renewable)", eligibilityAge: "5 – 70 years",
+      keyBenefits: ["Accidental death — 100% sum insured to nominee", "Permanent total disability — 100% sum insured", "Permanent partial disability — proportionate payout", "Temporary total disability — weekly cash benefit", "Medical expense reimbursement", "Children's education grant"],
+      exclusions: ["Self-inflicted injury or suicide attempt", "Under influence of alcohol or drugs", "Criminal or illegal activity", "War and nuclear risks", "Pregnancy-related injuries"],
+      documentsRequired: ["Age and ID proof", "Income proof", "Occupation certificate", "Proposal form"],
+      isFeatured: true,
+    },
+    {
+      slug: "new-india-personal-accident", providerId: pid("new-india-assurance"), name: "New India Personal Accident Policy", category: "personal-accident",
+      description: "A classic personal accident policy from New India Assurance providing worldwide compensation for accidental death and bodily injuries.",
+      premiumStartsFrom: 1200, coverAmount: "₹1 Lakh – ₹50 Lakh", policyTerm: "1 year (renewable)", eligibilityAge: "5 – 70 years",
+      keyBenefits: ["Accidental death and permanent disability cover", "Temporary total disablement weekly benefit", "Medical expenses reimbursement", "Education grant for dependent children", "Funeral expenses covered", "Worldwide 24×7 coverage"],
+      exclusions: ["Suicide and self-harm", "Pregnancy and childbirth injuries", "Criminal acts", "Venereal diseases"],
+      documentsRequired: ["Age and ID proof", "Occupation details", "Proposal form"],
+      isFeatured: false,
+    },
+    {
+      slug: "tata-aig-accident-guard", providerId: pid("tata-aig"), name: "Tata AIG Accident Guard", category: "personal-accident",
+      description: "Accident Guard covers accidental death, disability, and hospitalisation with flexible sum insured options for individuals and families.",
+      premiumStartsFrom: 1400, coverAmount: "₹5 Lakh – ₹50 Lakh", policyTerm: "1 year (renewable)", eligibilityAge: "18 – 65 years",
+      keyBenefits: ["Accidental death and PTD — 100% payout", "PPD — proportionate chart payout", "Hospital daily cash during disability", "Fracture care benefit", "Burns treatment cover", "Family floater option available"],
+      exclusions: ["Self-inflicted injury", "Mental disorders", "Hazardous activities (unless declared)", "Pre-existing conditions"],
+      documentsRequired: ["Age and ID proof", "Occupation and income details", "Medical certificate (high cover)"],
+      isFeatured: false,
+    },
+    {
+      slug: "icici-lombard-personal-protect", providerId: pid("icici-lombard"), name: "ICICI Lombard Personal Protect", category: "personal-accident",
+      description: "Personal accident plan from ICICI Lombard covering death, disability and hospitalisation with add-on options for OPD and critical illness.",
+      premiumStartsFrom: 1300, coverAmount: "₹5 Lakh – ₹1 Crore", policyTerm: "1 year (renewable)", eligibilityAge: "18 – 65 years",
+      keyBenefits: ["Sum insured up to ₹1 Crore", "Group discount for families", "OPD cover add-on available", "Critical illness benefit add-on", "Hospital daily cash option", "Worldwide coverage"],
+      exclusions: ["Suicide", "DUI accidents", "Criminal acts", "Adventure sports (without rider)"],
+      documentsRequired: ["Aadhaar or PAN", "Occupation certificate", "Income proof (for high sum insured)"],
+      isFeatured: false,
+    },
+
+    // ══════════════════════════════════════════════════
+    //  FIRE INSURANCE
+    // ══════════════════════════════════════════════════
+    {
+      slug: "new-india-fire-policy", providerId: pid("new-india-assurance"), name: "New India Standard Fire & Special Perils Policy", category: "fire",
+      description: "The standard fire insurance policy for buildings and contents against fire, explosion, lightning, storm, flood, earthquake, and allied perils.",
+      premiumStartsFrom: 2000, coverAmount: "₹5 Lakh – ₹500 Crore", policyTerm: "1 year (renewable)", eligibilityAge: "Any commercial or residential property",
+      keyBenefits: ["Fire and explosion cover", "Storm, cyclone, flood and inundation", "Earthquake and landslide", "Riot, strike, malicious damage", "Aircraft damage", "Bursting of water pipes and tanks"],
+      exclusions: ["War and nuclear risks", "Intentional burning", "Electrical short circuit (without endorsement)", "Inventory shortage or unexplained loss"],
+      documentsRequired: ["Property valuation / survey report", "Ownership deed or lease", "Previous policy copy", "Proposal form"],
+      isFeatured: false,
+    },
+    {
+      slug: "bajaj-fire-loss-profit", providerId: pid("bajaj-allianz"), name: "Bajaj Allianz Fire Loss of Profit Insurance", category: "fire",
+      description: "Covers loss of gross profit due to interruption of business following fire damage. Ideal for businesses that need continuity protection alongside their property cover.",
+      premiumStartsFrom: 3500, coverAmount: "Based on annual gross profit", policyTerm: "1 year (renewable)", eligibilityAge: "Commercial and industrial businesses",
+      keyBenefits: ["Loss of gross profit during interruption", "Increased cost of working expenses", "Auditor and forensic fees for claim preparation", "Extended indemnity period up to 36 months", "Payroll protection during shutdown", "Triggered by fire material damage policy"],
+      exclusions: ["War and nuclear contamination", "Deliberate damage", "Loss of market share", "Employee fraud or theft"],
+      documentsRequired: ["Audited accounts (last 3 years)", "Fire material damage policy copy", "Turnover and profit details", "Proposal form"],
+      isFeatured: false,
+    },
+    {
+      slug: "tata-aig-industrial-all-risk", providerId: pid("tata-aig"), name: "Tata AIG Industrial All Risk Policy", category: "fire",
+      description: "All-risk cover for large industrial units combining fire, machinery breakdown, and business interruption in a single comprehensive policy.",
+      premiumStartsFrom: 5000, coverAmount: "₹50 Crore+", policyTerm: "1 year (renewable)", eligibilityAge: "Industrial and manufacturing premises",
+      keyBenefits: ["Fire and all allied perils", "Machinery breakdown and electronic equipment", "Deterioration of stocks in cold chain", "Business interruption extension", "Risk engineering and survey support", "Single policy replacing multiple covers"],
+      exclusions: ["War and invasion", "Nuclear fission", "Consequential loss (without extension)", "Employee dishonesty"],
+      documentsRequired: ["Property schedule and declared values", "Risk inspection report", "Previous claims history", "Latest audited financials"],
+      isFeatured: false,
+    },
+    {
+      slug: "hdfc-ergo-fire-insurance", providerId: pid("hdfc-ergo"), name: "HDFC ERGO Standard Fire Policy", category: "fire",
+      description: "HDFC ERGO's fire policy for commercial and residential properties with add-ons for terrorism, earthquake, and machinery breakdown.",
+      premiumStartsFrom: 1800, coverAmount: "₹5 Lakh – ₹200 Crore", policyTerm: "1 year (renewable)", eligibilityAge: "Commercial, industrial and residential properties",
+      keyBenefits: ["Comprehensive fire and allied perils", "Optional terrorism cover endorsement", "Earthquake add-on available", "Stocks in process and in transit covered", "Quick digital claim processing", "Dedicated risk management team"],
+      exclusions: ["Willful negligence", "Normal wear and tear", "Faulty workmanship", "Pre-existing damage"],
+      documentsRequired: ["Property valuation", "Survey report", "Previous policy", "KYC documents"],
+      isFeatured: false,
+    },
+
+    // ══════════════════════════════════════════════════
+    //  MARINE INSURANCE
+    // ══════════════════════════════════════════════════
+    {
+      slug: "new-india-marine-cargo", providerId: pid("new-india-assurance"), name: "New India Marine Cargo Insurance", category: "marine",
+      description: "Covers goods in transit by sea, air, rail or road against physical loss or damage. Available on an open policy or specific voyage basis.",
+      premiumStartsFrom: 1800, coverAmount: "As per cargo value (CIF + 10%)", policyTerm: "Per voyage or annual open policy", eligibilityAge: "Importers, exporters and domestic traders",
+      keyBenefits: ["Institute Cargo Clauses A, B, C options", "All-risk cover under ICC-A", "Multimodal transit — sea, air, road, rail", "Warehouse to warehouse coverage", "General average and salvage charges", "Open cover for frequent shippers"],
+      exclusions: ["Inherent vice of the goods", "Delay in transit losses", "War and strikes (separate add-on available)", "Improper packing by shipper"],
+      documentsRequired: ["Commercial invoice and packing list", "Bill of lading / airway bill / LR", "Survey report (for claims)", "Proposal form"],
+      isFeatured: false,
+    },
+    {
+      slug: "bajaj-marine-cargo", providerId: pid("bajaj-allianz"), name: "Bajaj Allianz Marine Cargo Insurance", category: "marine",
+      description: "Bajaj Allianz marine cargo policy for import, export and domestic movements with competitive rates and fast claim settlement.",
+      premiumStartsFrom: 2000, coverAmount: "CIF + 10% of cargo value", policyTerm: "Per voyage or annual open cover", eligibilityAge: "Exporters, importers, traders, manufacturers",
+      keyBenefits: ["ICC A, B or C as per cargo need", "Customs duty included in claim payout", "Consolidated multimodal transport covered", "Express freight in emergencies covered", "Dedicated marine claims team", "Open policy for high-frequency shippers"],
+      exclusions: ["War (available as add-on)", "Strikes (available as add-on)", "Nuclear contamination", "Loss of market"],
+      documentsRequired: ["Commercial invoice", "Packing list", "Bill of lading / AWB / LR", "Proposal form"],
+      isFeatured: false,
+    },
+    {
+      slug: "icici-lombard-marine-cargo", providerId: pid("icici-lombard"), name: "ICICI Lombard Marine Cargo Insurance", category: "marine",
+      description: "Digital marine cargo insurance for domestic and international shipments with online policy issuance and automated claims.",
+      premiumStartsFrom: 1900, coverAmount: "As per declared cargo value", policyTerm: "Per voyage or annual", eligibilityAge: "Manufacturers, traders, exporters/importers",
+      keyBenefits: ["Instant digital policy issuance", "All modes of transport covered", "Special cargo cover — refrigerated, breakbulk, fragile", "Online claims submission and tracking", "Dedicated 24×7 marine helpdesk", "Accumulation and voyage limit management"],
+      exclusions: ["Inherent vice", "Wilful misconduct of insured", "Delay losses", "Loss of market value"],
+      documentsRequired: ["Invoice and packing list", "Transport document (BL/AWB/LR)", "KYC for new customers"],
+      isFeatured: false,
+    },
+    {
+      slug: "tata-aig-marine-hull", providerId: pid("tata-aig"), name: "Tata AIG Marine Hull Insurance", category: "marine", subCategory: "Hull",
+      description: "Marine hull insurance for vessels including fishing boats, barges, and small crafts against perils of the sea, fire and machinery breakdown.",
+      premiumStartsFrom: 5000, coverAmount: "As per vessel agreed value", policyTerm: "1 year (renewable)", eligibilityAge: "Vessel owners, operators",
+      keyBenefits: ["Perils of the sea — collision, stranding, sinking", "Fire and explosion", "Machinery damage", "General average and salvage", "P&I cover available (third-party liability)", "Worldwide navigation coverage"],
+      exclusions: ["Wear and tear", "Wilful misconduct", "War (available as add-on)", "Unseaworthy condition"],
+      documentsRequired: ["Vessel survey report", "Registration certificate", "Previous policy", "Proposal form"],
+      isFeatured: false,
+    },
+
+    // ══════════════════════════════════════════════════
+    //  PENSION INSURANCE
+    // ══════════════════════════════════════════════════
+    {
+      slug: "lic-new-jeevan-nidhi", providerId: pid("lic"), name: "LIC New Jeevan Nidhi", category: "pension", subCategory: "Traditional Pension",
+      description: "A participating pension plan that builds a retirement corpus during the accumulation phase and provides regular income as annuity in retirement.",
+      premiumStartsFrom: 10000, coverAmount: "Retirement corpus + lifelong annuity", policyTerm: "5 – 35 years", eligibilityAge: "20 – 60 years",
+      keyBenefits: ["Guaranteed additions in first 5 years", "Loyalty additions from 6th year", "Option to commute 1/3 of corpus tax-free", "7 annuity modes — life, joint life, guaranteed periods", "Death benefit = full fund value", "Tax deduction under Section 80CCC"],
+      exclusions: ["Suicide in first year (partial fund return)", "Undisclosed medical conditions"],
+      documentsRequired: ["Age and ID proof", "Income proof", "Medical examination"],
+      isFeatured: true,
+    },
+    {
+      slug: "hdfc-life-pension-guaranteed", providerId: pid("hdfc-life"), name: "HDFC Life Pension Guaranteed Plan", category: "pension", subCategory: "Immediate Annuity",
+      description: "A single-premium immediate annuity plan that starts paying income right away. Multiple annuity options for individual and joint life needs.",
+      premiumStartsFrom: 100000, coverAmount: "Lifelong annuity based on purchase price", policyTerm: "Lifelong", eligibilityAge: "45 – 75 years",
+      keyBenefits: ["Income starts from month 1", "8 annuity options including joint life", "Guaranteed income for life with no market risk", "Return of purchase price option on death", "Increasing annuity option at 3% p.a.", "ECS-based monthly payouts"],
+      exclusions: ["No premature exit (annuity product)", "Annuity rate fixed at inception"],
+      documentsRequired: ["Age proof (60+ preferred)", "ID proof", "Bank account details for ECS", "Medical reports"],
+      isFeatured: false,
+    },
+    {
+      slug: "icici-pru-easy-retirement", providerId: pid("icici-prudential"), name: "ICICI Pru Easy Retirement S", category: "pension", subCategory: "Unit-Linked Pension",
+      description: "A ULIP-based pension plan that invests in equity and debt funds during accumulation and then converts to annuity at retirement.",
+      premiumStartsFrom: 24000, coverAmount: "Fund-based corpus at maturity", policyTerm: "10 – 30 years", eligibilityAge: "25 – 70 years",
+      keyBenefits: ["Market-linked returns during accumulation phase", "Guaranteed minimum death benefit", "Partial withdrawals after 5-year lock-in", "Loyalty additions from 10th year", "Systematic withdrawal plan at retirement", "Tax benefits under Section 80CCC"],
+      exclusions: ["Market risk — ULIP returns not guaranteed", "Suicide in first year of policy"],
+      documentsRequired: ["Age and ID proof", "Income proof", "KYC documents", "Medical examination"],
+      isFeatured: false,
+    },
+    {
+      slug: "sbi-life-annuity-plus", providerId: pid("sbi-life"), name: "SBI Life Annuity Plus", category: "pension", subCategory: "Immediate Annuity",
+      description: "SBI Life's immediate annuity plan offering guaranteed income for life with multiple options — ideal for converting retirement savings to regular income.",
+      premiumStartsFrom: 50000, coverAmount: "Annuity based on purchase price", policyTerm: "Lifelong", eligibilityAge: "40 – 80 years",
+      keyBenefits: ["Immediate monthly income from day one", "Joint life with last survivor option", "Return of purchase price on death", "Guaranteed income — no market risk", "Loan facility available after 1 year", "Accessible via SBI's vast network"],
+      exclusions: ["No surrender (single premium annuity)", "Annuity rate locked at start"],
+      documentsRequired: ["Age proof", "ID proof", "Bank details for ECS", "Form 15G/H"],
+      isFeatured: false,
+    },
+
+    // ══════════════════════════════════════════════════
+    //  COMMERCIAL INSURANCE
+    // ══════════════════════════════════════════════════
+    {
+      slug: "bajaj-commercial-package", providerId: pid("bajaj-allianz"), name: "Bajaj Allianz Commercial Package Policy", category: "commercial",
+      description: "A bundled commercial insurance package for SMEs covering property, stock, money, machinery, and public liability in a single policy.",
+      premiumStartsFrom: 8000, coverAmount: "₹10 Lakh – ₹100 Crore", policyTerm: "1 year (renewable)", eligibilityAge: "Commercial and industrial establishments",
+      keyBenefits: ["Fire and allied perils for building and stock", "Burglary and housebreaking cover", "Money in transit and safe", "Machinery breakdown", "Public liability up to ₹50 Lakh", "Plate glass and signage cover"],
+      exclusions: ["War and nuclear risks", "Employee infidelity (needs separate fidelity cover)", "Pre-existing damage", "Contractual liability"],
+      documentsRequired: ["Business registration certificate", "Property valuation report", "Previous claims history", "Audited annual turnover"],
+      isFeatured: false,
+    },
+    {
+      slug: "new-india-shopkeeper-policy", providerId: pid("new-india-assurance"), name: "New India Shopkeeper Package Policy", category: "commercial", subCategory: "Shopkeeper",
+      description: "A specially designed package for retail shopkeepers covering shop building, stocks, furniture, cash, and personal accident for the owner.",
+      premiumStartsFrom: 3500, coverAmount: "₹2 Lakh – ₹2 Crore", policyTerm: "1 year (renewable)", eligibilityAge: "Retail shops and small establishments",
+      keyBenefits: ["Building and stocks against fire and allied perils", "Burglary and housebreaking", "Cash in counter, safe and transit", "Personal accident for the owner", "Plate glass insurance", "Neon sign and board cover"],
+      exclusions: ["War and nuclear risks", "Mysterious disappearance of cash", "Dishonesty of employees", "Wilful damage"],
+      documentsRequired: ["Shop lease or ownership document", "Stock valuation certificate", "Turnover certificate", "Proposal form"],
+      isFeatured: false,
+    },
+    {
+      slug: "hdfc-ergo-sme-package", providerId: pid("hdfc-ergo"), name: "HDFC ERGO SME Insurance Package", category: "commercial", subCategory: "SME",
+      description: "Comprehensive insurance solution for small and medium enterprises covering property, plant, machinery, goods in transit and business interruption.",
+      premiumStartsFrom: 6000, coverAmount: "₹10 Lakh – ₹50 Crore", policyTerm: "1 year (renewable)", eligibilityAge: "Small and medium enterprises",
+      keyBenefits: ["Fire and natural calamity for factory and office", "Machinery breakdown cover", "Electronic equipment all-risk", "Business interruption — loss of profit", "Goods in transit cover", "Employee group accident cover add-on"],
+      exclusions: ["Pre-existing damage", "Normal wear and tear", "War and nuclear risks", "Consequential loss (without extension)"],
+      documentsRequired: ["GSTIN and business registration", "Asset schedule", "Last 3 years turnover", "Proposal form"],
+      isFeatured: false,
+    },
+    {
+      slug: "tata-aig-workmen-compensation", providerId: pid("tata-aig"), name: "Tata AIG Workmen's Compensation Policy", category: "commercial", subCategory: "Liability",
+      description: "Provides coverage to employers for legal liability to pay compensation to employees for work-related accidents, injuries or occupational diseases.",
+      premiumStartsFrom: 4000, coverAmount: "As per Workmen's Compensation Act 1923", policyTerm: "1 year (renewable)", eligibilityAge: "Any employer with permanent or contract workers",
+      keyBenefits: ["Legal liability under Workmen's Compensation Act", "Medical expenses for injured workers", "Fatal accident compensation", "Occupational disease cover", "Contractor and sub-contractor employees", "Employer's liability add-on available"],
+      exclusions: ["War and civil commotion", "Intentional self-injury by employee", "Influence of alcohol or drugs", "Overhead electrical line accidents"],
+      documentsRequired: ["Employer registration", "Employee list with wages", "Nature of work declaration", "Previous claims history"],
+      isFeatured: false,
+    },
+
+    // ══════════════════════════════════════════════════
+    //  CROP INSURANCE
+    // ══════════════════════════════════════════════════
+    {
+      slug: "aic-pmfby", providerId: pid("aic"), name: "Pradhan Mantri Fasal Bima Yojana (PMFBY)", category: "crop",
+      description: "India's flagship government crop insurance scheme providing financial support to farmers for losses due to natural calamities, pests and diseases.",
+      premiumStartsFrom: 500, coverAmount: "Based on state-notified scale of finance", policyTerm: "Per crop season (Kharif / Rabi)", eligibilityAge: "All farmers — loanee and non-loanee",
+      keyBenefits: ["Low premiums: 2% Kharif, 1.5% Rabi, 5% horticulture", "Government subsidises balance of actuarial premium", "Pre-sowing and post-harvest losses covered", "Localised risk: hailstorm, landslide, inundation", "Prevented sowing compensation", "Technology-driven assessment via satellite and drones"],
+      exclusions: ["War and nuclear risks", "Wilful negligence by farmer", "Losses from avoidable risks", "Non-notified crops in the district"],
+      documentsRequired: ["Land records (7/12 extract or equivalent)", "Bank account and passbook (for loanee)", "Aadhaar card", "Sowing certificate"],
+      isFeatured: true,
+    },
+    {
+      slug: "aic-weather-based-crop", providerId: pid("aic"), name: "Restructured Weather Based Crop Insurance (RWBCIS)", category: "crop",
+      description: "Weather-triggered crop insurance scheme compensating farmers based on deviation from normal weather parameters — faster payouts with no field survey required.",
+      premiumStartsFrom: 400, coverAmount: "Based on notified scale of finance", policyTerm: "Per crop season", eligibilityAge: "All farmers growing notified crops",
+      keyBenefits: ["Payout triggered automatically by weather index deviation", "Faster claim settlement — no field survey needed", "Covers deficit and excess rainfall, temperature extremes", "Horticulture crops specially covered", "Integrated with Crop Insurance Portal", "Loanee farmers enrolled compulsorily"],
+      exclusions: ["Non-notified crops or areas", "Risks not covered by the weather index", "Post-harvest losses (PMFBY covers those)", "Negligence by farmer"],
+      documentsRequired: ["Sowing certificate", "Land records (patwari / tehsildar)", "Aadhaar card", "Bank account details"],
+      isFeatured: false,
+    },
+    {
+      slug: "new-india-coconut-palm", providerId: pid("new-india-assurance"), name: "New India Coconut Palm Insurance Scheme", category: "crop", subCategory: "Horticulture",
+      description: "Unique individual tree insurance for coconut palm growers, covering loss of trees due to natural calamities, pests, and diseases.",
+      premiumStartsFrom: 600, coverAmount: "₹900 per palm tree (government scale)", policyTerm: "1 year (renewable)", eligibilityAge: "Coconut palm growers (4–60 year old palms)",
+      keyBenefits: ["Individual palm tree identification and cover", "Natural calamities: cyclone, flood, fire, lightning", "Pest and disease compensation after survey", "Graded damage assessment by independent surveyor", "Payout within 30 days of survey completion", "Subsidised under National Horticulture Board scheme"],
+      exclusions: ["Palms below 4 years or above 60 years of age", "Malicious damage by palm owner", "Negligence and non-maintenance", "Unidentified or unregistered palms"],
+      documentsRequired: ["Land records", "Palm count certificate from horticulture department", "Aadhaar or PAN card", "Bank account details"],
+      isFeatured: false,
+    },
+
+    // ══════════════════════════════════════════════════
+    //  CYBER INSURANCE
+    // ══════════════════════════════════════════════════
+    {
+      slug: "bajaj-cyber-safe", providerId: pid("bajaj-allianz"), name: "Bajaj Allianz Cyber Safe Insurance", category: "cyber",
+      description: "India's most popular individual cyber insurance covering financial loss from online fraud, identity theft, cyber extortion, and data breach.",
+      premiumStartsFrom: 600, coverAmount: "₹1 Lakh – ₹1 Crore", policyTerm: "1 year (renewable)", eligibilityAge: "Individuals 18+ years",
+      keyBenefits: ["Online banking and UPI payment fraud", "Identity theft and impersonation", "Cyber stalking — psychological counselling expenses", "Malware attack — data restoration costs", "IT forensics and legal expenses", "Reputation damage management"],
+      exclusions: ["Fraudulent or criminal acts by the insured", "Pre-existing cyber incidents before policy start", "War and state-sponsored cyber terrorism", "Business-related cyber losses (personal policy)"],
+      documentsRequired: ["Aadhaar or PAN card", "Completed proposal form", "FIR copy (for claims)"],
+      isFeatured: true,
+    },
+    {
+      slug: "hdfc-ergo-cyber-sachet", providerId: pid("hdfc-ergo"), name: "HDFC ERGO Cyber Sachet", category: "cyber",
+      description: "Affordable cyber policy offering protection against banking fraud, social media hacking and phishing at pocket-friendly premiums — ideal for first-time buyers.",
+      premiumStartsFrom: 500, coverAmount: "₹50,000 – ₹50 Lakh", policyTerm: "1 year (renewable)", eligibilityAge: "Individuals 18+ years",
+      keyBenefits: ["Card and banking/UPI fraud cover", "Social media account hacking expenses", "Phishing and email spoofing losses", "Cyberbullying mental trauma support", "Legal consultation included (2 sessions)", "Data breach response assistance"],
+      exclusions: ["Losses due to insured sharing OTP/PIN voluntarily", "Business cyber losses (personal policy)", "Intentional acts by insured", "Previously known incidents"],
+      documentsRequired: ["Government ID", "Completed proposal form", "FIR copy and bank statement (for claims)"],
+      isFeatured: false,
+    },
+    {
+      slug: "icici-lombard-cyber-business", providerId: pid("icici-lombard"), name: "ICICI Lombard Cyber Enterprise Insurance", category: "cyber", subCategory: "Business",
+      description: "Enterprise-grade cyber liability insurance covering data breaches, ransomware, network interruption, and regulatory fines for businesses of all sizes.",
+      premiumStartsFrom: 15000, coverAmount: "₹50 Lakh – ₹100 Crore", policyTerm: "1 year (renewable)", eligibilityAge: "SME to large corporates",
+      keyBenefits: ["Data breach response and notification costs", "Ransomware payment and recovery expenses", "Business interruption from cyber attack", "Third-party liability for customer data breach", "Regulatory fines coverage (GDPR / DPDP Act 2023)", "Social engineering and funds transfer fraud"],
+      exclusions: ["Intentional misconduct by senior management", "Prior known breaches not disclosed", "Nation-state attacks (exclusions vary by policy)", "IP ownership or trade secret disputes"],
+      documentsRequired: ["Business registration certificate", "IT security questionnaire", "Previous cyber incident history", "Audited financials"],
+      isFeatured: false,
+    },
+    {
+      slug: "tata-aig-cyber-insurance", providerId: pid("tata-aig"), name: "Tata AIG Cyber Insurance (Individual & Family)", category: "cyber",
+      description: "Family cyber plan protecting every household member against online financial fraud, identity theft, and cyberbullying under one affordable policy.",
+      premiumStartsFrom: 700, coverAmount: "₹1 Lakh – ₹50 Lakh", policyTerm: "1 year (renewable)", eligibilityAge: "Individuals and families",
+      keyBenefits: ["Covers entire family under single policy", "Online banking and credit card fraud", "Cyber extortion and ransomware", "Identity theft and impersonation", "Cyber bullying support for minors", "24×7 cyber helpline and legal assistance"],
+      exclusions: ["Intentional sharing of credentials", "Pre-existing known cyber incidents", "Business-related losses", "Fraudulent claims"],
+      documentsRequired: ["Aadhaar for all members", "Completed proposal form", "Bank statements (for claims)"],
       isFeatured: false,
     },
   ];

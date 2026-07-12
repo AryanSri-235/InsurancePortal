@@ -139,9 +139,7 @@ export default function AdminShell({ children, session }: Props) {
       {/* Logo */}
       <div className="px-4 py-5 border-b border-slate-800/60 flex items-center justify-between">
         <Link href="/admin/dashboard" onClick={closeSidebar} className="flex items-center gap-2 group">
-          <div className="bg-white rounded-lg px-2 py-1 group-hover:opacity-90 transition-opacity">
-            <img src="/logo-zoomed.png" alt="NPS Insurance.Life" className="h-8 w-auto object-contain" />
-          </div>
+          <img src="/logo-dark-zoomed.png" alt="NPS Insurance.in" className="h-20 w-auto object-contain group-hover:opacity-90 transition-opacity" />
           <p className="text-slate-500 text-[10px] font-medium">Admin Panel</p>
         </Link>
         {/* Close button — mobile only */}

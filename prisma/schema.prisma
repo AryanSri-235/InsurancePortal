@@ -23,17 +23,15 @@ model Provider {
   isActive             Boolean  @default(true)
   createdAt            DateTime @default(now())
   updatedAt            DateTime @updatedAt
-
-  policies Policy[]
+  policies             Policy[]
 
   @@map("providers")
 }
 
 model Policy {
-  id                Int      @id @default(autoincrement())
-  slug              String   @unique
+  id                Int           @id @default(autoincrement())
+  slug              String        @unique
   providerId        Int
-  provider          Provider @relation(fields: [providerId], references: [id])
   name              String
   category          String
   subCategory       String?
@@ -46,14 +44,14 @@ model Policy {
   exclusions        String[]
   documentsRequired String[]
   brochureUrl       String?
-  isFeatured        Boolean  @default(false)
-  isActive          Boolean  @default(true)
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  riders   PolicyRider[]
-  leads    Lead[]
-  dueDates DueDate[]
+  isFeatured        Boolean       @default(false)
+  isActive          Boolean       @default(true)
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
+  dueDates          DueDate[]
+  leads             Lead[]
+  provider          Provider      @relation(fields: [providerId], references: [id])
+  riders            PolicyRider[]
 
   @@map("policies")
 }
@@ -61,24 +59,23 @@ model Policy {
 model PolicyRider {
   id           Int     @id @default(autoincrement())
   policyId     Int
-  policy       Policy  @relation(fields: [policyId], references: [id])
   name         String
   description  String?
   extraPremium Float?
+  policy       Policy  @relation(fields: [policyId], references: [id])
 
   @@map("policy_riders")
 }
 
 model Lead {
-  id          Int      @id @default(autoincrement())
-  leadType    String   @default("quote")
+  id          Int        @id @default(autoincrement())
+  leadType    String     @default("quote")
   name        String
   phone       String
   email       String?
   category    String?
   city        String?
   policyId    Int?
-  policy      Policy?  @relation(fields: [policyId], references: [id])
   utmSource   String?
   utmMedium   String?
   utmCampaign String?
@@ -87,13 +84,13 @@ model Lead {
   referrerUrl String?
   userAgent   String?
   deviceType  String?
-  status      String   @default("new")
+  status      String     @default("new")
   assignedTo  Int?
-  isReturning Boolean  @default(false)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
-  notes LeadNote[]
+  isReturning Boolean    @default(false)
+  createdAt   DateTime   @default(now())
+  updatedAt   DateTime   @updatedAt
+  notes       LeadNote[]
+  policy      Policy?    @relation(fields: [policyId], references: [id])
 
   @@map("leads")
 }
@@ -101,10 +98,10 @@ model Lead {
 model LeadNote {
   id        Int      @id @default(autoincrement())
   leadId    Int
-  lead      Lead     @relation(fields: [leadId], references: [id])
   note      String
   createdBy Int?
   createdAt DateTime @default(now())
+  lead      Lead     @relation(fields: [leadId], references: [id])
 
   @@map("lead_notes")
 }
@@ -115,49 +112,51 @@ model DueDate {
   phone            String
   email            String?
   policyId         Int?
-  policy           Policy?  @relation(fields: [policyId], references: [id])
   policyNumber     String?
-  bankName         String?
   dueDate          DateTime
   status           String   @default("pending")
   notes            String?
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
+  bankName         String?
+  policy           Policy?  @relation(fields: [policyId], references: [id])
 
   @@map("due_dates")
 }
 
 model User {
-  id           Int       @id @default(autoincrement())
-  name         String
-  phone        String    @unique
-  email        String?   @unique
-  passwordHash String
-  dob          DateTime?
-  gender       String?
-  city         String?
-  pincode      String?
-  isActive     Boolean   @default(true)
-  lastLoginAt  DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
+  id                Int       @id @default(autoincrement())
+  name              String?
+  phone             String    @unique
+  email             String?   @unique
+  passwordHash      String?
+  dob               DateTime?
+  gender            String?
+  city              String?
+  pincode           String?
+  isActive          Boolean   @default(true)
+  lastLoginAt       DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+  otpCode           String?   @map("otp_code")
+  otpExpiresAt      DateTime? @map("otp_expires_at")
+  isProfileComplete Boolean   @default(false)
 
   @@map("users")
 }
 
 model AdminUser {
-  id           Int       @id @default(autoincrement())
+  id           Int                @id @default(autoincrement())
   name         String
-  email        String    @unique
+  email        String             @unique
   passwordHash String
-  role         String    @default("superadmin")
+  role         String             @default("superadmin")
+  isActive     Boolean            @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime           @default(now())
+  updatedAt    DateTime           @updatedAt
   bankName     String?
   maxPolicies  Int?
-  isActive     Boolean   @default(true)
-  lastLoginAt  DateTime?
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
   activityLogs AdminActivityLog[]
 
   @@map("admin_users")
@@ -213,7 +212,7 @@ model Setting {
 model NewsletterSubscriber {
   id        Int      @id @default(autoincrement())
   email     String   @unique
-  source    String?  // "footer" | "blog" | "other"
+  source    String?
   createdAt DateTime @default(now())
 
   @@map("newsletter_subscribers")
@@ -234,12 +233,12 @@ model ContactMessage {
 model AdminActivityLog {
   id          Int       @id @default(autoincrement())
   adminUserId Int
-  adminUser   AdminUser @relation(fields: [adminUserId], references: [id])
   action      String
   entity      String?
   entityId    Int?
   details     String?
   createdAt   DateTime  @default(now())
+  adminUser   AdminUser @relation(fields: [adminUserId], references: [id])
 
   @@map("admin_activity_logs")
 }

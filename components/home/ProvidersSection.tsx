@@ -60,16 +60,16 @@ export default function ProvidersSection({ providers }: { providers: Provider[] 
         {/* Header */}
         <div className="text-center mb-10 px-4">
           <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">
-            Our Insurer Network
+            Our Partners
           </p>
           <h2 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight mb-4">
-            India&apos;s Top{" "}
+            Trusted by India&apos;s{" "}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Insurance Brands
+              Top Insurers
             </span>
           </h2>
           <p className="text-gray-500 text-base max-w-xl mx-auto">
-            {providers.length}+ IRDAI-registered companies compared in one place.
+            We&apos;ve partnered with {providers.length}+ IRDAI-registered insurance companies to bring you the best plans.
           </p>
         </div>
 

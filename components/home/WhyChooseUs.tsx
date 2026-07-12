@@ -3,9 +3,6 @@ import { Award, Lock, Zap, Target, Phone, PiggyBank } from "lucide-react";
 
 const reasons = [
   { icon: Award,    title: "IRDAI Registered",    description: "Licensed web aggregator fully regulated by IRDAI. Your data is protected and compliant with all regulations.", accent: "blue"  },
-  { icon: Lock,     title: "256-bit Encryption",  description: "Bank-grade security on every interaction. Your personal data is never sold or shared without consent.",         accent: "green" },
-  { icon: Zap,      title: "Instant Comparison",  description: "Compare 200+ plans from 50+ insurers in real-time. Sort by price, claim ratio, features — instantly.",         accent: "blue"  },
-  { icon: Target,   title: "Truly Unbiased",       description: "We don't sell — we compare. Our advisors recommend the best plan for your needs, not the highest commission.", accent: "green" },
   { icon: Phone,    title: "24×7 Claim Support",   description: "Dedicated claim support from first notice to final settlement. We're with you every step of the way.",        accent: "blue"  },
   { icon: PiggyBank, title: "Save Up to 40%",      description: "Customers who compare online save an average of 40% on premiums vs. buying directly from the insurer.",       accent: "green" },
 ];

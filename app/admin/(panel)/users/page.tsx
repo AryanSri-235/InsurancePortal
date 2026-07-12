@@ -58,9 +58,9 @@ const ALL_PAGES = [
 ];
 
 const PAGE_ACCESS: Record<string, Role[]> = {
-  dashboard:          ["superadmin", "ram"],
+  dashboard:          ["superadmin"],
   leads:              ["superadmin", "sales"],
-  "due-dates":        ["superadmin", "ram", "renewal"],
+  "due-dates":        ["superadmin", "renewal"],
   "contact-messages": ["superadmin"],
   newsletter:         ["superadmin"],
   "registered-users": ["superadmin"],
@@ -315,7 +315,7 @@ export default function UsersPage() {
                 <select required value={form.role} onChange={e => setForm(f => ({ ...f, role: e.target.value as Role, bankName: "" }))}
                   className="w-full border border-gray-200 rounded-xl px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white">
                   <option value="superadmin">Super Admin — full access</option>
-                  <option value="ram">R.A.M. — dashboard, policies, due-dates</option>
+                  <option value="ram">R.A.M. — policies, providers</option>
                   <option value="sales">Sales — leads only</option>
                   <option value="renewal">Renewal — due-dates only</option>
                 </select>

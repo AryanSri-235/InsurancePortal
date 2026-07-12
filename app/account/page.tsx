@@ -1,10 +1,9 @@
-import { redirect } from "next/navigation";
+﻿import { redirect } from "next/navigation";
 import { getUserSession } from "@/lib/user/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import LogoutButton from "@/components/user/LogoutButton";
 import QuickQuoteButton from "@/components/user/QuickQuoteButton";
-import RenewalRequestButton from "@/components/user/RenewalRequestButton";
 import ContactSupportForm from "@/components/user/ContactSupportForm";
 import { Home, Calendar, FileText, User, MessageSquare, ExternalLink, AlertTriangle, Clipboard, Copy, type LucideIcon } from "lucide-react";
 
@@ -75,7 +74,7 @@ export default async function AccountPage() {
   if (!user) redirect("/login");
 
   const quoteRequests = leads.filter((l) => l.leadType === "quote");
-  const initials = user.name.split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
+  const initials = (user.name ?? "U").split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   const memberSince = new Date(user.createdAt).toLocaleDateString("en-IN", { month: "short", year: "numeric" });
 
   return (
@@ -212,9 +211,7 @@ export default async function AccountPage() {
       {/* ── Mobile header ── */}
       <div className="acct-mobile-header">
         <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-          <div style={{ background: "#fff", borderRadius: 6, padding: "3px 7px" }}>
-            <img src="/logo-zoomed.png" alt="NPS Insurance.Life" style={{ height: 28, width: "auto", objectFit: "contain", display: "block" }} />
-          </div>
+          <img src="/logo-dark-zoomed.png" alt="NPS Insurance.Life" style={{ height: 36, width: "auto", objectFit: "contain", display: "block" }} />
         </Link>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <div style={{ width: 32, height: 32, borderRadius: 8, background: "linear-gradient(135deg, #186874 0%, #004aad 100%)", display: "flex", alignItems: "center", justifyContent: "center" }}>
@@ -228,9 +225,7 @@ export default async function AccountPage() {
       <aside className="acct-sidebar">
         <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
           <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-            <div style={{ background: "#fff", borderRadius: 8, padding: "4px 8px" }}>
-              <img src="/logo-zoomed.png" alt="NPS Insurance.Life" style={{ height: 36, width: "auto", objectFit: "contain", display: "block" }} />
-            </div>
+            <img src="/logo-dark-zoomed.png" alt="NPS Insurance.in" style={{ height: 80, width: "auto", objectFit: "contain", display: "block" }} />
           </Link>
         </div>
 
@@ -269,7 +264,7 @@ export default async function AccountPage() {
           <div style={{ background: "rgba(24,104,116,0.12)", border: "1px solid rgba(24,104,116,0.25)", borderRadius: 10, padding: "12px" }}>
             <p style={{ color: "#93C5FD", fontSize: 11, fontWeight: 700, marginBottom: 2 }}>Need coverage?</p>
             <p style={{ color: "#5C6B84", fontSize: 10, lineHeight: 1.4, marginBottom: 10 }}>Advisor calls you in 30 min.</p>
-            <QuickQuoteButton name={user.name} phone={user.phone} email={user.email} city={user.city} sidebar />
+            <QuickQuoteButton name={user.name ?? ""} phone={user.phone} email={user.email} city={user.city} sidebar />
           </div>
         </div>
 
@@ -290,7 +285,7 @@ export default async function AccountPage() {
           <div id="overview" style={{ marginBottom: 24 }}>
             <p style={{ fontSize: 11, fontWeight: 600, color: "#8899B4", letterSpacing: "0.08em", textTransform: "uppercase", marginBottom: 4 }}>My Account</p>
             <h1 style={{ fontSize: 24, fontWeight: 800, color: "#0B1120", letterSpacing: "-0.6px", lineHeight: 1.2 }}>
-              Hello, {user.name.split(" ")[0]}
+              Hello, {(user.name ?? "there").split(" ")[0]}
             </h1>
             <p style={{ color: "#5C6B84", fontSize: 13, marginTop: 4 }}>Here&apos;s a summary of your insurance activity.</p>
           </div>
@@ -361,7 +356,7 @@ export default async function AccountPage() {
                 <p style={{ fontSize: 13, fontWeight: 600, color: "#334155" }}>No renewals tracked yet</p>
                 <p style={{ fontSize: 12, color: "#94A3B8", textAlign: "center", maxWidth: 260 }}>Our advisors will add your policy renewal dates after you request a quote.</p>
                 <div style={{ marginTop: 4 }}>
-                  <QuickQuoteButton name={user.name} phone={user.phone} email={user.email} city={user.city} small />
+                  <QuickQuoteButton name={user.name ?? ""} phone={user.phone} email={user.email} city={user.city} small />
                 </div>
               </div>
             ) : (
@@ -396,15 +391,6 @@ export default async function AccountPage() {
                         <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 20, background: d.status === "renewed" ? "#ECFDF5" : d.status === "lapsed" ? "#FFF1F2" : "#FFFBEB", color: d.status === "renewed" ? "#065F46" : d.status === "lapsed" ? "#9F1239" : "#92400E", border: `1px solid ${d.status === "renewed" ? "#A7F3D0" : d.status === "lapsed" ? "#FECDD3" : "#FDE68A"}`, flexShrink: 0 }}>
                           {d.status}
                         </span>
-                        {d.status !== "renewed" && d.status !== "lapsed" && (
-                          <RenewalRequestButton
-                            name={user.name}
-                            phone={user.phone}
-                            email={user.email}
-                            category={d.policy?.category}
-                            policyNumber={d.policyNumber}
-                          />
-                        )}
                       </div>
                     </div>
                   );
@@ -431,7 +417,7 @@ export default async function AccountPage() {
                 <p style={{ fontSize: 13, fontWeight: 600, color: "#334155" }}>No quote requests yet</p>
                 <p style={{ fontSize: 12, color: "#94A3B8", textAlign: "center", maxWidth: 240 }}>Request a quote and an expert will call you within 30 minutes.</p>
                 <div style={{ marginTop: 4 }}>
-                  <QuickQuoteButton name={user.name} phone={user.phone} email={user.email} city={user.city} small />
+                  <QuickQuoteButton name={user.name ?? ""} phone={user.phone} email={user.email} city={user.city} small />
                 </div>
               </div>
             ) : (
@@ -502,7 +488,7 @@ export default async function AccountPage() {
               </div>
               <span style={{ fontSize: 11, color: "#8899B4" }}>We&apos;ll call you back</span>
             </div>
-            <ContactSupportForm name={user.name} phone={user.phone} email={user.email} />
+            <ContactSupportForm name={user.name ?? ""} phone={user.phone} email={user.email} />
           </div>
 
           <div style={{ height: 32 }} />

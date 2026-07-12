@@ -5,13 +5,12 @@ import { z } from "zod";
 
 export async function GET() {
   const session = await getSession();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session || !["superadmin", "renewal"].includes(session.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   try {
-    // RAM sees only their bank's due dates
-    const where = session.role === "ram" && session.bankName
-      ? { bankName: session.bankName }
-      : {};
+    const where = {};
 
     const items = await db.dueDate.findMany({
       where,
@@ -33,21 +32,20 @@ const schema = z.object({
   bankName: z.string().optional().nullable(),
   dueDate: z.string(),
   notes: z.string().optional(),
-  status: z.string().optional(),
+  status: z.enum(["pending", "completed", "overdue", "lapsed", "renewed"]).optional(),
 });
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session || !["superadmin", "renewal"].includes(session.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   try {
     const body = await req.json();
     const data = schema.parse(body);
 
-    // RAM always tags with their bankName
-    const bankName = session.role === "ram"
-      ? (session.bankName ?? null)
-      : (data.bankName ?? null);
+    const bankName = data.bankName ?? null;
 
     const item = await db.dueDate.create({
       data: {
@@ -71,20 +69,29 @@ export async function POST(req: NextRequest) {
   }
 }
 
+const patchSchema = z.object({
+  id: z.number(),
+  policyHolderName: z.string().min(2).optional(),
+  phone: z.string().min(10).optional(),
+  email: z.string().email().optional().or(z.literal("")),
+  policyNumber: z.string().optional(),
+  policyId: z.number().optional().nullable(),
+  bankName: z.string().optional().nullable(),
+  dueDate: z.string().optional(),
+  notes: z.string().optional(),
+  status: z.enum(["pending", "completed", "overdue", "lapsed", "renewed"]).optional(),
+});
+
 export async function PATCH(req: NextRequest) {
   const session = await getSession();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session || !["superadmin", "renewal"].includes(session.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   try {
-    const { id, policyHolderName, phone, email, policyNumber, dueDate, notes, policyId, status, bankName } = await req.json();
-
-    // RAM can only edit their own bank's records
-    if (session.role === "ram" && session.bankName) {
-      const existing = await db.dueDate.findUnique({ where: { id }, select: { bankName: true } });
-      if (existing?.bankName && existing.bankName !== session.bankName) {
-        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
-      }
-    }
+    const parsed = patchSchema.safeParse(await req.json());
+    if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message }, { status: 422 });
+    const { id, policyHolderName, phone, email, policyNumber, dueDate, notes, policyId, status, bankName } = parsed.data;
 
     const item = await db.dueDate.update({
       where: { id },
@@ -97,7 +104,7 @@ export async function PATCH(req: NextRequest) {
         ...(policyNumber !== undefined && { policyNumber: policyNumber || null }),
         ...(notes !== undefined  && { notes: notes || null }),
         ...(policyId !== undefined && { policyId: policyId ?? null }),
-        ...(bankName !== undefined && session.role !== "ram" && { bankName: bankName || null }),
+        ...(bankName !== undefined && { bankName: bankName || null }),
       },
     });
     return NextResponse.json({ success: true, data: item });

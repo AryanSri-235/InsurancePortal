@@ -4,7 +4,9 @@ import { getSession } from "@/lib/admin/auth";
 
 export async function GET(req: NextRequest) {
   const session = await getSession();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session || !["superadmin", "sales"].includes(session.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   const { searchParams } = new URL(req.url);
   const status = searchParams.get("status");
@@ -64,13 +66,18 @@ export async function GET(req: NextRequest) {
 
 export async function PATCH(req: NextRequest) {
   const session = await getSession();
-  if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  if (!session || !["superadmin", "sales"].includes(session.role)) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
 
   try {
     const { id, status, renewalDate, policyNumber } = await req.json();
     const validStatuses = ["new", "contacted", "converted", "lost"];
     if (!id || !validStatuses.includes(status)) {
       return NextResponse.json({ error: "Invalid data" }, { status: 422 });
+    }
+    if (renewalDate && isNaN(Date.parse(renewalDate))) {
+      return NextResponse.json({ error: "Invalid renewalDate" }, { status: 422 });
     }
     const lead = await db.lead.update({
       where: { id },

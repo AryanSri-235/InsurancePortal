@@ -3,6 +3,7 @@ import { db } from "@/lib/db";
 import { signToken, cookieOptions } from "@/lib/admin/auth";
 import bcrypt from "bcryptjs";
 import { z } from "zod";
+import { isRateLimited } from "@/lib/rate-limit";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -21,6 +22,11 @@ export async function POST(req: NextRequest) {
   }
 
   const { email, password } = parsed.data;
+
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
+  if (isRateLimited(`admin-login:${ip}:${email}`, 5, 15 * 60 * 1000)) {
+    return NextResponse.json({ error: "Too many login attempts. Please try again in 15 minutes." }, { status: 429 });
+  }
 
   try {
     const user = await db.adminUser.findUnique({ where: { email } });

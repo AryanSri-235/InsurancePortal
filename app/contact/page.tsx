@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Swal from "sweetalert2";
 import { type LucideIcon, Phone, Mail, MessageCircle, MapPin, CheckCircle, Zap } from "lucide-react";
 
 const channels: { icon: LucideIcon; title: string; detail: string; sub: string; color: string; iconBg: string; from: string; to: string }[] = [
@@ -36,7 +37,12 @@ export default function ContactPage() {
       }
       setSent(true);
     } catch (err: unknown) {
-      alert(err instanceof Error ? err.message : "Something went wrong. Please try again.");
+      Swal.fire({
+        icon: "error",
+        title: "Oops!",
+        text: err instanceof Error ? err.message : "Something went wrong. Please try again.",
+        confirmButtonColor: "#2563eb",
+      });
     } finally {
       setLoading(false);
     }

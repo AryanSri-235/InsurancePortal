@@ -1,9 +1,9 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 
-const SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET ?? "fallback-secret-change-in-prod"
-);
+const rawSecret = process.env.ADMIN_JWT_SECRET ?? process.env.JWT_SECRET;
+if (!rawSecret) throw new Error("ADMIN_JWT_SECRET is not set");
+const SECRET = new TextEncoder().encode(rawSecret);
 
 const COOKIE_NAME = "admin_token";
 const EXPIRES_IN = 60 * 60 * 8; // 8 hours

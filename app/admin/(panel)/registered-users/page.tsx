@@ -161,10 +161,10 @@ export default async function RegisteredUsersPage({
                     <td className="px-5 py-3.5">
                       <div className="flex items-center gap-2.5">
                         <div className="w-8 h-8 rounded-full bg-gradient-to-br from-blue-500 to-indigo-600 flex items-center justify-center text-white font-bold text-xs flex-shrink-0">
-                          {u.name.charAt(0).toUpperCase()}
+                          {(u.name ?? "?").charAt(0).toUpperCase()}
                         </div>
                         <div>
-                          <p className="font-semibold text-gray-900 text-sm leading-tight">{u.name}</p>
+                          <p className="font-semibold text-gray-900 text-sm leading-tight">{u.name ?? <span className="text-gray-400 italic">No name</span>}</p>
                           <p className="text-[10px] text-gray-400">ID #{u.id}</p>
                         </div>
                       </div>

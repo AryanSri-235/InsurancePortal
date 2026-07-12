@@ -50,7 +50,7 @@ const policySchema = z.object({
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
-  if (!session || session.role === "VIEWER") {
+  if (!session || ["sales", "renewal"].includes(session.role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -67,15 +67,19 @@ export async function POST(req: NextRequest) {
   }
 }
 
+const patchSchema = policySchema.partial();
+
 export async function PATCH(req: NextRequest) {
   const session = await getSession();
-  if (!session || session.role === "VIEWER") {
+  if (!session || ["sales", "renewal"].includes(session.role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
   try {
-    const { id, ...data } = await req.json();
+    const { id, ...body } = await req.json();
     if (!id) return NextResponse.json({ error: "ID required" }, { status: 422 });
+
+    const data = patchSchema.parse(body);
 
     // RAM users can only modify policies belonging to their provider
     if (session.role === "ram" && session.bankName) {
@@ -88,16 +92,21 @@ export async function PATCH(req: NextRequest) {
       }
     }
 
+    // RAM cannot reassign a policy to a different provider
+    if (session.role === "ram") delete (data as Record<string, unknown>).providerId;
     const policy = await db.policy.update({ where: { id }, data });
     return NextResponse.json({ success: true, data: policy });
-  } catch {
+  } catch (err: unknown) {
+    if (err instanceof z.ZodError) {
+      return NextResponse.json({ error: err.issues[0]?.message }, { status: 422 });
+    }
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }
 
 export async function DELETE(req: NextRequest) {
   const session = await getSession();
-  if (!session || !["SUPER_ADMIN"].includes(session.role)) {
+  if (!session || session.role !== "superadmin") {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 

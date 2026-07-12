@@ -159,9 +159,7 @@ export default function Footer() {
           {/* Brand column */}
           <div className="md:col-span-4">
             <Link href="/" className="flex items-center mb-5 group w-fit">
-              <div className="bg-white rounded-xl px-3 py-1.5 group-hover:opacity-90 transition-opacity">
-                <img src="/logo-zoomed.png" alt="NPS Insurance.Life" className="h-10 w-auto object-contain" />
-              </div>
+              <img src="/logo-dark-zoomed.png" alt="NPS Insurance.Life" className="h-20 w-auto object-contain group-hover:opacity-90 transition-opacity" />
             </Link>
 
             <p className="text-sm text-gray-500 leading-relaxed mb-6 max-w-xs">

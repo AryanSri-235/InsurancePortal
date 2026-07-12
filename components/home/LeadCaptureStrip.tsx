@@ -2,17 +2,28 @@
 
 import { useState } from "react";
 import Swal from "sweetalert2";
-import { CheckCircle } from "lucide-react";
+import { CheckCircle, ChevronDown } from "lucide-react";
 
-const TYPES = [
-  { value: "term",   label: "Term" },
-  { value: "health", label: "Health" },
-  { value: "motor",  label: "Motor" },
-  { value: "life",   label: "Life" },
+const INSURANCE_TYPES = [
+  { value: "term",              label: "Term Insurance" },
+  { value: "health",            label: "Health Insurance" },
+  { value: "life",              label: "Life Insurance" },
+  { value: "motor",             label: "Motor Insurance" },
+  { value: "car",               label: "Car Insurance" },
+  { value: "two-wheeler",       label: "Two Wheeler Insurance" },
+  { value: "family-health",     label: "Family Health Insurance" },
+  { value: "group-health",      label: "Group Health Insurance" },
+  { value: "travel",            label: "Travel Insurance" },
+  { value: "home",              label: "Home Insurance" },
+  { value: "term-women",        label: "Term Insurance for Women" },
+  { value: "return-premium",    label: "Term Plans with Return of Premium" },
+  { value: "guaranteed-return", label: "Guaranteed Return Plans" },
+  { value: "child-savings",     label: "Child Savings Plans" },
+  { value: "retirement",        label: "Retirement Plans" },
 ];
 
 export default function LeadCaptureStrip() {
-  const [form, setForm] = useState({ name: "", phone: "", email: "", category: "term" });
+  const [form, setForm] = useState({ name: "", phone: "", email: "", category: "" });
   const [loading, setLoading] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -29,7 +40,7 @@ export default function LeadCaptureStrip() {
         body: JSON.stringify({ ...form, leadType: "quote", utmSource: "lead_strip" }),
       });
       if (res.ok) {
-        setForm({ name: "", phone: "", email: "", category: "term" });
+        setForm({ name: "", phone: "", email: "", category: "" });
         Swal.fire({
           icon: "success",
           title: "We'll call you shortly!",
@@ -64,21 +75,22 @@ export default function LeadCaptureStrip() {
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="flex justify-center gap-2 mb-6 flex-wrap">
-            {TYPES.map((t) => (
-              <button
-                key={t.value}
-                type="button"
-                onClick={() => setForm({ ...form, category: t.value })}
-                className={`px-5 py-2 rounded-xl text-sm font-bold transition-all duration-150 border-2 ${
-                  form.category === t.value
-                    ? "bg-white text-blue-700 border-white shadow-lg"
-                    : "border-white/30 text-white hover:border-white/60"
-                }`}
-              >
-                {t.label}
-              </button>
-            ))}
+          {/* Insurance type selector */}
+          <div className="max-w-sm mx-auto mb-6 relative">
+            <select
+              value={form.category}
+              onChange={e => setForm({ ...form, category: e.target.value })}
+              required
+              className="w-full appearance-none bg-white/15 border-2 border-white/30 text-white rounded-xl px-4 py-3 text-sm font-semibold focus:outline-none focus:border-white/70 hover:border-white/50 transition-colors cursor-pointer"
+            >
+              <option value="" disabled className="bg-blue-700 text-white">Select insurance type…</option>
+              {INSURANCE_TYPES.map(t => (
+                <option key={t.value} value={t.value} className="bg-blue-700 text-white font-normal">
+                  {t.label}
+                </option>
+              ))}
+            </select>
+            <ChevronDown className="absolute right-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-white/70 pointer-events-none" />
           </div>
 
           <div className="flex flex-col sm:flex-row gap-3">

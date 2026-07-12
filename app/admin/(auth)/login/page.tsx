@@ -74,86 +74,85 @@ export default function AdminLoginPage() {
       <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-indigo-400/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-sm relative">
-        {/* Logo */}
-        <div className="text-center mb-8">
-          <div className="inline-flex mb-6">
-            <div className="bg-white rounded-xl px-4 py-2 shadow-sm border border-gray-200">
-              <img src="/logo-zoomed.png" alt="NPS Insurance.Life" className="h-11 w-auto object-contain" />
-            </div>
+
+        <div className="bg-white rounded-2xl border border-gray-200 shadow-xl shadow-gray-200/60 overflow-hidden">
+          {/* Top accent bar */}
+          <div className="h-1.5 bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-600" />
+
+          {/* Card header */}
+          <div className="px-7 pt-7 pb-6 text-center">
+            <img src="/logo-chatgpt.png" alt="NPS Insurance" className="h-24 w-auto object-contain mx-auto mb-5" />
+            <h1 className="text-xl font-bold text-gray-900">Welcome back</h1>
+            <p className="text-gray-400 text-sm mt-1">Sign in to the admin panel</p>
           </div>
-          <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-          <p className="text-gray-500 text-sm mt-1.5">Sign in to the admin panel</p>
-        </div>
+          <div className="h-1.5 bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-600" />
 
-        <div className="bg-white rounded-2xl border border-gray-200 shadow-xl shadow-gray-200/60 p-7">
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">
-                Email address
-              </label>
-              <input
-                type="email"
-                value={form.email}
-                onChange={(e) => setForm({ ...form, email: e.target.value })}
-                required
-                autoComplete="email"
-                placeholder="admin@example.com"
-                className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
-              />
-            </div>
-
-            <div>
-              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">
-                Password
-              </label>
-              <div className="relative">
+          {/* Form */}
+          <div className="px-7 py-6">
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">
+                  Email address
+                </label>
                 <input
-                  type={showPass ? "text" : "password"}
-                  value={form.password}
-                  onChange={(e) => setForm({ ...form, password: e.target.value })}
+                  type="email"
+                  value={form.email}
+                  onChange={(e) => setForm({ ...form, email: e.target.value })}
                   required
-                  autoComplete="current-password"
-                  placeholder="Password"
-                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pr-11 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                  autoComplete="email"
+                  placeholder="admin@example.com"
+                  className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
                 />
-                <button
-                  type="button"
-                  onClick={() => setShowPass(!showPass)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
-                  tabIndex={-1}
-                >
-                  {showPass ? (
-                    <EyeOff className="w-4 h-4" />
-                  ) : (
-                    <Eye className="w-4 h-4" />
-                  )}
-                </button>
               </div>
-            </div>
 
-            {error && (
-              <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
-                <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
-                <p className="text-red-600 text-sm">{error}</p>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-2">
+                  Password
+                </label>
+                <div className="relative">
+                  <input
+                    type={showPass ? "text" : "password"}
+                    value={form.password}
+                    onChange={(e) => setForm({ ...form, password: e.target.value })}
+                    required
+                    autoComplete="current-password"
+                    placeholder="Password"
+                    className="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 pr-11 text-gray-900 placeholder-gray-400 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPass(!showPass)}
+                    className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                    tabIndex={-1}
+                  >
+                    {showPass ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
+                  </button>
+                </div>
               </div>
-            )}
 
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold text-sm hover:from-blue-700 hover:to-indigo-700 disabled:opacity-60 transition-all duration-200 shadow-md shadow-blue-200 hover:shadow-blue-300 mt-1"
-            >
-              {loading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                  Signing in...
-                </span>
-              ) : "Sign In →"}
-            </button>
-          </form>
+              {error && (
+                <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+                  <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
+                  <p className="text-red-600 text-sm">{error}</p>
+                </div>
+              )}
+
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-gradient-to-r from-teal-600 via-blue-600 to-indigo-600 text-white py-3 rounded-xl font-semibold text-sm hover:opacity-90 disabled:opacity-60 transition-all duration-200 shadow-md shadow-blue-200 mt-1"
+              >
+                {loading ? (
+                  <span className="flex items-center justify-center gap-2">
+                    <Loader2 className="w-4 h-4 animate-spin" /> Signing in...
+                  </span>
+                ) : "Sign In →"}
+              </button>
+            </form>
+          </div>
         </div>
 
-        <p className="text-center text-xs text-gray-400 mt-6">
+        <p className="text-center text-xs text-gray-400 mt-5">
           InsurancePortal Admin · Restricted Access
         </p>
       </div>

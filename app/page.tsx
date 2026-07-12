@@ -65,8 +65,8 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* 1. Hero — headline, CTA, insurance type selector, live counters */}
-      <HeroSection />
+      {/* 1. Hero — headline, CTA, insurance type selector, partner logos */}
+      <HeroSection partners={providers} />
       <SectionDivider />
 
       {/* 2. Insurance Category Cards */}
