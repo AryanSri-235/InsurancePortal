@@ -7,6 +7,7 @@ import { Search, X, Frown, CheckCircle } from "lucide-react";
 const STATUS_OPTIONS = ["new", "contacted", "converted", "lost"];
 
 interface RenewalModal { leadId: number; name: string; phone: string; }
+interface Provider { id: number; name: string; }
 
 const CATEGORY_OPTIONS = ["term", "life", "health", "motor", "car", "two-wheeler", "family-health", "group-health", "travel", "home", "term-women", "return-premium", "guaranteed-return", "child-savings", "retirement"];
 
@@ -60,7 +61,11 @@ export default function LeadsPage() {
   const [renewalModal, setRenewalModal] = useState<RenewalModal | null>(null);
   const [renewalDate, setRenewalDate] = useState("");
   const [renewalPolicyNum, setRenewalPolicyNum] = useState("");
+  const [renewalProvider, setRenewalProvider] = useState("");
+  const [renewalCategory, setRenewalCategory] = useState("");
   const [renewalSaving, setRenewalSaving] = useState(false);
+  const [renewalError, setRenewalError] = useState("");
+  const [providers, setProviders] = useState<Provider[]>([]);
 
   const fetchLeads = useCallback(async () => {
     setLoading(true);
@@ -85,10 +90,17 @@ export default function LeadsPage() {
 
   async function updateStatus(id: number, status: string, lead?: Lead) {
     if (status === "converted" && lead) {
-      // Converted has its own renewal modal
       setRenewalModal({ leadId: id, name: lead.name, phone: lead.phone });
       setRenewalDate("");
       setRenewalPolicyNum("");
+      setRenewalProvider("");
+      setRenewalCategory(lead.category ?? "");
+      setRenewalError("");
+      if (providers.length === 0) {
+        fetch("/api/admin/providers")
+          .then((r) => r.json())
+          .then((d) => d.success && setProviders(d.data.map((p: { id: number; name: string }) => ({ id: p.id, name: p.name }))));
+      }
       return;
     }
 
@@ -118,19 +130,30 @@ export default function LeadsPage() {
     }
   }
 
-  async function confirmConvert(withRenewal: boolean) {
+  async function confirmConvert() {
     if (!renewalModal) return;
+    setRenewalError("");
+    if (!renewalDate)            { setRenewalError("Please select a renewal date."); return; }
+    if (!renewalPolicyNum.trim()) { setRenewalError("Please enter the policy number."); return; }
+    if (!renewalProvider)         { setRenewalError("Please select a provider."); return; }
+    if (!renewalCategory)         { setRenewalError("Please select an insurance category."); return; }
+
     setRenewalSaving(true);
     try {
-      await fetch("/api/admin/leads", {
+      const res = await fetch("/api/admin/leads", {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           id: renewalModal.leadId,
           status: "converted",
-          ...(withRenewal && renewalDate ? { renewalDate, policyNumber: renewalPolicyNum } : {}),
+          renewalDate,
+          policyNumber: renewalPolicyNum.trim(),
+          providerName: renewalProvider,
+          category: renewalCategory,
         }),
       });
+      const data = await res.json();
+      if (!res.ok) { setRenewalError(data.error ?? "Something went wrong."); return; }
       setLeads((prev) => prev.map((l) => l.id === renewalModal.leadId ? { ...l, status: "converted" } : l));
       setRenewalModal(null);
     } finally {
@@ -336,11 +359,16 @@ export default function LeadsPage() {
                 <p className="text-xs text-gray-500">{renewalModal.name} · {renewalModal.phone}</p>
               </div>
             </div>
-            <div className="p-5 space-y-4">
-              <p className="text-sm text-gray-600">Do you want to set a renewal due date for this customer?</p>
+            <div className="p-5 space-y-3.5">
+              {renewalError && (
+                <div className="px-3 py-2.5 bg-red-50 border border-red-100 rounded-lg text-xs text-red-600 font-medium">
+                  {renewalError}
+                </div>
+              )}
+
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
-                  Renewal Date <span className="text-gray-400 normal-case font-normal">(optional)</span>
+                  Renewal Date <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="date"
@@ -349,9 +377,10 @@ export default function LeadsPage() {
                   className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                 />
               </div>
+
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
-                  Policy Number <span className="text-gray-400 normal-case font-normal">(optional)</span>
+                  Policy Number <span className="text-red-500">*</span>
                 </label>
                 <input
                   type="text"
@@ -361,20 +390,53 @@ export default function LeadsPage() {
                   className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
                 />
               </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
+                  Provider <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={renewalProvider}
+                  onChange={(e) => setRenewalProvider(e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 bg-white text-gray-700"
+                >
+                  <option value="">Select provider...</option>
+                  {providers.map((p) => (
+                    <option key={p.id} value={p.name}>{p.name}</option>
+                  ))}
+                </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
+                  Insurance Category <span className="text-red-500">*</span>
+                </label>
+                <select
+                  value={renewalCategory}
+                  onChange={(e) => setRenewalCategory(e.target.value)}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500 bg-white text-gray-700"
+                >
+                  <option value="">Select category...</option>
+                  {CATEGORY_OPTIONS.map((c) => (
+                    <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g, " ")}</option>
+                  ))}
+                </select>
+              </div>
+
               <div className="flex gap-2 pt-1">
                 <button
-                  onClick={() => confirmConvert(true)}
+                  onClick={confirmConvert}
                   disabled={renewalSaving}
                   className="flex-1 bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-semibold py-2.5 rounded-lg transition-colors disabled:opacity-60"
                 >
-                  {renewalSaving ? "Saving..." : renewalDate ? "Convert + Add Renewal" : "Convert"}
+                  {renewalSaving ? "Saving..." : "Convert"}
                 </button>
                 <button
-                  onClick={() => confirmConvert(false)}
+                  onClick={() => setRenewalModal(null)}
                   disabled={renewalSaving}
                   className="border border-gray-200 text-gray-600 text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors"
                 >
-                  Skip
+                  Cancel
                 </button>
               </div>
             </div>

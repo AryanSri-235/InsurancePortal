@@ -71,38 +71,45 @@ export async function PATCH(req: NextRequest) {
   }
 
   try {
-    const { id, status, renewalDate, policyNumber } = await req.json();
+    const { id, status, renewalDate, policyNumber, providerName, category } = await req.json();
     const validStatuses = ["new", "contacted", "converted", "lost"];
     if (!id || !validStatuses.includes(status)) {
       return NextResponse.json({ error: "Invalid data" }, { status: 422 });
     }
-    if (renewalDate && isNaN(Date.parse(renewalDate))) {
-      return NextResponse.json({ error: "Invalid renewalDate" }, { status: 422 });
+    if (status === "converted") {
+      if (!renewalDate || isNaN(Date.parse(renewalDate))) return NextResponse.json({ error: "Renewal date is required" }, { status: 422 });
+      if (!policyNumber?.trim()) return NextResponse.json({ error: "Policy number is required" }, { status: 422 });
+      if (!providerName?.trim()) return NextResponse.json({ error: "Provider is required" }, { status: 422 });
+      if (!category?.trim()) return NextResponse.json({ error: "Category is required" }, { status: 422 });
     }
+
     const lead = await db.lead.update({
       where: { id },
       data: { status },
       select: { id: true, name: true, phone: true, email: true, category: true, policyId: true, status: true },
     });
 
-    // When converting, optionally create a DueDate
-    if (status === "converted" && renewalDate) {
-      await db.dueDate.create({
+    if (status === "converted") {
+      const due = await db.dueDate.create({
         data: {
           policyHolderName: lead.name,
           phone: lead.phone,
           email: lead.email ?? null,
-          policyId: lead.policyId ?? null,
-          policyNumber: policyNumber || null,
+          ...(lead.policyId ? { policy: { connect: { id: lead.policyId } } } : {}),
+          policyNumber: policyNumber.trim(),
+          bankName: providerName.trim(),
           dueDate: new Date(renewalDate),
           status: "pending",
           notes: `Auto-created from lead #${lead.id}`,
         },
       });
+      // Set category via raw SQL — Prisma client needs a restart to recognise the new column
+      await db.$executeRaw`UPDATE due_dates SET category = ${category.trim()} WHERE id = ${due.id}`;
     }
 
     return NextResponse.json({ success: true, data: lead });
-  } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  } catch (e) {
+    console.error("[leads PATCH]", e);
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Server error" }, { status: 500 });
   }
 }

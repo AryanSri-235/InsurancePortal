@@ -119,6 +119,7 @@ model DueDate {
   createdAt        DateTime @default(now())
   updatedAt        DateTime @updatedAt
   bankName         String?
+  category         String?
   policy           Policy?  @relation(fields: [policyId], references: [id])
 
   @@map("due_dates")

@@ -13,7 +13,13 @@ interface DueDate {
   dueDate: string;
   status: string;
   notes: string | null;
+  bankName: string | null;
+  category: string | null;
 }
+
+interface Provider { id: number; name: string; }
+
+const CATEGORY_OPTIONS = ["term", "life", "health", "motor", "car", "two-wheeler", "family-health", "group-health", "travel", "home", "term-women", "return-premium", "guaranteed-return", "child-savings", "retirement"];
 
 const STATUS_BADGE: Record<string, string> = {
   pending:  "bg-amber-50 text-amber-700 border-amber-100",
@@ -48,9 +54,13 @@ export default function DueDatesPage() {
   const [items, setItems] = useState<DueDate[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ policyHolderName: "", phone: "", email: "", policyNumber: "", dueDate: "", notes: "" });
+  const [form, setForm] = useState({ policyHolderName: "", phone: "", email: "", policyNumber: "", dueDate: "", notes: "", bankName: "", category: "" });
   const [saving, setSaving] = useState(false);
-  const [filters, setFilters] = useState({ search: "", status: "", urgency: "" });
+  const [filters, setFilters] = useState({ search: "", status: "", urgency: "", provider: "", category: "" });
+  const [providers, setProviders] = useState<Provider[]>([]);
+  const [renewedModal, setRenewedModal] = useState<DueDate | null>(null);
+  const [newDueDate, setNewDueDate] = useState("");
+  const [renewedSaving, setRenewedSaving] = useState(false);
 
   async function fetchItems() {
     setLoading(true);
@@ -65,13 +75,25 @@ export default function DueDatesPage() {
 
   useEffect(() => { fetchItems(); }, []);
 
+  function openForm() {
+    setShowForm(true);
+    if (providers.length === 0) {
+      fetch("/api/admin/providers")
+        .then(r => r.json())
+        .then(d => d.success && setProviders(d.data.map((p: { id: number; name: string }) => ({ id: p.id, name: p.name }))));
+    }
+  }
+
   async function updateStatus(id: number, status: string, currentStatus: string) {
+    if (status === "renewed") {
+      const item = items.find(i => i.id === id);
+      if (item) { setRenewedModal(item); setNewDueDate(""); }
+      return;
+    }
+
     const label = status.charAt(0).toUpperCase() + status.slice(1);
     const icons: Record<string, "question" | "warning"> = {
-      renewed: "question",
-      lapsed: "warning",
-      notified: "question",
-      pending: "question",
+      lapsed: "warning", notified: "question", pending: "question",
     };
     const result = await Swal.fire({
       icon: icons[status] ?? "question",
@@ -80,7 +102,7 @@ export default function DueDatesPage() {
       showCancelButton: true,
       confirmButtonText: `Yes, mark ${label}`,
       cancelButtonText: "Cancel",
-      confirmButtonColor: status === "lapsed" ? "#DC2626" : status === "renewed" ? "#059669" : "#2563EB",
+      confirmButtonColor: status === "lapsed" ? "#DC2626" : "#2563EB",
       reverseButtons: true,
     });
     if (!result.isConfirmed) return;
@@ -90,6 +112,39 @@ export default function DueDatesPage() {
       body: JSON.stringify({ id, status }),
     });
     setItems((prev) => prev.map((d) => d.id === id ? { ...d, status } : d));
+  }
+
+  async function confirmRenewed() {
+    if (!renewedModal || !newDueDate) return;
+    setRenewedSaving(true);
+    try {
+      // Mark current entry as renewed
+      await fetch("/api/admin/due-dates", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: renewedModal.id, status: "renewed" }),
+      });
+      // Create new pending entry for next cycle with same details
+      await fetch("/api/admin/due-dates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          policyHolderName: renewedModal.policyHolderName,
+          phone: renewedModal.phone,
+          email: renewedModal.email ?? "",
+          policyNumber: renewedModal.policyNumber ?? "",
+          bankName: renewedModal.bankName ?? "",
+          category: renewedModal.category ?? "",
+          dueDate: newDueDate,
+          notes: renewedModal.notes ?? "",
+          status: "pending",
+        }),
+      });
+      setRenewedModal(null);
+      fetchItems();
+    } finally {
+      setRenewedSaving(false);
+    }
   }
 
   async function handleAdd(e: React.FormEvent) {
@@ -103,7 +158,7 @@ export default function DueDatesPage() {
       });
       if (res.ok) {
         setShowForm(false);
-        setForm({ policyHolderName: "", phone: "", email: "", policyNumber: "", dueDate: "", notes: "" });
+        setForm({ policyHolderName: "", phone: "", email: "", policyNumber: "", dueDate: "", notes: "", bankName: "", category: "" });
         fetchItems();
       }
     } finally {
@@ -114,21 +169,28 @@ export default function DueDatesPage() {
   const filtered = useMemo(() => {
     return items.filter((item) => {
       const days = getDaysUntil(item.dueDate);
-      const matchSearch = !filters.search || [item.policyHolderName, item.phone, item.policyNumber ?? ""].some(v => v.toLowerCase().includes(filters.search.toLowerCase()));
-      const matchStatus = !filters.status || item.status === filters.status;
-      const matchUrgency = !filters.urgency || (
+      const matchSearch   = !filters.search   || [item.policyHolderName, item.phone, item.policyNumber ?? ""].some(v => v.toLowerCase().includes(filters.search.toLowerCase()));
+      const matchStatus   = !filters.status   || item.status === filters.status;
+      const matchProvider = !filters.provider || (item.bankName ?? "").toLowerCase().includes(filters.provider.toLowerCase());
+      const matchCategory = !filters.category || item.category === filters.category;
+      const matchUrgency  = !filters.urgency  || (
         filters.urgency === "overdue"   ? days < 0 :
         filters.urgency === "critical"  ? days >= 0 && days <= 7 :
         filters.urgency === "soon"      ? days > 7 && days <= 30 :
         filters.urgency === "upcoming"  ? days > 30 : true
       );
-      return matchSearch && matchStatus && matchUrgency;
+      return matchSearch && matchStatus && matchProvider && matchCategory && matchUrgency;
     });
   }, [items, filters]);
 
+  // Derive unique provider names from loaded items for the filter dropdown
+  const providerOptions = useMemo(() =>
+    [...new Set(items.map(i => i.bankName).filter(Boolean))].sort() as string[],
+  [items]);
+
   const overdueCount = items.filter(i => getDaysUntil(i.dueDate) < 0 && i.status === "pending").length;
   const criticalCount = items.filter(i => { const d = getDaysUntil(i.dueDate); return d >= 0 && d <= 7 && i.status === "pending"; }).length;
-  const hasFilters = !!(filters.search || filters.status || filters.urgency);
+  const hasFilters = !!(filters.search || filters.status || filters.urgency || filters.provider || filters.category);
 
   return (
     <div className="space-y-5 max-w-7xl">
@@ -139,7 +201,7 @@ export default function DueDatesPage() {
           <p className="text-gray-400 text-sm">Track policy renewal dates and notify customers</p>
         </div>
         <button
-          onClick={() => setShowForm(!showForm)}
+          onClick={openForm}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
         >
           <Plus className="w-4 h-4" />
@@ -187,7 +249,7 @@ export default function DueDatesPage() {
               { field: "policyHolderName", label: "Policy Holder Name", req: true, type: "text", placeholder: "Rajesh Kumar" },
               { field: "phone", label: "Phone Number", req: true, type: "tel", placeholder: "98XXXXXXXX" },
               { field: "email", label: "Email Address", req: false, type: "email", placeholder: "optional" },
-              { field: "policyNumber", label: "Policy Number", req: false, type: "text", placeholder: "POL-XXXXXXXX" },
+              { field: "policyNumber", label: "Policy Number", req: true, type: "text", placeholder: "POL-XXXXXXXX" },
               { field: "dueDate", label: "Renewal Date", req: true, type: "date", placeholder: "" },
               { field: "notes", label: "Notes", req: false, type: "text", placeholder: "Any special instructions..." },
             ].map(({ field, label, req, type, placeholder }) => (
@@ -205,6 +267,43 @@ export default function DueDatesPage() {
                 />
               </div>
             ))}
+
+            {/* Provider */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
+                Provider <span className="text-red-500">*</span>
+              </label>
+              <select
+                required
+                value={form.bankName}
+                onChange={(e) => setForm({ ...form, bankName: e.target.value })}
+                className={inputCls + " w-full"}
+              >
+                <option value="">Select provider...</option>
+                {providers.map((p) => (
+                  <option key={p.id} value={p.name}>{p.name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Insurance Category */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
+                Insurance Category <span className="text-red-500">*</span>
+              </label>
+              <select
+                required
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+                className={inputCls + " w-full"}
+              >
+                <option value="">Select category...</option>
+                {CATEGORY_OPTIONS.map((c) => (
+                  <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g, " ")}</option>
+                ))}
+              </select>
+            </div>
+
             <div className="sm:col-span-2 lg:col-span-3 flex gap-3 pt-1">
               <button
                 type="submit"
@@ -279,9 +378,37 @@ export default function DueDatesPage() {
             </select>
           </div>
 
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Provider</span>
+            <select
+              value={filters.provider}
+              onChange={(e) => setFilters({ ...filters, provider: e.target.value })}
+              className={inputCls}
+            >
+              <option value="">All Providers</option>
+              {providerOptions.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Category</span>
+            <select
+              value={filters.category}
+              onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+              className={inputCls}
+            >
+              <option value="">All Categories</option>
+              {CATEGORY_OPTIONS.map((c) => (
+                <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g, " ")}</option>
+              ))}
+            </select>
+          </div>
+
           {hasFilters && (
             <button
-              onClick={() => setFilters({ search: "", status: "", urgency: "" })}
+              onClick={() => setFilters({ search: "", status: "", urgency: "", provider: "", category: "" })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
               <X className="w-3.5 h-3.5" />
@@ -303,6 +430,7 @@ export default function DueDatesPage() {
               <tr className="border-b border-gray-100 bg-gray-50/80">
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Customer</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Phone</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Provider / Category</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Policy #</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Due Date</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Days Left</th>
@@ -314,7 +442,7 @@ export default function DueDatesPage() {
               {loading ? (
                 Array.from({ length: 4 }).map((_, i) => (
                   <tr key={i}>
-                    {Array.from({ length: 7 }).map((_, j) => (
+                    {Array.from({ length: 8 }).map((_, j) => (
                       <td key={j} className="px-4 py-3.5">
                         <div className="h-4 bg-gray-100 rounded animate-pulse" />
                       </td>
@@ -323,7 +451,7 @@ export default function DueDatesPage() {
                 ))
               ) : filtered.length === 0 ? (
                 <tr>
-                  <td colSpan={7}>
+                  <td colSpan={8}>
                     <div className="flex flex-col items-center justify-center py-14 text-gray-400">
                       <Calendar className="w-8 h-8 mb-2 opacity-40" />
                       <p className="text-sm font-medium">
@@ -331,7 +459,7 @@ export default function DueDatesPage() {
                       </p>
                       {items.length === 0 && (
                         <button
-                          onClick={() => setShowForm(true)}
+                          onClick={openForm}
                           className="mt-3 text-blue-600 text-sm font-semibold hover:underline"
                         >
                           + Add first entry
@@ -353,6 +481,11 @@ export default function DueDatesPage() {
                       </td>
                       <td className="px-4 py-3.5">
                         <span className="font-mono text-gray-700 text-sm">{item.phone}</span>
+                      </td>
+                      <td className="px-4 py-3.5">
+                        {item.bankName && <div className="text-sm text-gray-700 font-medium">{item.bankName}</div>}
+                        {item.category && <span className="text-[11px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded capitalize">{item.category.replace(/-/g, " ")}</span>}
+                        {!item.bankName && !item.category && <span className="text-gray-300">—</span>}
                       </td>
                       <td className="px-4 py-3.5 text-gray-500 text-xs font-mono">{item.policyNumber ?? "—"}</td>
                       <td className="px-4 py-3.5 text-gray-700 text-sm">
@@ -385,6 +518,57 @@ export default function DueDatesPage() {
           </table>
         </div>
       </div>
+
+      {/* Renewed modal — capture next due date */}
+      {renewedModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
+            <div className="bg-emerald-50 border-b border-emerald-100 px-5 py-4 flex items-center gap-3">
+              <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
+                <Calendar className="w-4 h-4 text-emerald-600" />
+              </div>
+              <div>
+                <p className="font-bold text-gray-900 text-sm">Mark as Renewed</p>
+                <p className="text-xs text-gray-500">{renewedModal.policyHolderName} · {renewedModal.phone}</p>
+              </div>
+            </div>
+            <div className="p-5 space-y-4">
+              <p className="text-sm text-gray-600">
+                Enter the next renewal due date. A new pending entry will be created automatically.
+              </p>
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
+                  Next Renewal Date <span className="text-red-500">*</span>
+                </label>
+                <input
+                  type="date"
+                  value={newDueDate}
+                  onChange={(e) => setNewDueDate(e.target.value)}
+                  min={new Date().toISOString().split("T")[0]}
+                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
+                  autoFocus
+                />
+              </div>
+              <div className="flex gap-2 pt-1">
+                <button
+                  onClick={confirmRenewed}
+                  disabled={renewedSaving || !newDueDate}
+                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold py-2.5 rounded-lg transition-colors"
+                >
+                  {renewedSaving ? "Saving..." : "Confirm Renewal"}
+                </button>
+                <button
+                  onClick={() => setRenewedModal(null)}
+                  disabled={renewedSaving}
+                  className="border border-gray-200 text-gray-600 text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

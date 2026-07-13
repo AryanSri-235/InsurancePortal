@@ -4,8 +4,10 @@ import { db } from "@/lib/db";
 import { getUserSession, signUserToken, userCookieOptions } from "@/lib/user/auth";
 
 const schema = z.object({
-  name:  z.string().min(2, "Name must be at least 2 characters"),
-  email: z.string().email().optional().or(z.literal("")),
+  name:   z.string().min(2, "Name must be at least 2 characters"),
+  email:  z.string().email().optional().or(z.literal("")),
+  gender: z.enum(["male", "female", "other"], { error: "Please select a valid gender" }),
+  dob:    z.string().min(1, "Date of birth is required"),
 });
 
 export async function POST(req: NextRequest) {
@@ -14,7 +16,14 @@ export async function POST(req: NextRequest) {
 
   const parsed = schema.safeParse(await req.json());
   if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message }, { status: 422 });
-  const { name, email } = parsed.data;
+  const { name, email, gender, dob } = parsed.data;
+
+  // Validate DOB is a real date and user is at least 18
+  const dobDate = new Date(dob);
+  if (isNaN(dobDate.getTime())) return NextResponse.json({ error: "Invalid date of birth." }, { status: 422 });
+  const minAge = new Date();
+  minAge.setFullYear(minAge.getFullYear() - 18);
+  if (dobDate > minAge) return NextResponse.json({ error: "You must be at least 18 years old." }, { status: 422 });
 
   // Check email uniqueness if provided
   if (email) {
@@ -24,7 +33,13 @@ export async function POST(req: NextRequest) {
 
   const user = await db.user.update({
     where: { id: session.id },
-    data: { name, email: email || null, isProfileComplete: true },
+    data: {
+      name,
+      email:  email || null,
+      gender,
+      dob:    dobDate,
+      isProfileComplete: true,
+    },
   });
 
   // Re-sign token with updated name

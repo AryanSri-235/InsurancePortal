@@ -30,6 +30,7 @@ const schema = z.object({
   policyNumber: z.string().optional(),
   policyId: z.number().optional().nullable(),
   bankName: z.string().optional().nullable(),
+  category: z.string().optional().nullable(),
   dueDate: z.string(),
   notes: z.string().optional(),
   status: z.enum(["pending", "completed", "overdue", "lapsed", "renewed"]).optional(),
@@ -53,13 +54,17 @@ export async function POST(req: NextRequest) {
         phone: data.phone,
         email: data.email || null,
         policyNumber: data.policyNumber || null,
-        policyId: data.policyId ?? null,
+        ...(data.policyId ? { policy: { connect: { id: data.policyId } } } : {}),
         bankName,
         dueDate: new Date(data.dueDate),
         notes: data.notes || null,
         status: data.status ?? "pending",
       },
     });
+    // Set category via raw SQL until Prisma client is regenerated after server restart
+    if (data.category) {
+      await db.$executeRaw`UPDATE due_dates SET category = ${data.category} WHERE id = ${item.id}`;
+    }
     return NextResponse.json({ success: true, data: item }, { status: 201 });
   } catch (err) {
     if (err instanceof z.ZodError) {
@@ -77,6 +82,7 @@ const patchSchema = z.object({
   policyNumber: z.string().optional(),
   policyId: z.number().optional().nullable(),
   bankName: z.string().optional().nullable(),
+  category: z.string().optional().nullable(),
   dueDate: z.string().optional(),
   notes: z.string().optional(),
   status: z.enum(["pending", "completed", "overdue", "lapsed", "renewed"]).optional(),
@@ -91,7 +97,7 @@ export async function PATCH(req: NextRequest) {
   try {
     const parsed = patchSchema.safeParse(await req.json());
     if (!parsed.success) return NextResponse.json({ error: parsed.error.issues[0]?.message }, { status: 422 });
-    const { id, policyHolderName, phone, email, policyNumber, dueDate, notes, policyId, status, bankName } = parsed.data;
+    const { id, policyHolderName, phone, email, policyNumber, dueDate, notes, policyId, status, bankName, category } = parsed.data;
 
     const item = await db.dueDate.update({
       where: { id },
@@ -103,10 +109,14 @@ export async function PATCH(req: NextRequest) {
         ...(email !== undefined && { email: email || null }),
         ...(policyNumber !== undefined && { policyNumber: policyNumber || null }),
         ...(notes !== undefined  && { notes: notes || null }),
-        ...(policyId !== undefined && { policyId: policyId ?? null }),
+        ...(policyId !== undefined && (policyId ? { policy: { connect: { id: policyId } } } : {})),
         ...(bankName !== undefined && { bankName: bankName || null }),
       },
     });
+    // Set category via raw SQL until Prisma client is regenerated after server restart
+    if (category !== undefined) {
+      await db.$executeRaw`UPDATE due_dates SET category = ${category || null} WHERE id = ${id}`;
+    }
     return NextResponse.json({ success: true, data: item });
   } catch {
     return NextResponse.json({ error: "Server error" }, { status: 500 });
