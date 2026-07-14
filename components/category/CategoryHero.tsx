@@ -83,9 +83,9 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
             <h1 className="text-4xl lg:text-5xl xl:text-6xl font-black text-gray-900 leading-[1.07] tracking-tight mb-5">
               {(() => {
                 const words = config.headline.split(" ");
-                const mid = Math.floor(words.length / 2);
-                const first = words.slice(0, mid).join(" ");
-                const rest  = words.slice(mid).join(" ");
+                if (words.length <= 1) return config.headline;
+                const first = words.slice(0, -1).join(" ");
+                const rest  = words[words.length - 1];
                 return (
                   <>
                     {first}{" "}
@@ -231,7 +231,7 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
                   <button
                     type="submit"
                     disabled={loading}
-                    className={`w-full bg-gradient-to-r ${accent.btn} text-white py-3.5 rounded-xl font-bold text-sm hover:opacity-90 disabled:opacity-60 transition-all shadow-md`}
+                    className="btn-shine w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold text-sm disabled:opacity-50 transition-all duration-200 shadow-lg shadow-blue-100 hover:-translate-y-0.5 active:translate-y-0"
                   >
                     {loading ? (
                       <span className="flex items-center justify-center gap-2">

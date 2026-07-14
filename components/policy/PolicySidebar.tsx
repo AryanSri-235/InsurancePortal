@@ -78,7 +78,7 @@ export default function PolicySidebar({ policyName, category, policyId, brochure
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-white text-blue-600 py-2.5 rounded-lg font-bold text-sm hover:bg-blue-50 disabled:opacity-60 transition-colors"
+            className="btn-shine w-full bg-white text-blue-600 py-2.5 rounded-lg font-bold text-sm hover:bg-blue-50 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 transition-all duration-200 shadow-md"
           >
             {loading ? (
               <span className="flex items-center justify-center gap-2">

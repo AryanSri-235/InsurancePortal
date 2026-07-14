@@ -52,7 +52,7 @@ export default function NewsletterForm({
       <button
         type="submit"
         disabled={state === "loading"}
-        className={buttonClass || "bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 whitespace-nowrap disabled:opacity-60"}
+        className={buttonClass || "btn-shine bg-blue-600 text-white text-sm font-bold px-5 py-2.5 rounded-xl hover:bg-blue-700 hover:-translate-y-0.5 active:translate-y-0 shadow-md shadow-blue-100/50 transition-all duration-200 whitespace-nowrap disabled:opacity-50"}
       >
         {state === "loading" ? "..." : "Subscribe →"}
       </button>

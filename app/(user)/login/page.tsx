@@ -192,7 +192,11 @@ export default function LoginPage() {
                   <p className="text-xs text-gray-400 mt-1.5">We&apos;ll send a 6-digit OTP to verify your number</p>
                 </div>
 
-                <button type="submit" disabled={loading || phone.length !== 10} className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2">
+                <button
+                  type="submit"
+                  disabled={loading || phone.length !== 10}
+                  className="btn-shine w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-blue-100 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
+                >
                   {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Sending OTP...</> : "Send OTP →"}
                 </button>
 
@@ -224,7 +228,11 @@ export default function LoginPage() {
                   </div>
                 </div>
 
-                <button type="submit" disabled={loading || otp.join("").length < 6} className="w-full bg-blue-600 hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-xl transition-colors text-sm flex items-center justify-center gap-2">
+                <button
+                  type="submit"
+                  disabled={loading || otp.join("").length < 6}
+                  className="btn-shine w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold text-sm disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 shadow-lg shadow-blue-100 hover:-translate-y-0.5 active:translate-y-0 flex items-center justify-center gap-2"
+                >
                   {loading ? <><Loader2 className="w-4 h-4 animate-spin" /> Verifying...</> : "Verify & Continue →"}
                 </button>
 

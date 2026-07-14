@@ -88,7 +88,7 @@ export default function ProviderLeadForm({ providerName, category }: Props) {
         <button
           type="submit"
           disabled={loading}
-          className="btn-shine w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white py-3.5 rounded-xl font-bold text-sm hover:from-blue-700 hover:to-blue-800 disabled:opacity-60 transition-all duration-200 shadow-lg shadow-blue-200 hover:-translate-y-0.5"
+          className="btn-shine w-full bg-blue-600 hover:bg-blue-700 text-white py-3.5 rounded-xl font-bold text-sm disabled:opacity-50 transition-all duration-200 shadow-lg shadow-blue-100 hover:-translate-y-0.5 active:translate-y-0"
         >
           {loading ? (
             <span className="flex items-center justify-center gap-2">

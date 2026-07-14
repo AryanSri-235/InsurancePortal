@@ -138,7 +138,7 @@ export default function ContactPage() {
                         placeholder="Tell us how we can help..." />
                     </div>
                     <button type="submit" disabled={loading}
-                      className="w-full btn-shine bg-gradient-to-r from-blue-600 to-indigo-600 text-white font-bold py-3.5 rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg shadow-blue-200 hover:-translate-y-0.5 disabled:opacity-60">
+                      className="w-full btn-shine bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 transition-all duration-200 shadow-lg shadow-blue-100">
                       {loading ? "Sending..." : "Send Message →"}
                     </button>
                   </form>

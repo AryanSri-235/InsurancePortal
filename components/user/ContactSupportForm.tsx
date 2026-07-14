@@ -99,7 +99,7 @@ export default function ContactSupportForm({ name, phone, email }: Props) {
         <button
           type="submit"
           disabled={loading || !message.trim()}
-          style={{ background: "#1E54D0", color: "#fff", fontWeight: 700, fontSize: 13, border: "none", borderRadius: 8, padding: "10px 20px", cursor: "pointer", opacity: loading || !message.trim() ? 0.55 : 1, transition: "opacity 0.15s" }}
+          className="btn-shine bg-blue-600 text-white font-bold text-sm px-5 py-2.5 rounded-xl hover:bg-blue-700 hover:-translate-y-0.5 active:translate-y-0 disabled:opacity-50 transition-all duration-200 shadow-md shadow-blue-100/50"
         >
           {loading ? "Sending…" : "Send Message"}
         </button>
