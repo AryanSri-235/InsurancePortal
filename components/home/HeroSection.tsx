@@ -3,39 +3,44 @@
 import Image from "next/image";
 import Link from "next/link";
 import QuoteForm from "@/components/QuoteForm";
+import { CATEGORY_CONFIG } from "@/lib/category-config";
 
-type Partner = { id: number; name: string; slug: string; logoUrl: string | null };
+type Partner = { id: number; name: string; slug: string; logoUrl: string | null; categories: string[] };
+
+function providerHref(p: Partner): string {
+  const cat = p.categories?.[0];
+  const route = cat ? CATEGORY_CONFIG[cat]?.route : null;
+  return route ? `${route}/${p.slug}` : "#";
+}
 
 
 
-// ── Pinned partners with brand identity ──────────────────────────────────────
-const PINNED_SLUGS = ["hdfc-ergo", "lic", "tata-aig", "icici-lombard", "digit-insurance"];
+const GRADIENTS = [
+  "from-blue-500 to-blue-700",
+  "from-teal-500 to-teal-700",
+  "from-indigo-500 to-indigo-700",
+  "from-cyan-500 to-cyan-700",
+  "from-sky-500 to-sky-700",
+  "from-blue-600 to-indigo-700",
+  "from-teal-600 to-cyan-700",
+  "from-indigo-600 to-blue-700",
+];
 
-const BRAND: Record<string, { gradient: string; initials: string }> = {
-  "hdfc-ergo":       { gradient: "from-red-500 to-red-700",         initials: "HE"  },
-  "lic":             { gradient: "from-amber-400 to-orange-500",     initials: "LIC" },
-  "tata-aig":        { gradient: "from-blue-700 to-blue-900",        initials: "TA"  },
-  "icici-lombard":   { gradient: "from-orange-500 to-red-500",       initials: "IL"  },
-  "digit-insurance": { gradient: "from-violet-500 to-purple-700",    initials: "GD"  },
-};
+function getInitials(name: string) {
+  const words = name.replace(/[^a-zA-Z ]/g, " ").trim().split(/\s+/);
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+  return (words[0][0] + words[1][0]).toUpperCase();
+}
 
-// Per-logo dimensions — tuned so each fills the card nicely
-const LOGO_SIZE: Record<string, { w: number; h: number; cls: string }> = {
-  "lic":             { w: 130, h: 52, cls: "max-h-[52px] w-auto scale-125" },
-  "tata-aig":        { w: 120, h: 52, cls: "max-h-[52px] w-auto scale-125" },
-  "icici-lombard":   { w: 140, h: 52, cls: "max-h-[52px] w-auto scale-125" },
-  "digit-insurance": { w: 120, h: 44, cls: "max-h-11 w-auto scale-125" },
-  "hdfc-ergo":       { w: 130, h: 52, cls: "max-h-[52px] w-auto scale-125" },
-};
+const TIGHT_PADDING = new Set([
+  "sbi-general", "royal-sundaram", "niva-bupa", "magma-general",
+  "galaxy-health", "manipal-cigna", "universal-sompo", "shriram-general", "liberty-general",
+]);
 
 function PartnerStrip({ partners }: { partners: Partner[] }) {
-  const pinned = PINNED_SLUGS
-    .map(slug => partners.find(p => p.slug === slug))
-    .filter(Boolean) as Partner[];
+  if (!partners.length) return null;
 
-  if (!pinned.length) return null;
-
-  const track = [...pinned, ...pinned, ...pinned];
+  const track = [...partners, ...partners];
 
   return (
     <div className="mt-10 pt-8 border-t border-blue-100/60">
@@ -46,10 +51,10 @@ function PartnerStrip({ partners }: { partners: Partner[] }) {
       <style>{`
         @keyframes partner-scroll {
           0%   { transform: translateX(0); }
-          100% { transform: translateX(calc(-100% / 3)); }
+          100% { transform: translateX(-50%); }
         }
         .partner-track {
-          animation: partner-scroll 14s linear infinite;
+          animation: partner-scroll 80s linear infinite;
           will-change: transform;
         }
         .partner-track:hover { animation-play-state: paused; }
@@ -61,29 +66,33 @@ function PartnerStrip({ partners }: { partners: Partner[] }) {
 
         <div className="partner-track flex items-center gap-3 w-max">
           {track.map((p, i) => {
-            const brand = BRAND[p.slug] ?? { gradient: "from-blue-500 to-blue-700", initials: p.name.slice(0, 2).toUpperCase() };
+            const gradient = GRADIENTS[i % GRADIENTS.length];
+            const initials = getInitials(p.name);
             return (
               <Link
                 key={`${p.id}-${i}`}
-                href={`/${p.slug}`}
+                href={providerHref(p)}
                 title={p.name}
-                className="flex-shrink-0 flex items-center gap-3 bg-white border border-gray-100 rounded-xl px-4 py-3 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+                className="flex-shrink-0 flex items-center justify-center bg-white border border-gray-100 rounded-xl shadow-sm overflow-hidden hover:shadow-md hover:border-blue-200 transition-all"
+                style={{ width: 180, height: 88 }}
               >
                 {p.logoUrl ? (
-                  <Image
-                    src={p.logoUrl}
-                    alt={p.name}
-                    width={LOGO_SIZE[p.slug]?.w  ?? 100}
-                    height={LOGO_SIZE[p.slug]?.h ?? 40}
-                    className={`object-contain ${LOGO_SIZE[p.slug]?.cls ?? "max-h-10 w-auto"}`}
-                  />
+                  <div className="relative w-full h-full">
+                    <Image
+                      src={p.logoUrl}
+                      alt={p.name}
+                      fill
+                      className={`object-contain ${TIGHT_PADDING.has(p.slug) ? "scale-[1.5]" : "p-3"}`}
+                      unoptimized
+                    />
+                  </div>
                 ) : (
-                  <>
-                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${brand.gradient} flex items-center justify-center text-white text-xs font-black flex-shrink-0`}>
-                      {brand.initials}
+                  <div className="flex items-center gap-2 px-3">
+                    <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${gradient} flex items-center justify-center text-white text-xs font-black flex-shrink-0`}>
+                      {initials}
                     </div>
-                    <span className="text-sm font-bold text-gray-700 whitespace-nowrap">{p.name}</span>
-                  </>
+                    <span className="text-xs font-semibold text-gray-700 whitespace-nowrap max-w-[90px] truncate">{p.name}</span>
+                  </div>
                 )}
               </Link>
             );

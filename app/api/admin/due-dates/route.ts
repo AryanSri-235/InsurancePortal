@@ -10,16 +10,13 @@ export async function GET() {
   }
 
   try {
-    const where = {};
-
     const items = await db.dueDate.findMany({
-      where,
       orderBy: { dueDate: "asc" },
-      include: { policy: { include: { provider: true } } },
     });
     return NextResponse.json({ success: true, data: items });
-  } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  } catch (e) {
+    console.error("[due-dates GET]", e);
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Server error" }, { status: 500 });
   }
 }
 

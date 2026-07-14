@@ -298,8 +298,9 @@ export default function LeadsPage() {
                         {lead.status}
                       </span>
                     </td>
-                    <td className="px-4 py-3.5 text-gray-400 text-xs whitespace-nowrap">
-                      {new Date(lead.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}
+                    <td className="px-4 py-3.5 text-xs whitespace-nowrap">
+                      <div className="text-gray-700">{new Date(lead.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "2-digit" })}</div>
+                      <div className="text-gray-400 mt-0.5">{new Date(lead.createdAt).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: true })}</div>
                     </td>
                     <td className="px-4 py-3.5">
                       <select

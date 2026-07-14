@@ -11,22 +11,27 @@ export async function GET(req: NextRequest) {
   const category = searchParams.get("category");
   const search = searchParams.get("search");
 
+  // RAM with no bankName configured cannot be scoped — block entirely
+  if (session.role === "ram" && !session.bankName) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
   try {
     const policies = await db.policy.findMany({
       where: {
         ...(category ? { category } : {}),
         ...(search ? { name: { contains: search, mode: "insensitive" as const } } : {}),
-        // RAM users only see policies from their own provider (matched by bankName)
-        ...(session.role === "ram" && session.bankName
-          ? { provider: { name: { contains: session.bankName, mode: "insensitive" as const } } }
+        ...(session.role === "ram"
+          ? { provider: { name: { contains: session.bankName!, mode: "insensitive" as const } } }
           : {}),
       },
       include: { provider: { select: { name: true } } },
       orderBy: [{ category: "asc" }, { name: "asc" }],
     });
     return NextResponse.json({ success: true, data: policies });
-  } catch {
-    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  } catch (e) {
+    console.error("[policies GET]", e);
+    return NextResponse.json({ error: e instanceof Error ? e.message : "Server error" }, { status: 500 });
   }
 }
 
@@ -57,6 +62,21 @@ export async function POST(req: NextRequest) {
   try {
     const body = await req.json();
     const data = policySchema.parse(body);
+
+    // RAM can only create policies for their own provider
+    if (session.role === "ram") {
+      if (!session.bankName) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      const ramProvider = await db.provider.findFirst({
+        where: { name: { contains: session.bankName, mode: "insensitive" } },
+        select: { id: true },
+      });
+      if (!ramProvider || ramProvider.id !== data.providerId) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+    }
+
     const policy = await db.policy.create({ data });
     return NextResponse.json({ success: true, data: policy }, { status: 201 });
   } catch (err: unknown) {
@@ -82,7 +102,10 @@ export async function PATCH(req: NextRequest) {
     const data = patchSchema.parse(body);
 
     // RAM users can only modify policies belonging to their provider
-    if (session.role === "ram" && session.bankName) {
+    if (session.role === "ram") {
+      if (!session.bankName) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
       const existing = await db.policy.findUnique({
         where: { id },
         include: { provider: { select: { name: true } } },

@@ -37,7 +37,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Term Insurance",
     route: "/term-insurance",
     emoji: "🛡️",
-    headline: "Best Term Insurance Plans in India 2024",
+    headline: "Best Term Insurance Plans",
     subheadline: "Get life cover up to ₹5 Crore at just ₹490/month. Compare 20+ term plans from top insurers.",
     color: {
       bg: "from-blue-700 to-blue-900",
@@ -99,7 +99,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Health Insurance",
     route: "/health-insurance",
     emoji: "🏥",
-    headline: "Best Health Insurance Plans in India 2024",
+    headline: "Best Health Insurance Plans",
     subheadline: "Cashless treatment at 14,000+ hospitals. Compare family floater and individual health plans.",
     color: {
       bg: "from-green-700 to-green-900",
@@ -161,7 +161,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Motor Insurance",
     route: "/motor-insurance",
     emoji: "🚗",
-    headline: "Best Car & Bike Insurance in India 2024",
+    headline: "Best Car & Bike Insurance",
     subheadline: "Mandatory by law. Zero depreciation + 24x7 roadside assistance. Renew in 2 minutes.",
     color: {
       bg: "from-blue-600 to-blue-800",
@@ -223,7 +223,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Life Insurance",
     route: "/life-insurance",
     emoji: "💰",
-    headline: "Best Life Insurance Plans in India 2024",
+    headline: "Best Life Insurance Plans",
     subheadline: "Build wealth while protecting your family. ULIP, endowment, whole life — compare all.",
     color: {
       bg: "from-green-700 to-green-900",
@@ -286,7 +286,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Car Insurance",
     route: "/car-insurance",
     emoji: "🚗",
-    headline: "Best Car Insurance Plans in India 2024",
+    headline: "Best Car Insurance Plans",
     subheadline: "Compare comprehensive, third-party & own damage car insurance. Zero depreciation, cashless garages, instant policy.",
     color: {
       gradient: "from-blue-600 to-blue-800",
@@ -419,7 +419,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Two Wheeler Insurance",
     route: "/two-wheeler-insurance",
     emoji: "🛵",
-    headline: "Best Bike & Scooter Insurance in India 2024",
+    headline: "Best Bike & Scooter Insurance",
     subheadline: "Mandatory third-party cover + comprehensive protection for your bike. Renew in 2 minutes.",
     color: {
       gradient: "from-blue-600 to-blue-800",
@@ -532,7 +532,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Family Health Insurance",
     route: "/family-health-insurance",
     emoji: "👨‍👩‍👧",
-    headline: "Best Family Health Insurance Plans in India 2024",
+    headline: "Best Family Health Insurance Plans",
     subheadline: "One policy covers entire family. Cashless treatment at 14,000+ hospitals. Cover from ₹5 Lakh to ₹1 Crore.",
     color: {
       gradient: "from-green-700 to-green-900",
@@ -643,7 +643,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Employee Group Health Insurance",
     route: "/group-health-insurance",
     emoji: "🏢",
-    headline: "Best Group Health Insurance for Employees in India 2024",
+    headline: "Best Group Health Insurance for Employees",
     subheadline: "Cover your entire workforce. No waiting period, pre-existing diseases covered from day 1.",
     color: {
       gradient: "from-green-700 to-green-900",
@@ -761,7 +761,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Travel Insurance",
     route: "/travel-insurance",
     emoji: "✈️",
-    headline: "Best Travel Insurance Plans in India 2024",
+    headline: "Best Travel Insurance Plans",
     subheadline: "Trip cancellation, medical emergencies abroad, lost baggage. Domestic & international coverage from ₹500.",
     color: {
       bg: "from-blue-600 to-blue-800",
@@ -875,7 +875,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Home Insurance",
     route: "/home-insurance",
     emoji: "🏠",
-    headline: "Best Home Insurance Plans in India 2024",
+    headline: "Best Home Insurance Plans",
     subheadline: "Protect your home from fire, flood, theft & natural disasters. Structure + contents coverage from ₹2,500/year.",
     color: {
       bg: "from-green-700 to-green-900",
@@ -992,7 +992,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Term Insurance for Women",
     route: "/term-insurance-women",
     emoji: "👩",
-    headline: "Best Term Insurance Plans for Women in India 2024",
+    headline: "Best Term Insurance Plans for Women",
     subheadline: "Exclusive discounts for non-smoker women. Get ₹1 Crore cover from ₹390/month.",
     color: {
       primary: "#186874",
@@ -1100,7 +1100,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Return of Premium Term Plans",
     route: "/return-of-premium-plans",
     emoji: "💰",
-    headline: "Best Return of Premium Term Plans in India 2024",
+    headline: "Best Return of Premium Term Plans",
     subheadline: "Get all your premiums back at maturity if you survive the policy term. Life cover + guaranteed return.",
     color: {
       primary: "#186874",
@@ -1222,7 +1222,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Guaranteed Return Plans",
     route: "/guaranteed-return-plans",
     emoji: "📈",
-    headline: "Best Guaranteed Return Plans in India 2024",
+    headline: "Best Guaranteed Return Plans",
     subheadline: "Fixed returns of 5–7% p.a. guaranteed by insurer. No market risk. Build corpus with life cover.",
     color: {
       from: "from-green-700",
@@ -1326,7 +1326,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Child Savings Plans",
     route: "/child-savings-plans",
     emoji: "👶",
-    headline: "Best Child Insurance & Savings Plans in India 2024",
+    headline: "Best Child Insurance & Savings Plans",
     subheadline: "Secure your child's future — education, marriage, career goals. Waiver of premium if parent passes away.",
     color: {
       primary: "#15803D",
@@ -1442,7 +1442,7 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     label: "Retirement Plans",
     route: "/retirement-plans",
     emoji: "🏖️",
-    headline: "Best Retirement Plans & Pension Plans in India 2024",
+    headline: "Best Retirement Plans & Pension Plans",
     subheadline: "Guaranteed pension income for life. Annuity plans, NPS-linked, ULIP retirement — all compared.",
     color: {
       primary: "#186874",

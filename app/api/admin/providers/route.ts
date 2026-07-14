@@ -8,9 +8,14 @@ export async function GET() {
   const session = await getSession();
   if (!session) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
+  // RAM with no bankName gets an empty list — they have no scoped provider
+  if (session.role === "ram" && !session.bankName) {
+    return NextResponse.json({ success: true, data: [] });
+  }
+
   const providers = await db.provider.findMany({
-    where: session.role === "ram" && session.bankName
-      ? { name: { contains: session.bankName, mode: "insensitive" } }
+    where: session.role === "ram"
+      ? { name: { contains: session.bankName!, mode: "insensitive" } }
       : {},
     select: {
       id: true, name: true, slug: true, logoUrl: true,

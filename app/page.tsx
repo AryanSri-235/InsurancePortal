@@ -1,7 +1,6 @@
 import HeroSection from "@/components/home/HeroSection";
 import CategoryCards from "@/components/home/CategoryCards";
 import WhyChooseUs from "@/components/home/WhyChooseUs";
-import ProvidersSection from "@/components/home/ProvidersSection";
 import HowItWorks from "@/components/home/HowItWorks";
 import FeaturedPolicies from "@/components/home/FeaturedPolicies";
 import TestimonialsSection from "@/components/home/TestimonialsSection";
@@ -77,11 +76,7 @@ export default async function HomePage() {
       <WhyChooseUs />
       <SectionDivider />
 
-      {/* 4. Top Providers — auto-scrolling logo carousel */}
-      <ProvidersSection providers={providers} />
-      <SectionDivider />
-
-      {/* 5. How It Works — 3-step visual flow */}
+      {/* 4. How It Works — 3-step visual flow */}
       <HowItWorks />
       <SectionDivider />
 
