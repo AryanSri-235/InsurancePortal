@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ success: false, error: "Server configuration error" }, { status: 500 });
     }
 
-    const url = `https://cpaas.messagecentral.com/verification/v3/send?flowType=SMS&mobileNumber=${phone}&countryCode=91&customerId=${customerId}`;
+    const url = `https://cpaas.messagecentral.com/verification/v3/send?flowType=SMS&mobileNumber=${phone}&countryCode=91&customerId=${customerId}&otpLength=6`;
     
     const response = await fetch(url, {
       method: "POST",
