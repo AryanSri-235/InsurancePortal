@@ -1,36 +1,92 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# NPS Insurance Portal
 
-## Getting Started
+NPS Insurance Portal is a premium, modern insurance comparison web application. It allows users to browse, compare, and request quotes for a wide range of insurance policies (Term, Health, Motor, Life, Travel, Home, and specialized subcategories) while providing administrators with a powerful control panel to manage leads, policies, providers, and blog posts.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## 🚀 Key Features
+
+* **Complete Insurance Suite:** Dedicated pages for Term, Health, Motor, Life, Car, Bike, Travel, Home, and specialty plans.
+* **Premium Explainer & FAQ System:** Categorized, dynamic policy highlights, target buyer personas, and interactive FAQs.
+* **Stateless Message Central OTP Authentication:** Secure, mobile-number-based login and signup powered by Message Central CPaaS APIs (eliminating legacy Firebase dependencies).
+* **Interactive Policy Tables:** Filterable and sortable policy tables ranked by claim settlement ratios.
+* **Prisma ORM Backend:** Strongly-typed schemas mapping providers, policies, users, leads, due dates, FAQs, and testimonials.
+* **Admin Dashboard:** Access-controlled control panel for lead management, policy/provider updates, and content generation.
+
+---
+
+## 🛠️ Technology Stack
+
+* **Frontend:** [Next.js](https://nextjs.org/) (App Router, React 19), [Tailwind CSS](https://tailwindcss.com/) for modern animations and premium UI layouts.
+* **Database & ORM:** [Prisma ORM](https://www.prisma.io/) with [PostgreSQL](https://www.postgresql.org/) (fully compatible with Neon, Aiven, Supabase, or AWS RDS).
+* **SMS Gateway:** [Message Central CPaaS API](https://messagecentral.com/) for fast, secure OTP deliveries.
+* **Icons:** [Lucide React](https://lucide.dev/) for crisp vector symbols.
+
+---
+
+## ⚙️ Environment Variables Setup
+
+Create a `.env` file in the root of the project and populate it with the following configuration keys:
+
+```env
+# Database Connection (PostgreSQL)
+DATABASE_URL="postgresql://username:password@hostname:5432/dbname?sslmode=require"
+
+# JWT Token Secret for Session Cookie Signatures
+JWT_SECRET="your-32-character-random-jwt-secret-key"
+
+# Message Central SMS Gateway Configuration
+MESSAGE_CENTRAL_CUSTOMER_ID="your-customer-id"
+MESSAGE_CENTRAL_AUTH_TOKEN="your-cpaas-auth-token"
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 💻 Getting Started Locally
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 1. Install Dependencies
+```bash
+npm install
+```
 
-## Learn More
+### 2. Configure Database Tables
+Apply the Prisma schema to your target PostgreSQL database instance:
+```bash
+npx prisma db push
+```
 
-To learn more about Next.js, take a look at the following resources:
+### 3. Seed Initial Data
+Populate the database with pre-configured insurance categories, top providers, and featured policy options:
+```bash
+npm run seed
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. Run Development Server
+```bash
+npm run dev
+```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+Open [http://localhost:3000](http://localhost:3000) in your browser to interact with the application.
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 🛡️ Database Management & Schema Changes
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+If you need to make changes to the database structure:
+1. Edit the Prisma schema file located in `prisma/schema.prisma`.
+2. Push the schema updates to your database:
+   ```bash
+   npx prisma db push
+   ```
+3. Generate the updated Prisma client files:
+   ```bash
+   npx prisma generate
+   ```
+
+---
+
+## 🚀 Deployment Guide (Vercel & Cloud Databases)
+
+1. **Database:** Create a managed PostgreSQL database instance using **Aiven** (highly recommended for a 1 GB free tier) or **Neon**.
+2. **Environment Variables:** Inject the `.env` variables into the Vercel Dashboard project settings.
+3. **Build Script:** Ensure the project's build command includes `prisma generate` (usually pre-configured as `prisma generate && next build`).
