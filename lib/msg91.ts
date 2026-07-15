@@ -20,10 +20,10 @@ export async function msg91SendOtp(phone: string): Promise<{ success: boolean; e
 export async function msg91VerifyOtp(phone: string, otp: string): Promise<{ success: boolean }> {
   if (!AUTH_KEY) return { success: false };
   try {
-    const res  = await fetch(`${BASE}/verify`, {
-      method: "POST",
-      headers: { authkey: AUTH_KEY, "Content-Type": "application/json" },
-      body: JSON.stringify({ mobile: `91${phone}`, otp }),
+    const url = `${BASE}/verify?otp=${encodeURIComponent(otp)}&mobile=${encodeURIComponent(`91${phone}`)}`;
+    const res  = await fetch(url, {
+      method: "GET",
+      headers: { authkey: AUTH_KEY },
     });
     const data = await res.json();
     return { success: data.type === "success" };

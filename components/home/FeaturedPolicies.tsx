@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Policy, Provider } from "@prisma/client";
 import BgDecorations from "./BgDecorations";
 import { Check } from "lucide-react";
@@ -24,15 +24,28 @@ const ACCENT = [
 
 const CARD_W = 300; // px — keeps cards consistent
 
-export default function FeaturedPolicies({ policies }: { policies: PolicyWithProvider[] }) {
+export default function FeaturedPolicies({ policies: initialPolicies = [] }: { policies?: PolicyWithProvider[] }) {
+  const [policies, setPolicies] = useState<PolicyWithProvider[]>(initialPolicies);
   const trackRef = useRef<HTMLDivElement>(null);
 
-  if (!policies.length) return null;
+  useEffect(() => {
+    fetch("/api/policies?featured=true&limit=6")
+      .then((res) => res.json())
+      .then((res) => {
+        if (res.success && res.data) {
+          setPolicies(res.data);
+        }
+      })
+      .catch((err) => console.error("Error fetching featured policies:", err));
+  }, []);
+
+  if (!policies || !policies.length) return null;
 
   // Triple the list for a seamless loop
   const items = [...policies, ...policies, ...policies];
   // Animation duration: ~4s per card
   const duration = policies.length * 4;
+
 
   return (
     <section className="py-20 bg-white relative overflow-hidden">
