@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db } from "@/lib/db";
 import { isRateLimited } from "@/lib/rate-limit";
-import { verifyFirebaseToken } from "@/lib/user/firebase-verify";
 import { signUserToken, userCookieOptions } from "@/lib/user/auth";
 
 const schema = z.object({
-  idToken: z.string().min(1, "ID Token is required"),
+  phone: z.string().regex(/^[6-9]\d{9}$/, "Invalid phone number format"),
+  otp: z.string().min(4, "OTP must be at least 4 digits"),
+  verificationId: z.string().min(1, "Verification ID is required"),
 });
 
 export async function POST(req: NextRequest) {
@@ -16,30 +17,43 @@ export async function POST(req: NextRequest) {
   if (!parsed.success) {
     return NextResponse.json({ error: parsed.error.issues[0]?.message }, { status: 422 });
   }
-  const { idToken } = parsed.data;
-
-  // Verify Firebase Token
-  let phone = "";
-  try {
-    const payload = await verifyFirebaseToken(idToken);
-    const fullPhone = payload.phone_number as string;
-    
-    if (!fullPhone) {
-      return NextResponse.json({ error: "Phone number not verified or missing in credentials." }, { status: 400 });
-    }
-
-    // Clean phone number: remove +91 or any country code prefix and keep last 10 digits
-    phone = fullPhone.replace(/^\+91/, "").replace(/\D/g, "").slice(-10);
-    if (!/^[6-9]\d{9}$/.test(phone)) {
-      return NextResponse.json({ error: "Invalid phone number format." }, { status: 400 });
-    }
-  } catch (err: any) {
-    console.error("[verify-otp] Firebase token verification failed:", err);
-    return NextResponse.json({ error: "Authentication failed. Invalid token." }, { status: 401 });
-  }
+  const { phone, otp, verificationId } = parsed.data;
 
   if (isRateLimited(`verify-otp:${ip}:${phone}`, 10, 15 * 60 * 1000)) {
     return NextResponse.json({ error: "Too many attempts. Try again later." }, { status: 429 });
+  }
+
+  // Validate OTP via Message Central API
+  try {
+    const authToken = process.env.MESSAGE_CENTRAL_AUTH_TOKEN;
+    const url = `https://cpaas.messagecentral.com/verification/v3/validateOtp?verificationId=${verificationId}&code=${otp}`;
+
+    if (!authToken) {
+      console.error("Missing Message Central configuration in environment");
+      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+    }
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "authToken": authToken
+      }
+    });
+
+    if (!response.ok) {
+      console.error("Message Central Validation failed with status:", response.status);
+      return NextResponse.json({ error: "OTP verification failed. Please try again." }, { status: 400 });
+    }
+
+    const resData = await response.json();
+    if (resData.responseCode !== 200) {
+      console.error("Message Central Validation error response:", resData);
+      const errMsg = resData.message === "WRONG_OTP_PROVIDED" ? "Wrong OTP entered. Please try again." : (resData.message || "Invalid OTP.");
+      return NextResponse.json({ error: errMsg }, { status: 400 });
+    }
+  } catch (err: any) {
+    console.error("[verify-otp] Message Central verification exception:", err);
+    return NextResponse.json({ error: "Authentication failed. Error verifying OTP." }, { status: 401 });
   }
 
   // Find or create user (upsert in case record wasn't created yet)
@@ -60,3 +74,4 @@ export async function POST(req: NextRequest) {
   res.cookies.set("user_token", token, userCookieOptions());
   return res;
 }
+

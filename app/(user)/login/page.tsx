@@ -4,8 +4,6 @@ import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { Loader2, Phone, ArrowLeft, CheckCircle2, RefreshCw } from "lucide-react";
-import { auth } from "@/lib/firebase";
-import { RecaptchaVerifier, signInWithPhoneNumber, ConfirmationResult } from "firebase/auth";
 
 type Step = "phone" | "otp";
 
@@ -17,36 +15,10 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [error,   setError]   = useState("");
   const [timer,   setTimer]   = useState(0);
-  const [confirmationResult, setConfirmationResult] = useState<ConfirmationResult | null>(null);
+  const [verificationId, setVerificationId] = useState("");
   
   const inputRefs = useRef<(HTMLInputElement | null)[]>([]);
   const timerRef  = useRef<ReturnType<typeof setInterval> | null>(null);
-
-  // Initialize reCAPTCHA on client
-  useEffect(() => {
-    if (!auth) return;
-    try {
-      (window as any).recaptchaVerifier = new RecaptchaVerifier(auth, "recaptcha-container", {
-        size: "invisible",
-        callback: () => {
-          // reCAPTCHA solved, continue flow
-        },
-        "expired-callback": () => {
-          setError("reCAPTCHA verification expired. Please try again.");
-        }
-      });
-    } catch (err) {
-      console.error("reCAPTCHA initialization error:", err);
-    }
-
-    return () => {
-      try {
-        if ((window as any).recaptchaVerifier) {
-          (window as any).recaptchaVerifier.clear();
-        }
-      } catch {}
-    };
-  }, []);
 
   useEffect(() => {
     if (timer <= 0) { if (timerRef.current) clearInterval(timerRef.current); return; }
@@ -60,34 +32,24 @@ export default function LoginPage() {
     if (!/^[6-9]\d{9}$/.test(phone)) { setError("Enter a valid 10-digit Indian mobile number."); return; }
     setLoading(true);
     try {
-      const appVerifier = (window as any).recaptchaVerifier;
-      if (!appVerifier) {
-        setError("reCAPTCHA not initialized. Please try refreshing the page.");
-        setLoading(false);
+      const res = await fetch("/api/auth/send-otp", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ phone })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setError(data.error || "Failed to send OTP. Please try again.");
         return;
       }
 
-      const formattedPhone = `+91${phone}`;
-      const confirmation = await signInWithPhoneNumber(auth, formattedPhone, appVerifier);
-      setConfirmationResult(confirmation);
+      setVerificationId(data.verificationId);
       setStep("otp");
       setTimer(30);
       setTimeout(() => inputRefs.current[0]?.focus(), 100);
     } catch (err: any) {
-      console.error("Firebase sendOtp error:", err);
-      setError(err.message || "Failed to send OTP. Please try again.");
-      
-      // Reset reCAPTCHA widget if it fails
-      try {
-        const appVerifier = (window as any).recaptchaVerifier;
-        if (appVerifier) {
-          appVerifier.render().then((widgetId: any) => {
-            if ((window as any).grecaptcha) {
-              (window as any).grecaptcha.reset(widgetId);
-            }
-          });
-        }
-      } catch {}
+      console.error("Message Central sendOtp error:", err);
+      setError("Failed to send OTP. Please check your network and try again.");
     } finally {
       setLoading(false);
     }
@@ -116,29 +78,22 @@ export default function LoginPage() {
     setError("");
     const code = otp.join("");
     if (code.length < 6) { setError("Enter all 6 digits."); return; }
-    if (!confirmationResult) { setError("No active OTP session. Please request OTP again."); return; }
+    if (!verificationId) { setError("No active OTP session. Please request OTP again."); return; }
     
     setLoading(true);
     try {
-      const credential = await confirmationResult.confirm(code);
-      const userToken = await credential.user.getIdToken();
-
       const res  = await fetch("/api/auth/verify-otp", { 
         method: "POST", 
         headers: { "Content-Type": "application/json" }, 
-        body: JSON.stringify({ idToken: userToken }) 
+        body: JSON.stringify({ phone, otp: code, verificationId }) 
       });
       const data = await res.json();
-      if (!res.ok) { setError(data.error); return; }
+      if (!res.ok) { setError(data.error || "Verification failed"); return; }
       if (data.isNewUser) { router.push("/complete-profile"); }
       else               { router.push("/account"); router.refresh(); }
     } catch (err: any) {
-      console.error("Firebase verifyOtp error:", err);
-      if (err.code === "auth/invalid-verification-code") {
-        setError("Invalid OTP. Please try again.");
-      } else {
-        setError(err.message || "Network error. Please try again.");
-      }
+      console.error("verifyOtp error:", err);
+      setError("Network error. Please check your connection and try again.");
     } finally {
       setLoading(false);
     }
@@ -146,10 +101,6 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6 relative overflow-hidden">
-      {/* Invisible reCAPTCHA container required by Firebase */}
-      <div id="recaptcha-container"></div>
-
-
       {/* Grid pattern */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.035]" xmlns="http://www.w3.org/2000/svg">
         <defs>
@@ -194,7 +145,6 @@ export default function LoginPage() {
 
           {/* Header */}
           <div className="px-8 pt-7 pb-6 relative overflow-hidden">
-
             <div className="relative z-10">
               <Link href="/" className="inline-flex mb-5">
                 <img src="/logo-chatgpt.png" alt="NPS Insurance" className="h-24 w-auto object-contain" />
@@ -234,7 +184,6 @@ export default function LoginPage() {
             {error && (
               <div className="mb-4 px-4 py-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">{error}</div>
             )}
-
 
             {/* Step 1: Phone */}
             {step === "phone" && (
