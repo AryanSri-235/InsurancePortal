@@ -2,14 +2,13 @@ import React from "react";
 import { Check, User } from "lucide-react";
 
 interface Props {
-  slug: string; // "term" | "health" | "motor" | "life"
+  slug: string; // e.g., "term", "car", "travel", etc.
 }
 
 const CheckIcon = () => <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />;
-
 const PersonIcon = () => <User className="w-4 h-4" />;
 
-type SlugKey = "term" | "health" | "motor" | "life";
+type SlugKey = "term" | "health" | "motor" | "life" | "travel" | "home";
 
 const categoryData: Record<
   SlugKey,
@@ -112,13 +111,88 @@ const categoryData: Record<
       "Reversionary and terminal bonus in participating (with-profits) plans",
     ],
   },
+  travel: {
+    label: "Travel",
+    paragraphs: [
+      "Travel insurance is a vital protection plan designed to cover financial losses and medical emergencies while traveling domestically or internationally. Whether you are taking a short holiday or a long business trip, travel insurance provides coverage for emergency medical treatment, hospitalisation, and medical evacuation abroad, where healthcare costs can be extremely high. It ensures you have 24/7 global assistance for peace of mind.",
+      "Beyond medical emergencies, travel insurance protects against travel inconveniences such as trip cancellation, trip interruption, flight delays, and missed connections. If your checked baggage is lost, stolen, or delayed by the airline, the policy offers compensation to buy essentials. Some plans also offer visa rejection cover, reimbursing non-refundable ticket and hotel bookings if your visa is not approved.",
+      "Choosing the right travel insurance plan depends on your destination, travel frequency, and age. For frequent flyers, an annual multi-trip plan is highly cost-effective as it covers unlimited trips in a 12-month period. For single trips, individual or family travel policies are available. Make sure to check the coverage limits, network hospitals, and exclusions like adventure sports or pre-existing diseases before purchasing."
+    ],
+    personas: [
+      "International travellers",
+      "Frequent business flyers",
+      "Leisure & family holidaymakers"
+    ],
+    features: [
+      "Emergency medical & hospitalisation cover abroad",
+      "Medical evacuation and repatriation back to India",
+      "Trip cancellation and interruption cover",
+      "Baggage loss, delay, and damage coverage",
+      "Flight delay & missed connection allowance",
+      "Personal accident cover during the trip",
+      "24x7 global assistance helpline"
+    ]
+  },
+  home: {
+    label: "Home",
+    paragraphs: [
+      "Home insurance is a protective policy that safeguards your physical home structure and its contents from damages caused by natural disasters, fire, theft, and other unforeseen events. In India, home insurance is crucial due to the vulnerability to earthquakes, floods, and cyclones. Structure insurance covers the cost of repairing or rebuilding your home's walls, roof, and fixed fittings, while contents insurance protects furniture, electronics, and personal belongings.",
+      "For homeowners, a comprehensive structure and contents policy provides complete peace of mind. Tenants can opt for contents-only coverage to protect their personal belongings without paying for the structural insurance. The premium is calculated based on the reinstatement cost of the building (the cost to rebuild) rather than the market value or land price, making home insurance surprisingly affordable in India.",
+      "Filing a home insurance claim requires documenting the damage with photos or videos, filing an FIR for theft or burglary, and notifying your insurer immediately. A surveyor will assess the damage to process the claim. Exclusions typically include normal wear and tear, pre-existing damage, and war risks. Adding optional covers like electrical breakdown or loss of rent ensures comprehensive security."
+    ],
+    personas: [
+      "Homeowners & property owners",
+      "Tenants & renters",
+      "Landlords & real estate investors"
+    ],
+    features: [
+      "Structure coverage for fire & allied perils",
+      "Contents coverage for furniture & electronics",
+      "Natural disaster protection (floods, earthquakes)",
+      "Theft, burglary, and housebreaking cover",
+      "Public liability cover for third-party injury",
+      "Rent allowance during home repair period",
+      "Electrical & mechanical breakdown add-on"
+    ]
+  }
 };
 
-const defaultData = categoryData["term"];
+// Maps subcategories and long names to one of our core explainer categories
+function resolveExplainerSlug(slug: string): SlugKey {
+  const map: Record<string, SlugKey> = {
+    // Term
+    "term": "term",
+    "term-women": "term",
+    "term-rop": "term",
+    
+    // Health
+    "health": "health",
+    "family-health": "health",
+    "group-health": "health",
+    
+    // Motor
+    "motor": "motor",
+    "car": "motor",
+    "two-wheeler": "motor",
+    
+    // Life
+    "life": "life",
+    "guaranteed-return": "life",
+    "child-savings": "life",
+    "retirement": "life",
+    
+    // Travel
+    "travel": "travel",
+    
+    // Home
+    "home": "home"
+  };
+  return map[slug] ?? "term";
+}
 
 export default function InsuranceExplainer({ slug }: Props) {
-  const data =
-    categoryData[slug as SlugKey] ?? defaultData;
+  const resolvedSlug = resolveExplainerSlug(slug);
+  const data = categoryData[resolvedSlug];
 
   const { label, paragraphs, personas, features } = data;
 
