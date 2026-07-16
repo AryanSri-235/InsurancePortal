@@ -15,7 +15,7 @@ const sections: { icon: LucideIcon; title: string; body: string }[] = [
   { icon: Copyright, title: "Intellectual Property", body: "All content on InsurancePortal — including text, graphics, logos, and software — is our intellectual property or that of our licensors. You may not reproduce, distribute, or create derivative works without explicit written permission." },
   { icon: Scale, title: "Limitation of Liability", body: "InsurancePortal shall not be liable for any indirect, incidental, or consequential damages arising from use of our services. Our maximum liability in any claim shall not exceed the amount you paid us (which, for free users, is ₹0)." },
   { icon: Landmark, title: "Governing Law", body: "These terms are governed by the laws of India. Any disputes shall be subject to the exclusive jurisdiction of courts in Mumbai, Maharashtra." },
-  { icon: Phone, title: "Contact", body: "For legal enquiries: legal@insuranceportal.in · InsurancePortal, Mumbai, Maharashtra, India 400001." },
+  { icon: Phone, title: "Contact", body: "For legal enquiries: inquery@npsinsurance.in · InsurancePortal, Mumbai, Maharashtra, India 400001." },
 ];
 
 export default function TermsPage() {

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import NewsletterForm from "@/components/NewsletterForm";
@@ -240,11 +240,11 @@ export default function Footer() {
                   Get Free Quote &rarr;
                 </Link>
                 <a
-                  href="tel:1800XXXXXXX"
+                  href="tel:+918076175709"
                   className="flex items-center justify-center gap-2 text-sm font-semibold text-blue-400 hover:text-white border border-blue-800/60 py-2.5 rounded-xl hover:border-blue-500 transition-all duration-200"
                 >
                   <Phone className="w-4 h-4" />
-                  Call 1800-XXX-XXXX (Free)
+                  Call +91 80761 75709
                 </a>
               </div>
             </div>

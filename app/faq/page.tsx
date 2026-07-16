@@ -13,7 +13,7 @@ const faqs = [
   { q: "Is third-party motor insurance mandatory in India?", a: "Yes. Under the Motor Vehicles Act, third-party (TP) liability insurance is mandatory for all vehicles in India. Driving without it can result in a fine of ₹2,000 and/or 3 months imprisonment.", category: "Motor Insurance" },
   { q: "What is the difference between ULIP and term insurance?", a: "Term insurance is pure protection — you pay a low premium for a high life cover. ULIPs combine insurance with investment (market-linked). For pure protection, term is almost always better value. For long-term wealth building, consult an advisor.", category: "Life Insurance" },
   { q: "Can I get tax benefits on insurance premiums?", a: "Yes. Term and life insurance premiums up to ₹1.5 lakh qualify for deduction under Section 80C. Health insurance premiums up to ₹25,000 (₹50,000 for senior citizens) qualify under Section 80D.", category: "General" },
-  { q: "How do I file a claim?", a: "For policies bought through us, call our 24×7 claim helpline at 1800-XXX-XXXX or email claims@insuranceportal.in. For policies bought directly from an insurer, contact them. We'll guide you through the process either way.", category: "General" },
+  { q: "How do I file a claim?", a: "For policies bought through us, call our helpline at +91 80761 75709 or email inquery@npsinsurance.in. For policies bought directly from an insurer, contact them. We'll guide you through the process either way.", category: "General" },
   { q: "Is InsurancePortal free to use?", a: "Yes, completely free. We are an IRDAI-registered web aggregator. We earn a referral commission from insurers when you buy a policy, which means you pay the same premium — or less — as buying directly.", category: "General" },
 ];
 
@@ -99,8 +99,8 @@ export default function FaqPage() {
             <h3 className="text-3xl font-black mb-3">Talk to an Expert</h3>
             <p className="text-blue-100 mb-7">Our advisors are available Mon–Sat, 9 AM – 7 PM — free of charge.</p>
             <div className="flex flex-col sm:flex-row gap-3 justify-center">
-              <a href="tel:1800XXXXXXX" className="bg-white text-blue-600 font-bold px-6 py-3 rounded-2xl hover:bg-blue-50 transition-colors shadow-xl">
-                <Phone className="w-4 h-4 inline" /> Call Free: 1800-XXX-XXXX
+              <a href="tel:+918076175709" className="bg-white text-blue-600 font-bold px-6 py-3 rounded-2xl hover:bg-blue-50 transition-colors shadow-xl">
+                <Phone className="w-4 h-4 inline" /> Call: +91 80761 75709
               </a>
               <Link href="/contact" className="border-2 border-white/30 text-white font-bold px-6 py-3 rounded-2xl hover:bg-white/10 transition-colors">
                 Send a Message

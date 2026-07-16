@@ -157,7 +157,7 @@ export default function ProviderClaimProcess({ provider, category }: Props) {
                     <Phone className="w-4 h-4 text-white" />
                   </span>
                   <span className="text-sm font-medium">
-                    1800-XXX-XXXX (Toll Free)
+                    +91 80761 75709
                   </span>
                 </div>
 

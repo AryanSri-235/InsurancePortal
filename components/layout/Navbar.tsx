@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
@@ -139,7 +139,7 @@ export default function Navbar() {
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs py-2 text-center font-medium hidden md:block">
         <span className="opacity-90">✦ Compare 200+ plans from 50+ top insurers &mdash; 100% Free, No Spam</span>
         <span className="mx-4 opacity-40">|</span>
-        <span className="opacity-90">☎ Expert helpline: <span className="font-bold">1800-XXX-XXXX</span> &middot; Mon&ndash;Sat 9 AM&ndash;7 PM</span>
+        <span className="opacity-90">☎ Expert helpline: <span className="font-bold">+91 80761 75709</span> &middot; Mon&ndash;Sat 9 AM&ndash;7 PM</span>
       </div>
 
       <header
@@ -174,7 +174,7 @@ export default function Navbar() {
                 <div
                   onMouseEnter={() => openDropdown("plans")}
                   onMouseLeave={closeDropdown}
-                  className={`absolute top-full left-1/2 -translate-x-1/2 mt-0 w-[780px] bg-white rounded-2xl shadow-2xl shadow-gray-200/80 border border-gray-100 p-5 transition-all duration-200 ${
+                  className={`absolute top-full left-0 translate-x-0 xl:left-1/2 xl:-translate-x-1/2 mt-0 w-[780px] bg-white rounded-2xl shadow-2xl shadow-gray-200/80 border border-gray-100 p-5 transition-all duration-200 ${
                     activeDropdown === "plans" ? "opacity-100 translate-y-0 pointer-events-auto" : "opacity-0 -translate-y-2 pointer-events-none"
                   }`}
                 >
@@ -210,8 +210,8 @@ export default function Navbar() {
                   </div>
                   <div className="border-t border-gray-100 mt-4 pt-3 flex items-center justify-between">
                     <span className="text-xs text-gray-400">Not sure which plan suits you? Talk to a free expert.</span>
-                    <a href="tel:1800XXXXXXX" className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">
-                      <Phone className="w-3 h-3" /> Call Free &ndash; 1800-XXX-XXXX
+                    <a href="tel:+918076175709" className="text-xs font-bold text-blue-600 hover:underline flex items-center gap-1">
+                      <Phone className="w-3 h-3" /> Call &ndash; +91 80761 75709
                     </a>
                   </div>
                 </div>
@@ -304,9 +304,9 @@ export default function Navbar() {
 
             {/* Right CTAs */}
             <div className="hidden md:flex items-center gap-3">
-              <a href="tel:1800XXXXXXX" className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors duration-200 border border-gray-200 rounded-xl px-3 py-2 hover:border-blue-200 hover:bg-blue-50">
+              <a href="tel:+918076175709" className="flex items-center gap-2 text-sm font-semibold text-gray-700 hover:text-blue-600 transition-colors duration-200 border border-gray-200 rounded-xl px-3 py-2 hover:border-blue-200 hover:bg-blue-50">
                 <Phone className="w-4 h-4" />
-                1800-XXX-XXXX
+                +91 80761 75709
               </a>
 
               {!userSession && (

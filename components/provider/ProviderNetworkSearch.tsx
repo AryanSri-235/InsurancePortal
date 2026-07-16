@@ -101,7 +101,7 @@ export default function ProviderNetworkSearch({
         {/* Note and CTA */}
         <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
           <p className="text-xs text-gray-400 italic">
-            Actual hospital/garage count may vary. Call 1800-XXX-XXXX to
+            Actual hospital/garage count may vary. Call +91 80761 75709 to
             confirm.
           </p>
           {isHealth && (

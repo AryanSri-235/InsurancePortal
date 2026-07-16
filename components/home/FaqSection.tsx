@@ -67,11 +67,11 @@ export default function FaqSection({ faqs }: { faqs: Faq[] }) {
             <p className="text-xl font-bold mb-1">Still have questions?</p>
             <p className="text-blue-100 text-sm mb-6">Our experts are available Mon–Sat, 9 AM – 7 PM</p>
             <a
-              href="tel:+918000000000"
+              href="tel:+918076175709"
               className="inline-flex items-center gap-2 bg-white text-blue-700 font-bold px-7 py-3.5 rounded-2xl text-sm hover:bg-blue-50 transition-colors shadow-xl"
             >
               <Phone className="w-4 h-4" />
-              Call Free: 1800-XXX-XXXX
+              Call: +91 80761 75709
             </a>
           </div>
         </div>

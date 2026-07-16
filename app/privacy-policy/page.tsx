@@ -13,7 +13,7 @@ const sections: { icon: LucideIcon; title: string; body: string }[] = [
   { icon: Cookie, title: "Cookies", body: "We use cookies and similar technologies to remember your preferences, analyse traffic, and improve our services. You can control cookie settings through your browser. Disabling cookies may affect some functionality." },
   { icon: BadgeCheck, title: "Your Rights", body: "You have the right to: access the personal data we hold; request correction of inaccurate data; request deletion of your data (subject to legal obligations); withdraw consent for marketing; and lodge a complaint with the relevant data protection authority." },
   { icon: Calendar, title: "Data Retention", body: "We retain your personal information as long as necessary to provide our services and comply with legal obligations. Lead and enquiry data is typically retained for 3 years. You may request deletion at any time by contacting us." },
-  { icon: Phone, title: "Contact Us", body: "For privacy-related queries, please contact our Data Protection Officer at: privacy@insuranceportal.in or write to InsurancePortal, Mumbai, Maharashtra, India 400001." },
+  { icon: Phone, title: "Contact Us", body: "For privacy-related queries, please contact our Data Protection Officer at: inquery@npsinsurance.in or write to InsurancePortal, Mumbai, Maharashtra, India 400001." },
 ];
 
 export default function PrivacyPolicyPage() {

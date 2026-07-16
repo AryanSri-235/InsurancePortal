@@ -154,7 +154,7 @@ export default async function AccountPage() {
         }
 
         .collapse-toggle {
-          background: #2563EB; /* Bright blue */
+          background: #186874; /* Brand teal */
           border: 1px solid rgba(255, 255, 255, 0.2);
           color: #ffffff;
           width: 28px;
@@ -171,13 +171,13 @@ export default async function AccountPage() {
         }
 
         .collapse-toggle:hover {
-          background: #3B82F6;
+          background: #1f7d8c;
           transform: scale(1.1);
-          box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+          box-shadow: 0 0 12px rgba(24, 104, 116, 0.5);
         }
 
         .acct-sidebar.collapsed .collapse-toggle {
-          background: #2563EB;
+          background: #186874;
           border: 1px solid rgba(255, 255, 255, 0.2);
         }
 

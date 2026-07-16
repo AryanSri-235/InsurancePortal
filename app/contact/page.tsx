@@ -6,8 +6,8 @@ import Swal from "sweetalert2";
 import { type LucideIcon, Phone, Mail, MessageCircle, MapPin, CheckCircle, Zap } from "lucide-react";
 
 const channels: { icon: LucideIcon; title: string; detail: string; sub: string; color: string; iconBg: string; from: string; to: string }[] = [
-  { icon: Phone, title: "Call Us Free", detail: "1800-XXX-XXXX", sub: "Mon–Sat · 9 AM–7 PM", color: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80", iconBg: "bg-blue-50", from: "#3b82f6", to: "#6366f1" },
-  { icon: Mail, title: "Email Us", detail: "support@insuranceportal.in", sub: "Response within 24 hours", color: "border-emerald-200 hover:border-emerald-300 hover:shadow-emerald-100/80", iconBg: "bg-emerald-50", from: "#10b981", to: "#14b8a6" },
+  { icon: Phone, title: "Call Us", detail: "+91 80761 75709", sub: "Mon–Sat · 9 AM–7 PM", color: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80", iconBg: "bg-blue-50", from: "#3b82f6", to: "#6366f1" },
+  { icon: Mail, title: "Email Us", detail: "inquery@npsinsurance.in", sub: "Response within 24 hours", color: "border-emerald-200 hover:border-emerald-300 hover:shadow-emerald-100/80", iconBg: "bg-emerald-50", from: "#10b981", to: "#14b8a6" },
   { icon: MessageCircle, title: "WhatsApp", detail: "Chat on WhatsApp", sub: "Typical reply in < 5 min", color: "border-green-200 hover:border-green-300 hover:shadow-green-100/80", iconBg: "bg-green-50", from: "#22c55e", to: "#16a34a" },
   { icon: MapPin, title: "Office", detail: "Mumbai, Maharashtra", sub: "India 400001", color: "border-orange-200 hover:border-orange-300 hover:shadow-orange-100/80", iconBg: "bg-orange-50", from: "#f97316", to: "#f59e0b" },
 ];
@@ -176,7 +176,7 @@ export default function ContactPage() {
 
               <div className="bg-amber-50 border-2 border-amber-100 rounded-3xl p-6">
                 <p className="font-bold text-gray-900 mb-2"><Zap className="w-4 h-4 inline mr-1" /> Fastest way to get help</p>
-                <p className="text-sm text-gray-500">Call us directly on <span className="font-bold text-blue-600">1800-XXX-XXXX</span> (free). Average wait time: under 2 minutes.</p>
+                <p className="text-sm text-gray-500">Call us directly on <span className="font-bold text-blue-600">+91 80761 75709</span>. Average wait time: under 2 minutes.</p>
               </div>
             </div>
           </div>

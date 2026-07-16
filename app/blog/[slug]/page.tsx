@@ -476,10 +476,10 @@ export default async function BlogPostPage({ params }: Props) {
                   Get Free Quote &rarr;
                 </Link>
                 <a
-                  href="tel:1800XXXXXXX"
+                  href="tel:+918076175709"
                   className="block mt-2 text-center text-blue-200 text-xs font-semibold hover:text-white transition-colors py-1"
                 >
-                  Or call 1800-XXX-XXXX (Free)
+                  Or call +91 80761 75709
                 </a>
               </div>
 
