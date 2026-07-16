@@ -4,7 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 import Swal from "sweetalert2";
-import { Mail, MessageSquare, Plus, Calendar, FileText, X } from "lucide-react";
+import { Mail, MessageSquare, Plus, Calendar, FileText, X, ArrowLeft } from "lucide-react";
 
 interface User {
   id: number;
@@ -241,10 +241,19 @@ export default function UserDetailPage() {
   return (
     <div className="space-y-5 max-w-4xl">
       {/* Breadcrumb */}
-      <div className="flex items-center gap-2 text-sm text-gray-400">
-        <Link href="/admin/registered-users" className="hover:text-gray-600 transition-colors">Registered Users</Link>
-        <span>/</span>
-        <span className="text-gray-700 font-medium">{user.name}</span>
+      <div className="flex items-center gap-3">
+        <Link
+          href="/admin/registered-users"
+          className="group flex items-center gap-1.5 bg-white hover:bg-gray-50 border border-gray-200 text-gray-600 hover:text-gray-900 px-3 py-1.5 rounded-lg text-xs font-semibold shadow-sm transition-all"
+        >
+          <ArrowLeft className="w-3.5 h-3.5 group-hover:-translate-x-0.5 transition-transform" />
+          Back
+        </Link>
+        <div className="flex items-center gap-2 text-sm text-gray-400">
+          <Link href="/admin/registered-users" className="hover:text-gray-600 transition-colors">Registered Users</Link>
+          <span>/</span>
+          <span className="text-gray-700 font-medium">{user.name}</span>
+        </div>
       </div>
 
       {/* Profile card */}

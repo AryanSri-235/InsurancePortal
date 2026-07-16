@@ -56,7 +56,7 @@ export default function LeadsPage() {
   const [leads, setLeads] = useState<Lead[]>([]);
   const [meta, setMeta] = useState<Meta>({ total: 0, page: 1, pages: 1 });
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({ status: "", category: "", search: "", page: 1 });
+  const [filters, setFilters] = useState({ status: "", category: "", search: "", page: 1, dateFrom: "", dateTo: "" });
   const [updatingId, setUpdatingId] = useState<number | null>(null);
   const [renewalModal, setRenewalModal] = useState<RenewalModal | null>(null);
   const [renewalDate, setRenewalDate] = useState("");
@@ -73,6 +73,8 @@ export default function LeadsPage() {
     if (filters.status) params.set("status", filters.status);
     if (filters.category) params.set("category", filters.category);
     if (filters.search) params.set("search", filters.search);
+    if (filters.dateFrom) params.set("dateFrom", filters.dateFrom);
+    if (filters.dateTo) params.set("dateTo", filters.dateTo);
     params.set("page", String(filters.page));
     try {
       const res = await fetch(`/api/admin/leads?${params}`);
@@ -161,7 +163,7 @@ export default function LeadsPage() {
     }
   }
 
-  const hasFilters = !!(filters.status || filters.category || filters.search);
+  const hasFilters = !!(filters.status || filters.category || filters.search || filters.dateFrom || filters.dateTo);
 
   return (
     <div className="space-y-5 max-w-7xl">
@@ -222,9 +224,27 @@ export default function LeadsPage() {
             </select>
           </FilterInput>
 
+          <FilterInput label="Date From">
+            <input
+              type="date"
+              value={filters.dateFrom}
+              onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value, page: 1 })}
+              className={inputCls}
+            />
+          </FilterInput>
+
+          <FilterInput label="Date To">
+            <input
+              type="date"
+              value={filters.dateTo}
+              onChange={(e) => setFilters({ ...filters, dateTo: e.target.value, page: 1 })}
+              className={inputCls}
+            />
+          </FilterInput>
+
           {hasFilters && (
             <button
-              onClick={() => setFilters({ status: "", category: "", search: "", page: 1 })}
+              onClick={() => setFilters({ status: "", category: "", search: "", page: 1, dateFrom: "", dateTo: "" })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
               <X className="w-3.5 h-3.5" />

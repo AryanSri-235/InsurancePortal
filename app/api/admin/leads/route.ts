@@ -12,10 +12,22 @@ export async function GET(req: NextRequest) {
   const status = searchParams.get("status");
   const category = searchParams.get("category");
   const search = searchParams.get("search");
+  const dateFrom = searchParams.get("dateFrom");
+  const dateTo = searchParams.get("dateTo");
   const page = Math.max(1, parseInt(searchParams.get("page") ?? "1"));
   const limit = 20;
 
   try {
+    let dateFromParsed: Date | undefined = undefined;
+    let dateToParsed: Date | undefined = undefined;
+    if (dateFrom && !isNaN(Date.parse(dateFrom))) {
+      dateFromParsed = new Date(dateFrom);
+    }
+    if (dateTo && !isNaN(Date.parse(dateTo))) {
+      dateToParsed = new Date(dateTo);
+      dateToParsed.setHours(23, 59, 59, 999);
+    }
+
     const where = {
       ...(status ? { status } : {}),
       ...(category ? { category } : {}),
@@ -26,6 +38,14 @@ export async function GET(req: NextRequest) {
               { phone: { contains: search } },
               { email: { contains: search, mode: "insensitive" as const } },
             ],
+          }
+        : {}),
+      ...((dateFromParsed || dateToParsed)
+        ? {
+            createdAt: {
+              ...(dateFromParsed ? { gte: dateFromParsed } : {}),
+              ...(dateToParsed ? { lte: dateToParsed } : {}),
+            },
           }
         : {}),
     };

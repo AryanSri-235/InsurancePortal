@@ -135,9 +135,20 @@ export async function DELETE(req: NextRequest) {
 
   try {
     const { id } = await req.json();
-    await db.policy.update({ where: { id }, data: { isActive: false } });
+    if (typeof id !== "number") {
+      return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+
+    await db.$transaction([
+      db.policyRider.deleteMany({ where: { policyId: id } }),
+      db.dueDate.updateMany({ where: { policyId: id }, data: { policyId: null } }),
+      db.lead.updateMany({ where: { policyId: id }, data: { policyId: null } }),
+      db.policy.delete({ where: { id } }),
+    ]);
+
     return NextResponse.json({ success: true });
-  } catch {
+  } catch (err) {
+    console.error("[policies DELETE]", err);
     return NextResponse.json({ error: "Server error" }, { status: 500 });
   }
 }

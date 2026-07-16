@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
-import { Plus, Search, X, Check, Minus } from "lucide-react";
+import { Plus, Search, X, Check, Minus, Trash2 } from "lucide-react";
 
 interface Provider {
   id: number;
@@ -82,6 +82,7 @@ export default function UsersPage() {
   const [form, setForm]           = useState(EMPTY_FORM);
   const [saving, setSaving]       = useState(false);
   const [search, setSearch]       = useState("");
+  const [currentUser, setCurrentUser] = useState<{ id: number; email: string } | null>(null);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -92,6 +93,7 @@ export default function UsersPage() {
     const usersData     = await usersRes.json();
     const providersData = await providersRes.json();
     setUsers(usersData.users ?? []);
+    setCurrentUser(usersData.currentUser ?? null);
     setProviders((providersData.data ?? []).map((p: { id: number; name: string }) => ({ id: p.id, name: p.name })));
     setLoading(false);
   }, []);
@@ -133,6 +135,38 @@ export default function UsersPage() {
       body: JSON.stringify({ id: user.id, isActive: !user.isActive }),
     });
     if (res.ok) setUsers(prev => prev.map(u => u.id === user.id ? { ...u, isActive: !u.isActive } : u));
+  }
+
+  async function handleDelete(user: AdminUser) {
+    const confirmed = await Swal.fire({
+      title: `Delete ${user.name}?`,
+      text: "This action cannot be undone and will delete all associated activity logs.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#DC2626",
+      reverseButtons: true,
+    });
+    if (!confirmed.isConfirmed) return;
+
+    try {
+      const res = await fetch("/api/admin/users", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: user.id }),
+      });
+      if (res.ok) {
+        setUsers(prev => prev.filter(u => u.id !== user.id));
+        Swal.fire({ icon: "success", title: "User deleted", timer: 1500, showConfirmButton: false });
+      } else {
+        const data = await res.json();
+        Swal.fire({ icon: "error", title: "Error", text: typeof data.error === "string" ? data.error : "Failed to delete user" });
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire({ icon: "error", title: "Error", text: "Something went wrong" });
+    }
   }
 
   const filtered = users.filter(u =>
@@ -217,12 +251,24 @@ export default function UsersPage() {
                         {user.lastLoginAt ? new Date(user.lastLoginAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }) : "Never"}
                       </td>
                       <td className="px-4 py-3">
-                        <button
-                          onClick={() => toggleActive(user)}
-                          className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors ${user.isActive ? "text-red-600 hover:bg-red-50" : "text-green-600 hover:bg-green-50"}`}
-                        >
-                          {user.isActive ? "Deactivate" : "Activate"}
-                        </button>
+                        <div className="flex items-center gap-2">
+                          <button
+                            onClick={() => toggleActive(user)}
+                            className={`text-xs font-semibold px-3 py-1.5 rounded-lg transition-colors ${user.isActive ? "text-amber-600 hover:bg-amber-50" : "text-green-600 hover:bg-green-50"}`}
+                          >
+                            {user.isActive ? "Deactivate" : "Activate"}
+                          </button>
+                          {currentUser?.id !== user.id && (
+                            <button
+                              onClick={() => handleDelete(user)}
+                              className="text-xs font-semibold px-2.5 py-1.5 rounded-lg text-red-600 hover:bg-red-50 transition-colors flex items-center gap-1"
+                              title="Delete User"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                              Delete
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   ))}

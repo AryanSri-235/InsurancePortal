@@ -2,13 +2,15 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
-import { Plus, X, Search, ShieldCheck, Star, Pencil, ExternalLink } from "lucide-react";
+import { Plus, X, Search, ShieldCheck, Star, Pencil, ExternalLink, Trash2 } from "lucide-react";
+import Swal from "sweetalert2";
 
 interface Policy {
   id: number;
   name: string;
   slug: string;
   category: string;
+  providerId: number;
   premiumStartsFrom: number | null;
   coverAmount: string | null;
   isFeatured: boolean;
@@ -55,8 +57,28 @@ export default function PoliciesClient({ role }: { role: string }) {
 
   const [policies, setPolicies] = useState<Policy[]>([]);
   const [loading, setLoading] = useState(true);
-  const [filters, setFilters] = useState({ category: "", search: "", featured: "" });
+  const [providers, setProviders] = useState<{ id: number; name: string }[]>([]);
+  const [filters, setFilters] = useState({
+    category: "",
+    search: "",
+    providerId: "",
+    isActive: "",
+    isFeatured: "",
+    minPremium: "",
+    maxPremium: "",
+  });
   const [togglingId, setTogglingId] = useState<number | null>(null);
+
+  useEffect(() => {
+    fetch("/api/admin/providers")
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.success) {
+          setProviders(data.data.map((p: any) => ({ id: p.id, name: p.name })));
+        }
+      })
+      .catch((err) => console.error("Failed to fetch providers:", err));
+  }, []);
 
   const fetchPolicies = useCallback(async () => {
     setLoading(true);
@@ -102,14 +124,71 @@ export default function PoliciesClient({ role }: { role: string }) {
     }
   }
 
-  const displayed = policies.filter(p =>
-    filters.featured === "featured"     ? p.isFeatured :
-    filters.featured === "not-featured" ? !p.isFeatured :
-    filters.featured === "inactive"     ? !p.isActive :
-    true
-  );
+  async function deletePolicy(id: number, name: string) {
+    const confirmed = await Swal.fire({
+      title: `Delete policy "${name}"?`,
+      text: "This action cannot be undone and will dissociate this policy from existing leads and due dates.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Yes, delete",
+      cancelButtonText: "Cancel",
+      confirmButtonColor: "#DC2626",
+      reverseButtons: true,
+    });
+    if (!confirmed.isConfirmed) return;
 
-  const hasFilters = !!(filters.category || filters.search || filters.featured);
+    try {
+      const res = await fetch("/api/admin/policies", {
+        method: "DELETE",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id }),
+      });
+      if (res.ok) {
+        setPolicies((prev) => prev.filter((p) => p.id !== id));
+        Swal.fire({ icon: "success", title: "Policy deleted", timer: 1500, showConfirmButton: false });
+      } else {
+        Swal.fire({ icon: "error", title: "Error", text: "Failed to delete policy" });
+      }
+    } catch (err) {
+      console.error(err);
+      Swal.fire({ icon: "error", title: "Error", text: "Something went wrong" });
+    }
+  }
+
+  const displayed = policies.filter((p) => {
+    if (filters.providerId && p.providerId !== parseInt(filters.providerId)) {
+      return false;
+    }
+    if (filters.isActive === "active" && !p.isActive) {
+      return false;
+    }
+    if (filters.isActive === "inactive" && p.isActive) {
+      return false;
+    }
+    if (filters.isFeatured === "featured" && !p.isFeatured) {
+      return false;
+    }
+    if (filters.isFeatured === "not-featured" && p.isFeatured) {
+      return false;
+    }
+    if (filters.minPremium && (p.premiumStartsFrom === null || p.premiumStartsFrom < parseFloat(filters.minPremium))) {
+      return false;
+    }
+    if (filters.maxPremium && (p.premiumStartsFrom === null || p.premiumStartsFrom > parseFloat(filters.maxPremium))) {
+      return false;
+    }
+    return true;
+  });
+
+  const hasFilters = !!(
+    filters.category ||
+    filters.search ||
+    filters.providerId ||
+    filters.isActive ||
+    filters.isFeatured ||
+    filters.minPremium ||
+    filters.maxPremium
+  );
   const colSpan = isRam ? 7 : 8;
 
   return (
@@ -161,22 +240,72 @@ export default function PoliciesClient({ role }: { role: string }) {
           </div>
 
           <div className="flex flex-col gap-1">
-            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Visibility</span>
+            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Provider</span>
             <select
-              value={filters.featured}
-              onChange={(e) => setFilters({ ...filters, featured: e.target.value })}
+              value={filters.providerId}
+              onChange={(e) => setFilters({ ...filters, providerId: e.target.value })}
               className={inputCls}
             >
-              <option value="">All Policies</option>
-              {!isRam && <option value="featured">Featured Only</option>}
-              {!isRam && <option value="not-featured">Not Featured</option>}
-              <option value="inactive">Inactive</option>
+              <option value="">All Providers</option>
+              {providers.map((p) => (
+                <option key={p.id} value={String(p.id)}>{p.name}</option>
+              ))}
             </select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Status</span>
+            <select
+              value={filters.isActive}
+              onChange={(e) => setFilters({ ...filters, isActive: e.target.value })}
+              className={inputCls}
+            >
+              <option value="">All Statuses</option>
+              <option value="active">Active Only</option>
+              <option value="inactive">Inactive Only</option>
+            </select>
+          </div>
+
+          {!isRam && (
+            <div className="flex flex-col gap-1">
+              <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Featured</span>
+              <select
+                value={filters.isFeatured}
+                onChange={(e) => setFilters({ ...filters, isFeatured: e.target.value })}
+                className={inputCls}
+              >
+                <option value="">All</option>
+                <option value="featured">Featured Only</option>
+                <option value="not-featured">Not Featured Only</option>
+              </select>
+            </div>
+          )}
+
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Min Premium</span>
+            <input
+              type="number"
+              placeholder="Min..."
+              value={filters.minPremium}
+              onChange={(e) => setFilters({ ...filters, minPremium: e.target.value })}
+              className={`${inputCls} w-24`}
+            />
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Max Premium</span>
+            <input
+              type="number"
+              placeholder="Max..."
+              value={filters.maxPremium}
+              onChange={(e) => setFilters({ ...filters, maxPremium: e.target.value })}
+              className={`${inputCls} w-24`}
+            />
           </div>
 
           {hasFilters && (
             <button
-              onClick={() => setFilters({ category: "", search: "", featured: "" })}
+              onClick={() => setFilters({ category: "", search: "", providerId: "", isActive: "", isFeatured: "", minPremium: "", maxPremium: "" })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
               <X className="w-3.5 h-3.5" />
@@ -274,12 +403,22 @@ export default function PoliciesClient({ role }: { role: string }) {
                           <Pencil className="w-3 h-3" />
                           Edit
                         </Link>
+                        {role === "superadmin" && (
+                          <button
+                            onClick={() => deletePolicy(policy.id, policy.name)}
+                            className="text-xs font-semibold text-red-600 border border-red-100 bg-red-50 hover:bg-white hover:border-red-200 px-2.5 py-1.5 rounded-lg transition-colors flex items-center gap-1"
+                            title="Delete Policy"
+                          >
+                            <Trash2 className="w-3 h-3" />
+                            Delete
+                          </button>
+                        )}
                         <Link
                           href={`/${policy.category}-insurance/${policy.slug}`}
                           target="_blank"
                           className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
                         >
-                          <ExternalLink className="w-3 h-3" />
+                          <ExternalLink className="w-3.5 h-3.5" />
                         </Link>
                       </div>
                     </td>

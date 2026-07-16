@@ -20,7 +20,8 @@ async function requireSuperadmin() {
 }
 
 export async function GET() {
-  if (!await requireSuperadmin()) {
+  const session = await requireSuperadmin();
+  if (!session) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -33,7 +34,7 @@ export async function GET() {
     orderBy: { createdAt: "desc" },
   });
 
-  return NextResponse.json({ users });
+  return NextResponse.json({ users, currentUser: session });
 }
 
 export async function POST(req: NextRequest) {
@@ -96,4 +97,33 @@ export async function PATCH(req: NextRequest) {
   });
 
   return NextResponse.json({ user });
+}
+
+export async function DELETE(req: NextRequest) {
+  const session = await requireSuperadmin();
+  if (!session) {
+    return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+  }
+
+  try {
+    const { id } = await req.json();
+
+    if (typeof id !== "number") {
+      return NextResponse.json({ error: "Invalid payload" }, { status: 400 });
+    }
+
+    if (session.id === id) {
+      return NextResponse.json({ error: "You cannot delete yourself" }, { status: 400 });
+    }
+
+    await prisma.$transaction([
+      prisma.adminActivityLog.deleteMany({ where: { adminUserId: id } }),
+      prisma.adminUser.delete({ where: { id } }),
+    ]);
+
+    return NextResponse.json({ success: true });
+  } catch (err) {
+    console.error("[users DELETE]", err);
+    return NextResponse.json({ error: "Server error" }, { status: 500 });
+  }
 }
