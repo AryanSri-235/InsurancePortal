@@ -21,7 +21,7 @@ export default function CategoryFaq({ faqs, title }: { faqs: FaqItem[]; title: s
         <div className="text-center mb-14">
           <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">Common Questions</p>
           <h2 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">
-            <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
               {title}
             </span>
           </h2>
@@ -60,7 +60,7 @@ export default function CategoryFaq({ faqs, title }: { faqs: FaqItem[]; title: s
         </div>
 
         {/* CTA */}
-        <div className="mt-14 bg-gradient-to-br from-blue-600 to-green-700 rounded-3xl p-10 text-white text-center relative overflow-hidden">
+        <div className="mt-14 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-10 text-white text-center relative overflow-hidden">
           <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none" />
           <p className="text-blue-200 text-sm font-semibold uppercase tracking-widest mb-3">Still Unsure?</p>
           <h3 className="text-3xl font-black mb-3">Talk to an Expert — Free</h3>

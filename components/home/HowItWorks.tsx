@@ -55,15 +55,15 @@ export default function HowItWorks() {
               style={{ animationDelay: `${i * 0.15}s` }}
               className="animate-fade-in-up relative z-10 group"
             >
-              <div className={`border-2 rounded-3xl p-8 hover:-translate-y-2 hover:shadow-2xl hover:shadow-gray-100/80 transition-all duration-300 bg-white ${s.bg}`}>
-                <div className="flex items-center justify-between mb-6">
-                  <div className="w-14 h-14 rounded-2xl bg-white border border-gray-200 flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
-                    <s.Icon className="w-7 h-7 text-gray-900" strokeWidth={1.75} />
+              <div className="border-2 rounded-2xl p-6 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-100/40 hover:border-blue-500 hover:bg-blue-50/30 transition-all duration-300 bg-white border-gray-200/80">
+                <div className="flex items-center justify-between mb-4">
+                  <div className="w-12 h-12 rounded-xl bg-white border border-gray-200 flex items-center justify-center shadow-sm transition-transform duration-300 group-hover:scale-110 group-hover:rotate-6">
+                    <s.Icon className="w-6 h-6 text-gray-900" strokeWidth={1.75} />
                   </div>
-                  <span className="text-5xl font-black text-gray-100 select-none">{s.num}</span>
+                  <span className="text-4xl font-black text-gray-100 select-none">{s.num}</span>
                 </div>
-                <h3 className="text-xl font-bold text-gray-900 mb-3">{s.title}</h3>
-                <p className="text-gray-500 text-sm leading-relaxed">{s.description}</p>
+                <h3 className="text-lg font-bold text-gray-900 mb-2">{s.title}</h3>
+                <p className="text-gray-500 text-xs leading-relaxed">{s.description}</p>
               </div>
             </div>
           ))}

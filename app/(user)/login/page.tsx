@@ -101,6 +101,14 @@ export default function LoginPage() {
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-6 relative overflow-hidden">
+      {/* Back button */}
+      <Link 
+        href="/" 
+        className="absolute top-6 left-6 z-20 flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-xl text-sm font-semibold text-slate-700 hover:text-slate-900 hover:bg-white shadow-sm hover:shadow transition-all duration-200 hover:-translate-x-1"
+      >
+        <ArrowLeft className="w-4 h-4" /> Back to Home
+      </Link>
+
       {/* Grid pattern */}
       <svg className="absolute inset-0 w-full h-full pointer-events-none opacity-[0.035]" xmlns="http://www.w3.org/2000/svg">
         <defs>

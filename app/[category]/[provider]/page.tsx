@@ -5,7 +5,6 @@ import { isValidCategory, resolveCategory, categoryLabel } from "@/lib/utils";
 import ProviderHero from "@/components/provider/ProviderHero";
 import ProviderAbout from "@/components/provider/ProviderAbout";
 import ProviderPlans from "@/components/provider/ProviderPlans";
-import ProviderReviews from "@/components/provider/ProviderReviews";
 import ProviderClaimProcess from "@/components/provider/ProviderClaimProcess";
 import ProviderNetworkSearch from "@/components/provider/ProviderNetworkSearch";
 import ProviderFaq from "@/components/provider/ProviderFaq";
@@ -85,8 +84,6 @@ export default async function ProviderPage({ params }: Props) {
       <ProviderAbout provider={provider} />
       <SectionDivider />
       <ProviderPlans policies={policies} category={catSlug} providerName={provider.name} />
-      <SectionDivider />
-      <ProviderReviews providerName={provider.name} />
       <SectionDivider />
       <ProviderClaimProcess provider={provider} category={catSlug} />
       <SectionDivider />

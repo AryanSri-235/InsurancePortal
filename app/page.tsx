@@ -20,7 +20,6 @@ async function getFeaturedPolicies() {
           select: { name: true, slug: true, logoUrl: true, claimSettlementRatio: true },
         },
       },
-      take: 6,
     });
   } catch { return []; }
 }

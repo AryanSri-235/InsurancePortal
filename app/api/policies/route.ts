@@ -6,7 +6,8 @@ export async function GET(req: NextRequest) {
   const category = searchParams.get("category");
   const providerId = searchParams.get("providerId");
   const featured = searchParams.get("featured");
-  const take = Math.min(parseInt(searchParams.get("limit") ?? "20"), 50);
+  const limitParam = searchParams.get("limit");
+  const take = limitParam ? parseInt(limitParam) : undefined;
 
   try {
     const policies = await db.policy.findMany({

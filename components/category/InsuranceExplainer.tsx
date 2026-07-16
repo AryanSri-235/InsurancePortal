@@ -5,7 +5,7 @@ interface Props {
   slug: string; // e.g., "term", "car", "travel", etc.
 }
 
-const CheckIcon = () => <Check className="w-5 h-5 text-green-500 flex-shrink-0 mt-0.5" />;
+const CheckIcon = () => <Check className="w-5 h-5 text-blue-600 flex-shrink-0 mt-0.5" />;
 const PersonIcon = () => <User className="w-4 h-4" />;
 
 type SlugKey = "term" | "health" | "motor" | "life" | "travel" | "home";

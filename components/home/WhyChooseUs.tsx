@@ -8,8 +8,8 @@ const reasons = [
 ];
 
 const A = {
-  blue:  { border: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80",  iconBg: "bg-blue-50",  bar: "#2563eb" },
-  green: { border: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80", iconBg: "bg-blue-50", bar: "#186874" },
+  blue:  { border: "border-gray-200/80 hover:border-blue-500 hover:bg-blue-50/30 hover:shadow-xl hover:shadow-blue-100/40",  iconBg: "bg-blue-50",  bar: "#2563eb" },
+  green: { border: "border-gray-200/80 hover:border-blue-500 hover:bg-blue-50/30 hover:shadow-xl hover:shadow-blue-100/40", iconBg: "bg-blue-50", bar: "#186874" },
 };
 
 export default function WhyChooseUs() {
@@ -36,14 +36,15 @@ export default function WhyChooseUs() {
               <div
                 key={i}
                 style={{ animationDelay: `${i * 0.08}s` }}
-                className={`animate-fade-in-up group bg-white border-2 rounded-3xl p-7 hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 cursor-default ${s.border}`}
+                className={`animate-fade-in-up group bg-white border-2 rounded-2xl p-5 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-default flex items-start gap-4 ${s.border}`}
               >
-                <div className={`w-14 h-14 rounded-2xl ${s.iconBg} flex items-center justify-center mb-5 transition-transform duration-300 group-hover:scale-110 group-hover:-rotate-3`}>
-                  <Icon className="w-6 h-6" />
+                <div className={`w-12 h-12 rounded-xl ${s.iconBg} flex items-center justify-center flex-shrink-0 transition-transform duration-300 group-hover:scale-105`}>
+                  <Icon className="w-5 h-5 text-blue-600" />
                 </div>
-                <div className="h-0.5 w-10 rounded-full mb-4 transition-all duration-300 group-hover:w-16" style={{ background: s.bar }} />
-                <h3 className="font-bold text-gray-900 text-lg mb-2">{r.title}</h3>
-                <p className="text-sm text-gray-500 leading-relaxed">{r.description}</p>
+                <div>
+                  <h3 className="font-bold text-gray-900 text-base leading-tight mb-1.5">{r.title}</h3>
+                  <p className="text-xs text-gray-500 leading-relaxed">{r.description}</p>
+                </div>
               </div>
             );
           })}

@@ -23,36 +23,67 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Too many attempts. Try again later." }, { status: 429 });
   }
 
-  // Validate OTP via Message Central API
+  // Validate OTP
   try {
-    const authToken = process.env.MESSAGE_CENTRAL_AUTH_TOKEN;
-    const url = `https://cpaas.messagecentral.com/verification/v3/validateOtp?verificationId=${verificationId}&code=${otp}`;
+    const msg91AuthKey = process.env.MSG91_AUTH_KEY;
 
-    if (!authToken) {
-      console.error("Missing Message Central configuration in environment");
-      return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
-    }
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "authToken": authToken
+    if (verificationId === "msg91" || msg91AuthKey) {
+      if (!msg91AuthKey) {
+        console.error("Missing MSG91_AUTH_KEY in environment");
+        return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
       }
-    });
 
-    if (!response.ok) {
-      console.error("Message Central Validation failed with status:", response.status);
-      return NextResponse.json({ error: "OTP verification failed. Please try again." }, { status: 400 });
-    }
+      // Verify OTP via MSG91 (GET request)
+      const url = `https://control.msg91.com/api/v5/otp/verify?otp=${otp}&mobile=91${phone}`;
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "authkey": msg91AuthKey
+        }
+      });
 
-    const resData = await response.json();
-    if (resData.responseCode !== 200) {
-      console.error("Message Central Validation error response:", resData);
-      const errMsg = resData.message === "WRONG_OTP_PROVIDED" ? "Wrong OTP entered. Please try again." : (resData.message || "Invalid OTP.");
-      return NextResponse.json({ error: errMsg }, { status: 400 });
+      if (!response.ok) {
+        console.error("MSG91 Validation failed with status:", response.status);
+        return NextResponse.json({ error: "OTP verification failed. Please try again." }, { status: 400 });
+      }
+
+      const resData = await response.json();
+      if (resData.type !== "success") {
+        console.error("MSG91 Validation error response:", resData);
+        const errMsg = resData.message || "Invalid OTP.";
+        return NextResponse.json({ error: errMsg }, { status: 400 });
+      }
+    } else {
+      // Validate OTP via Message Central API
+      const authToken = process.env.MESSAGE_CENTRAL_AUTH_TOKEN;
+      const url = `https://cpaas.messagecentral.com/verification/v3/validateOtp?verificationId=${verificationId}&code=${otp}`;
+
+      if (!authToken) {
+        console.error("Missing Message Central configuration in environment");
+        return NextResponse.json({ error: "Server configuration error" }, { status: 500 });
+      }
+
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "authToken": authToken
+        }
+      });
+
+      if (!response.ok) {
+        console.error("Message Central Validation failed with status:", response.status);
+        return NextResponse.json({ error: "OTP verification failed. Please try again." }, { status: 400 });
+      }
+
+      const resData = await response.json();
+      if (resData.responseCode !== 200) {
+        console.error("Message Central Validation error response:", resData);
+        const errMsg = resData.message === "WRONG_OTP_PROVIDED" ? "Wrong OTP entered. Please try again." : (resData.message || "Invalid OTP.");
+        return NextResponse.json({ error: errMsg }, { status: 400 });
+      }
     }
   } catch (err: any) {
-    console.error("[verify-otp] Message Central verification exception:", err);
+    console.error("[verify-otp] OTP verification exception:", err);
     return NextResponse.json({ error: "Authentication failed. Error verifying OTP." }, { status: 401 });
   }
 

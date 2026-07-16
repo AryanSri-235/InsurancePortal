@@ -1,10 +1,11 @@
-﻿import { redirect } from "next/navigation";
+import { redirect } from "next/navigation";
 import { getUserSession } from "@/lib/user/auth";
 import { db } from "@/lib/db";
 import Link from "next/link";
 import LogoutButton from "@/components/user/LogoutButton";
 import QuickQuoteButton from "@/components/user/QuickQuoteButton";
 import ContactSupportForm from "@/components/user/ContactSupportForm";
+import AccountSidebar from "@/components/user/AccountSidebar";
 import { Home, Calendar, FileText, User, MessageSquare, ExternalLink, AlertTriangle, Clipboard, Copy, type LucideIcon } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -92,6 +93,321 @@ export default async function AccountPage() {
           width: 220px; flex-shrink: 0; background: #0B1120;
           display: flex; flex-direction: column;
           position: sticky; top: 0; height: 100vh; overflow-y: auto;
+          transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .acct-sidebar.collapsed {
+          width: 72px;
+        }
+
+        /* Hide scrollbars for Webkit browsers (Chrome, Safari) */
+        .acct-sidebar::-webkit-scrollbar,
+        .acct-main::-webkit-scrollbar,
+        .acct-wrapper::-webkit-scrollbar {
+          display: none !important;
+        }
+
+        /* Hide scrollbars for IE, Edge and Firefox */
+        .acct-sidebar,
+        .acct-main,
+        .acct-wrapper {
+          -ms-overflow-style: none !important;
+          scrollbar-width: none !important;
+        }
+
+        .sidebar-header {
+          padding: 20px;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          position: relative;
+        }
+        
+        .acct-sidebar.collapsed .sidebar-header {
+          flex-direction: column;
+          gap: 12px;
+          align-items: center;
+          justify-content: center;
+          padding: 16px 10px;
+        }
+
+        .logo-link {
+          display: flex;
+          align-items: center;
+          text-decoration: none;
+        }
+
+        .expanded-logo {
+          height: 80px;
+          width: auto;
+          object-fit: contain;
+          display: block;
+        }
+
+        .collapsed-logo {
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 32px;
+          height: 32px;
+        }
+
+        .collapse-toggle {
+          background: #2563EB; /* Bright blue */
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          color: #ffffff;
+          width: 28px;
+          height: 28px;
+          border-radius: 50%;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          cursor: pointer;
+          box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
+          transition: all 0.2s ease-in-out;
+          outline: none;
+          flex-shrink: 0;
+        }
+
+        .collapse-toggle:hover {
+          background: #3B82F6;
+          transform: scale(1.1);
+          box-shadow: 0 0 12px rgba(59, 130, 246, 0.5);
+        }
+
+        .acct-sidebar.collapsed .collapse-toggle {
+          background: #2563EB;
+          border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .profile-section {
+          padding: 20px;
+          border-bottom: 1px solid rgba(255,255,255,0.06);
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          transition: all 0.3s;
+        }
+
+        .acct-sidebar.collapsed .profile-section {
+          align-items: center;
+          padding: 20px 10px;
+        }
+
+        .avatar-circle {
+          width: 44px;
+          height: 44px;
+          border-radius: 12px;
+          background: linear-gradient(135deg, #186874 0%, #004aad 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          margin-bottom: 10px;
+          flex-shrink: 0;
+          transition: all 0.3s;
+        }
+        
+        .acct-sidebar.collapsed .avatar-circle {
+          margin-bottom: 0;
+        }
+
+        .avatar-circle span {
+          color: #fff;
+          font-weight: 800;
+          font-size: 16px;
+          letter-spacing: -0.5px;
+        }
+
+        .profile-info {
+          transition: opacity 0.2s ease, max-height 0.3s ease;
+          opacity: 1;
+          max-height: 200px;
+          width: 100%;
+        }
+
+        .acct-sidebar.collapsed .profile-info {
+          opacity: 0;
+          max-height: 0;
+          overflow: hidden;
+          pointer-events: none;
+          margin: 0;
+        }
+
+        .profile-name {
+          color: #fff;
+          font-weight: 700;
+          font-size: 13px;
+          line-height: 1.3;
+          margin-bottom: 3px;
+        }
+
+        .profile-phone {
+          color: #5C6B84;
+          font-size: 11px;
+          font-weight: 500;
+        }
+
+        .profile-city {
+          color: #5C6B84;
+          font-size: 11px;
+          margin-top: 1px;
+        }
+
+        .member-badge {
+          margin-top: 10px;
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          background: rgba(24,104,116,0.15);
+          border: 1px solid rgba(24,104,116,0.3);
+          border-radius: 20px;
+          padding: 3px 8px;
+        }
+
+        .status-dot {
+          width: 5px;
+          height: 5px;
+          border-radius: 50%;
+          background: #4ADE80;
+        }
+
+        .member-badge span {
+          color: #93C5FD;
+          font-size: 10px;
+          font-weight: 600;
+        }
+
+        .nav-menu {
+          padding: 12px 10px;
+          flex: 1;
+        }
+
+        .acct-sidebar.collapsed .nav-menu {
+          padding: 12px 6px;
+        }
+
+        .menu-title {
+          color: #3A4A60;
+          font-size: 9px;
+          font-weight: 700;
+          letter-spacing: 0.12em;
+          text-transform: uppercase;
+          padding: 0 10px;
+          margin-bottom: 6px;
+          transition: opacity 0.2s;
+        }
+
+        .acct-sidebar.collapsed .menu-title {
+          opacity: 0;
+          height: 0;
+          margin: 0;
+          padding: 0;
+          overflow: hidden;
+        }
+
+        .nav-icon {
+          width: 15px;
+          height: 15px;
+          stroke-width: 1.8px;
+          flex-shrink: 0;
+        }
+
+        .nav-label {
+          transition: opacity 0.2s;
+          white-space: nowrap;
+        }
+
+        .acct-sidebar.collapsed .nav-label {
+          display: none;
+        }
+
+        .acct-sidebar.collapsed .acct-nav-link {
+          justify-content: center;
+          padding: 10px 0;
+        }
+
+        .promo-section {
+          padding: 16px;
+          border-top: 1px solid rgba(255,255,255,0.06);
+          transition: all 0.3s;
+        }
+
+        .acct-sidebar.collapsed .promo-section {
+          display: none;
+        }
+
+        .promo-box {
+          background: rgba(24,104,116,0.12);
+          border: 1px solid rgba(24,104,116,0.25);
+          border-radius: 10px;
+          padding: 12px;
+        }
+
+        .promo-title {
+          color: #93C5FD;
+          font-size: 11px;
+          font-weight: 700;
+          margin-bottom: 2px;
+        }
+
+        .promo-desc {
+          color: #5C6B84;
+          font-size: 10px;
+          line-height: 1.4;
+          margin-bottom: 10px;
+        }
+
+        .sidebar-footer {
+          padding: 12px 16px 16px;
+          border-top: 1px solid rgba(255,255,255,0.06);
+          display: flex;
+          flex-direction: column;
+          gap: 4px;
+        }
+
+        .acct-sidebar.collapsed .sidebar-footer {
+          padding: 12px 8px;
+          align-items: center;
+        }
+
+        .footer-link {
+          color: #5C6B84;
+          font-size: 11px;
+          font-weight: 500;
+          text-decoration: none;
+          display: flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 0;
+          transition: color 0.15s;
+        }
+
+        .footer-link:hover {
+          color: #fff;
+        }
+
+        .footer-label {
+          white-space: nowrap;
+        }
+
+        .acct-sidebar.collapsed .footer-label {
+          display: none;
+        }
+
+        .acct-sidebar.collapsed .footer-link {
+          justify-content: center;
+          width: 100%;
+        }
+
+        .acct-sidebar.collapsed .acct-logout span {
+          display: none;
+        }
+
+        .acct-sidebar.collapsed .acct-logout {
+          justify-content: center;
+          width: 100%;
+          padding: 5px 0;
         }
 
         /* ── Mobile header (hidden on desktop) ── */
@@ -221,61 +537,15 @@ export default async function AccountPage() {
         </div>
       </div>
 
-      {/* ── Sidebar (desktop only) ── */}
-      <aside className="acct-sidebar">
-        <div style={{ padding: "20px 20px 16px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-          <Link href="/" style={{ display: "flex", alignItems: "center", textDecoration: "none" }}>
-            <img src="/logo-dark-zoomed.png" alt="NPS Insurance.in" style={{ height: 80, width: "auto", objectFit: "contain", display: "block" }} />
-          </Link>
-        </div>
-
-        <div style={{ padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-          <div style={{ width: 44, height: 44, borderRadius: 12, background: "linear-gradient(135deg, #186874 0%, #004aad 100%)", display: "flex", alignItems: "center", justifyContent: "center", marginBottom: 10 }}>
-            <span style={{ color: "#fff", fontWeight: 800, fontSize: 16, letterSpacing: "-0.5px" }}>{initials}</span>
-          </div>
-          <p style={{ color: "#fff", fontWeight: 700, fontSize: 13, lineHeight: 1.3, marginBottom: 3 }}>{user.name}</p>
-          <p style={{ color: "#5C6B84", fontSize: 11, fontWeight: 500 }}>+91 {user.phone}</p>
-          {user.city && <p style={{ color: "#5C6B84", fontSize: 11, marginTop: 1 }}>{user.city}</p>}
-          <div style={{ marginTop: 10, display: "inline-flex", alignItems: "center", gap: 4, background: "rgba(24,104,116,0.15)", border: "1px solid rgba(24,104,116,0.3)", borderRadius: 20, padding: "3px 8px" }}>
-            <div style={{ width: 5, height: 5, borderRadius: "50%", background: "#4ADE80" }} />
-            <span style={{ color: "#93C5FD", fontSize: 10, fontWeight: 600 }}>Member since {memberSince}</span>
-          </div>
-        </div>
-
-        <nav style={{ padding: "12px 10px", flex: 1 }}>
-          <p style={{ color: "#3A4A60", fontSize: 9, fontWeight: 700, letterSpacing: "0.12em", textTransform: "uppercase", padding: "0 10px", marginBottom: 6 }}>Menu</p>
-          {(
-            [
-              { label: "Overview",  href: "#overview",  Icon: Home },
-              { label: "Renewals",  href: "#renewals",  Icon: Calendar },
-              { label: "Quotes",    href: "#quotes",    Icon: FileText },
-              { label: "Profile",   href: "#profile",   Icon: User },
-              { label: "Contact",   href: "#contact",   Icon: MessageSquare },
-            ] as { label: string; href: string; Icon: LucideIcon }[]
-          ).map((item) => (
-            <a key={item.label} href={item.href} className="acct-nav-link">
-              <item.Icon width={15} height={15} strokeWidth={1.8} />
-              {item.label}
-            </a>
-          ))}
-        </nav>
-
-        <div style={{ padding: "16px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
-          <div style={{ background: "rgba(24,104,116,0.12)", border: "1px solid rgba(24,104,116,0.25)", borderRadius: 10, padding: "12px" }}>
-            <p style={{ color: "#93C5FD", fontSize: 11, fontWeight: 700, marginBottom: 2 }}>Need coverage?</p>
-            <p style={{ color: "#5C6B84", fontSize: 10, lineHeight: 1.4, marginBottom: 10 }}>Advisor calls you in 30 min.</p>
-            <QuickQuoteButton name={user.name ?? ""} phone={user.phone} email={user.email} city={user.city} sidebar />
-          </div>
-        </div>
-
-        <div style={{ padding: "12px 16px 16px", borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", gap: 4 }}>
-          <Link href="/" style={{ color: "#5C6B84", fontSize: 11, fontWeight: 500, textDecoration: "none", display: "flex", alignItems: "center", gap: 6, padding: "5px 0" }}>
-            <ExternalLink width={12} height={12} strokeWidth={2} />
-            Back to site
-          </Link>
-          <LogoutButton />
-        </div>
-      </aside>
+      {/* ── Sidebar ── */}
+      <AccountSidebar
+        initials={initials}
+        userName={user.name}
+        userPhone={user.phone}
+        userCity={user.city}
+        userEmail={user.email}
+        memberSince={memberSince}
+      />
 
       {/* ── Main ── */}
       <main className="acct-main">

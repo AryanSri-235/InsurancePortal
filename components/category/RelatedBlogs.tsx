@@ -6,21 +6,21 @@ interface RelatedBlogsProps {
 
 const categoryColorMap: Record<string, string> = {
   term: "bg-blue-600",
-  health: "bg-green-600",
+  health: "bg-blue-600",
   motor: "bg-blue-600",
   life: "bg-green-600",
 };
 
 const categoryAccentMap: Record<string, string> = {
   term: "text-blue-600 bg-blue-50",
-  health: "text-green-600 bg-green-50",
+  health: "text-blue-600 bg-blue-50",
   motor: "text-blue-600 bg-blue-50",
   life: "text-green-600 bg-green-50",
 };
 
 const categoryButtonMap: Record<string, string> = {
   term: "text-blue-600 hover:text-blue-800",
-  health: "text-green-600 hover:text-green-800",
+  health: "text-blue-600 hover:text-blue-800",
   motor: "text-blue-600 hover:text-blue-800",
   life: "text-green-600 hover:text-green-800",
 };

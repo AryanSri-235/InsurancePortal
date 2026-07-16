@@ -110,8 +110,8 @@ export default function HealthSpecific() {
                 onClick={() => setActiveTab(tab.id)}
                 className={`px-5 py-2 rounded-full text-sm font-medium transition-all ${
                   activeTab === tab.id
-                    ? "bg-green-500 text-white shadow"
-                    : "bg-gray-100 text-gray-600 hover:bg-green-50 hover:text-green-600"
+                    ? "bg-blue-600 text-white shadow"
+                    : "bg-gray-100 text-gray-600 hover:bg-blue-50 hover:text-blue-600"
                 }`}
               >
                 {tab.label}
@@ -120,7 +120,7 @@ export default function HealthSpecific() {
           </div>
 
           {/* Tab panel */}
-          <div className="bg-green-50 border border-green-100 rounded-2xl p-6 md:p-8">
+          <div className="bg-blue-50 border border-blue-100 rounded-2xl p-6 md:p-8">
             <div className="flex flex-col md:flex-row gap-8">
               <div className="flex-1">
                 <h3 className="text-xl font-bold text-gray-900 mb-3">
@@ -136,7 +136,7 @@ export default function HealthSpecific() {
                 )}
                 <div className="flex items-center gap-2 mt-4">
                   <span className="text-sm text-gray-500">Typical premium:</span>
-                  <span className="font-semibold text-green-700 text-sm bg-green-100 px-3 py-1 rounded-full">
+                  <span className="font-semibold text-blue-700 text-sm bg-blue-100 px-3 py-1 rounded-full">
                     {content.premium}
                   </span>
                 </div>
@@ -148,7 +148,7 @@ export default function HealthSpecific() {
                 <ul className="space-y-2">
                   {content.highlights.map((h, i) => (
                     <li key={i} className="flex items-start gap-2 text-sm text-gray-600">
-                      <Check className="w-3 h-3" />
+                      <Check className="w-3 h-3 text-blue-600" />
                       {h}
                     </li>
                   ))}
@@ -172,8 +172,8 @@ export default function HealthSpecific() {
             {/* Cashless */}
             <div className="bg-white rounded-2xl border border-gray-200 p-6">
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-10 h-10 bg-green-100 rounded-full flex items-center justify-center">
-                  <CheckCircle className="w-5 h-5 text-green-600" />
+                <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                  <CheckCircle className="w-5 h-5 text-blue-600" />
                 </div>
                 <h3 className="text-lg font-bold text-gray-900">Cashless Claims</h3>
               </div>
@@ -182,11 +182,11 @@ export default function HealthSpecific() {
               </p>
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">Pros</p>
+                  <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">Pros</p>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li className="flex gap-2"><span className="text-green-500">+</span>No upfront payment required</li>
-                    <li className="flex gap-2"><span className="text-green-500">+</span>Fast and hassle-free process</li>
-                    <li className="flex gap-2"><span className="text-green-500">+</span>Ideal for planned surgeries</li>
+                    <li className="flex gap-2"><span className="text-blue-500">+</span>No upfront payment required</li>
+                    <li className="flex gap-2"><span className="text-blue-500">+</span>Fast and hassle-free process</li>
+                    <li className="flex gap-2"><span className="text-blue-500">+</span>Ideal for planned surgeries</li>
                   </ul>
                 </div>
                 <div>
@@ -212,10 +212,10 @@ export default function HealthSpecific() {
               </p>
               <div className="space-y-3">
                 <div>
-                  <p className="text-xs font-semibold text-green-600 uppercase tracking-wide mb-1">Pros</p>
+                  <p className="text-xs font-semibold text-blue-600 uppercase tracking-wide mb-1">Pros</p>
                   <ul className="text-sm text-gray-600 space-y-1">
-                    <li className="flex gap-2"><span className="text-green-500">+</span>Freedom to choose any hospital</li>
-                    <li className="flex gap-2"><span className="text-green-500">+</span>Useful in emergencies at non-network facilities</li>
+                    <li className="flex gap-2"><span className="text-blue-500">+</span>Freedom to choose any hospital</li>
+                    <li className="flex gap-2"><span className="text-blue-500">+</span>Useful in emergencies at non-network facilities</li>
                   </ul>
                 </div>
                 <div>

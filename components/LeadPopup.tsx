@@ -57,7 +57,7 @@ export default function LeadPopup() {
 
       <div className="fixed inset-0 z-[9999] flex items-center justify-center px-4 pointer-events-none">
         <div className="pointer-events-auto w-full max-w-md bg-white rounded-3xl shadow-2xl overflow-hidden animate-fade-in-up" style={{ animationDuration: "0.3s" }}>
-          <div className="h-1.5 w-full bg-gradient-to-r from-blue-500 via-blue-400 to-green-500" />
+          <div className="h-1.5 w-full bg-gradient-to-r from-blue-500 via-blue-400 to-indigo-500" />
 
           <div className="p-7">
             <button
@@ -70,12 +70,12 @@ export default function LeadPopup() {
 
             <div className="mb-5 pr-8">
               <div className="flex items-center gap-2 mb-3">
-                <span className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
+                <span className="w-2 h-2 bg-blue-600 rounded-full animate-pulse" />
                 <p className="text-blue-600 text-xs font-semibold uppercase tracking-widest">Free Expert Advice</p>
               </div>
               <h2 className="text-2xl font-black text-gray-900 leading-tight">
                 Get the Best Insurance{" "}
-                <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                   Quote Today
                 </span>
               </h2>
@@ -87,7 +87,7 @@ export default function LeadPopup() {
             <QuoteForm compact utmSource="popup" onSuccess={handleSuccess} />
 
             <div className="mt-4 flex items-center gap-2 text-xs text-gray-400 justify-center">
-              <ShieldCheck className="w-3.5 h-3.5 text-green-500 flex-shrink-0" />
+              <ShieldCheck className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
               256-bit SSL · IRDAI Registered · No spam
             </div>
           </div>

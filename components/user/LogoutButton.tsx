@@ -19,7 +19,7 @@ export default function LogoutButton() {
       style={{ display: "flex", alignItems: "center", gap: 6, color: "#5C6B84", fontSize: 11, fontWeight: 500, background: "none", border: "none", cursor: "pointer", padding: "5px 0", transition: "color 0.15s" }}
     >
       <LogOut width="12" height="12" />
-      Sign out
+      <span>Sign out</span>
     </button>
   );
 }

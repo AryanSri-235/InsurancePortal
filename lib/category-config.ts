@@ -1,4 +1,4 @@
-﻿export type CategorySlug = "term" | "health" | "motor" | "life" | "car" | "two-wheeler" | "family-health" | "group-health" | "travel" | "home" | "term-women" | "term-rop" | "guaranteed-return" | "child-savings" | "retirement";
+export type CategorySlug = "term" | "health" | "motor" | "life" | "car" | "two-wheeler" | "family-health" | "group-health" | "travel" | "home" | "term-women" | "term-rop" | "guaranteed-return" | "child-savings" | "retirement";
 
 export interface CategoryConfig {
   slug: CategorySlug;
@@ -102,9 +102,9 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     headline: "Best Health Insurance Plans",
     subheadline: "Cashless treatment at 14,000+ hospitals. Compare family floater and individual health plans.",
     color: {
-      bg: "from-green-700 to-green-900",
-      accent: "green",
-      badge: "bg-green-100 text-green-700",
+      bg: "from-blue-700 to-blue-900",
+      accent: "blue",
+      badge: "bg-blue-100 text-blue-700",
       badgeText: "Health Insurance",
     },
     trustBadges: ["14,000+ Network Hospitals", "Cashless Claims", "No Room Rent Cap"],
@@ -535,8 +535,8 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     headline: "Best Family Health Insurance Plans",
     subheadline: "One policy covers entire family. Cashless treatment at 14,000+ hospitals. Cover from ₹5 Lakh to ₹1 Crore.",
     color: {
-      gradient: "from-green-700 to-green-900",
-      accent: "green",
+      gradient: "from-blue-700 to-blue-900",
+      accent: "blue",
     },
     trustBadges: [
       { label: "14,000+ Cashless Hospitals", icon: "hospital" },
@@ -646,8 +646,8 @@ export const CATEGORY_CONFIG: Record<string, CategoryConfig> = {
     headline: "Best Group Health Insurance for Employees",
     subheadline: "Cover your entire workforce. No waiting period, pre-existing diseases covered from day 1.",
     color: {
-      gradient: "from-green-700 to-green-900",
-      accent: "green",
+      gradient: "from-blue-700 to-blue-900",
+      accent: "blue",
     },
     trustBadges: [
       { label: "No Waiting Period", icon: "shield-check" },

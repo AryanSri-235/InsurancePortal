@@ -29,7 +29,7 @@ export default function FeaturedPolicies({ policies: initialPolicies = [] }: { p
   const trackRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    fetch("/api/policies?featured=true&limit=6")
+    fetch("/api/policies?featured=true")
       .then((res) => res.json())
       .then((res) => {
         if (res.success && res.data) {

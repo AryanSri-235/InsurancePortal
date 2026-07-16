@@ -108,28 +108,28 @@ export default function HeroSection({ partners = [] }: { partners?: Partner[] })
   return (
     <section id="lead-form" className="bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 lg:pt-16 lg:pb-20">
-        <div className="grid lg:grid-cols-2 gap-14 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
 
           {/* ── Left copy ── */}
           <div className="animate-fade-in-up relative z-10">
             <div className="inline-flex items-center gap-2 mb-7 px-4 py-2 rounded-full border border-blue-200 bg-blue-50 text-blue-700 text-sm font-semibold shadow-sm">
               <span className="w-2 h-2 bg-indigo-600 rounded-full animate-pulse" />
-                    India’s Leading Insurance Service Provider            </div>
+              India’s Leading Insurance Service Provider            </div>
 
-            <h1 className="text-5xl lg:text-6xl font-black text-gray-900 leading-[1.07] tracking-tight mb-6">
+            <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-gray-900 leading-[1.07] tracking-tight mb-6">
               Protect What{" "}
               <span className="relative whitespace-nowrap">
                 <span className="relative z-10 bg-blue-600 bg-clip-text text-transparent">Matters</span>
                 <svg className="absolute -bottom-1 left-0 w-full overflow-visible" height="8" viewBox="0 0 220 8" fill="none">
-                  <path d="M2 6 Q55 1 110 5 Q165 9 218 4" stroke="url(#hg)" strokeWidth="3" strokeLinecap="round"/>
-                  <defs><linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#186874"/><stop offset="100%" stopColor="#004aad"/></linearGradient></defs>
+                  <path d="M2 6 Q55 1 110 5 Q165 9 218 4" stroke="url(#hg)" strokeWidth="3" strokeLinecap="round" />
+                  <defs><linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stopColor="#186874" /><stop offset="100%" stopColor="#004aad" /></linearGradient></defs>
                 </svg>
               </span>
               {" "}Most.
             </h1>
 
             <p className="text-gray-500 text-lg leading-relaxed mb-0 max-w-md">
-                India's Most Trusted Insurance Partner for 35 Years — Honest Advice, Guaranteed Best Price, Real Claim Support.             </p>
+              India's Most Trusted Insurance Partner for <strong className="text-blue-600 font-bold">35 Years </strong>of Honest Advice, Guaranteed Best Price, Real Claim Support.            </p>
 
             <PartnerStrip partners={partners} />
           </div>
@@ -148,7 +148,7 @@ export default function HeroSection({ partners = [] }: { partners?: Partner[] })
 
                 <div className="mt-5 flex items-center gap-3 pt-5 border-t border-gray-100">
                   <div className="flex -space-x-2">
-                    {[["bg-blue-500","A"],["bg-indigo-600","R"],["bg-blue-600","S"]].map(([c,l], i) => (
+                    {[["bg-blue-500", "A"], ["bg-indigo-600", "R"], ["bg-blue-600", "S"]].map(([c, l], i) => (
                       <div key={i} className={`w-7 h-7 rounded-full ${c} border-2 border-white flex items-center justify-center text-white text-xs font-bold`}>{l}</div>
                     ))}
                   </div>

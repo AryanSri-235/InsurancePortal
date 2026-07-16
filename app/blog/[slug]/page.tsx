@@ -8,19 +8,41 @@ import ShareButtons from "@/components/blog/ShareButtons";
 // ── colour maps (mirrors blog/page.tsx) ──────────────────────────────────────
 
 const catColors: Record<string, string> = {
-  "Term Insurance":   "bg-blue-100 text-blue-700",
+  "Term Insurance": "bg-blue-100 text-blue-700",
   "Health Insurance": "bg-emerald-100 text-emerald-700",
-  "Motor Insurance":  "bg-orange-100 text-orange-700",
-  "Life Insurance":   "bg-violet-100 text-violet-700",
-  "Guides":           "bg-gray-100 text-gray-700",
+  "Motor Insurance": "bg-orange-100 text-orange-700",
+  "Life Insurance": "bg-violet-100 text-violet-700",
+  "Car Insurance": "bg-sky-100 text-sky-700",
+  "Two Wheeler Insurance": "bg-amber-100 text-amber-700",
+  "Family Health Insurance": "bg-teal-100 text-teal-700",
+  "Group Health Insurance": "bg-cyan-100 text-cyan-700",
+  "Travel Insurance": "bg-yellow-100 text-yellow-700",
+  "Home Insurance": "bg-rose-100 text-rose-700",
+  "Term Insurance for Women": "bg-pink-100 text-pink-700",
+  "Return of Premium Term Plans": "bg-indigo-100 text-indigo-700",
+  "Guaranteed Return Plans": "bg-green-100 text-green-700",
+  "Child Savings Plans": "bg-fuchsia-100 text-fuchsia-700",
+  "Retirement Plans": "bg-purple-100 text-purple-700",
+  "Guides": "bg-gray-100 text-gray-700",
 };
 
 const catBar: Record<string, string> = {
-  "Term Insurance":   "from-blue-500 to-indigo-500",
+  "Term Insurance": "from-blue-500 to-indigo-500",
   "Health Insurance": "from-emerald-500 to-teal-500",
-  "Motor Insurance":  "from-orange-500 to-amber-500",
-  "Life Insurance":   "from-violet-500 to-purple-500",
-  "Guides":           "from-gray-400 to-gray-500",
+  "Motor Insurance": "from-orange-500 to-amber-500",
+  "Life Insurance": "from-violet-500 to-purple-500",
+  "Car Insurance": "from-sky-500 to-blue-500",
+  "Two Wheeler Insurance": "from-amber-500 to-orange-500",
+  "Family Health Insurance": "from-teal-500 to-emerald-500",
+  "Group Health Insurance": "from-cyan-500 to-blue-500",
+  "Travel Insurance": "from-yellow-500 to-amber-500",
+  "Home Insurance": "from-rose-500 to-pink-500",
+  "Term Insurance for Women": "from-pink-500 to-rose-500",
+  "Return of Premium Term Plans": "from-indigo-500 to-violet-500",
+  "Guaranteed Return Plans": "from-green-500 to-emerald-500",
+  "Child Savings Plans": "from-fuchsia-500 to-purple-500",
+  "Retirement Plans": "from-purple-500 to-indigo-500",
+  "Guides": "from-gray-400 to-gray-500",
 };
 
 // ── fallback post data (used when DB is unreachable / returns nothing) ───────
@@ -288,14 +310,14 @@ type Post = (typeof fallbackPosts)[0];
 async function getPost(slug: string): Promise<Post | null> {
   try {
     const p = await db.blogPost.findUnique({ where: { slug } });
-    if (p?.publishedAt) {
+    if (p) {
       return {
         id: p.id,
         slug: p.slug,
         title: p.title,
         excerpt: p.excerpt ?? "",
         category: p.category ?? "Guides",
-        publishedAt: p.publishedAt,
+        publishedAt: p.publishedAt ?? p.createdAt,
         author: p.author ?? "InsurancePortal Team",
         bodyHtml: p.bodyHtml,
       } as Post;
@@ -324,12 +346,17 @@ async function getRelated(category: string, currentSlug: string): Promise<Post[]
     .slice(0, 3);
 }
 
+interface Props {
+  params: Promise<{ slug: string }>;
+}
+
 // ── metadata ─────────────────────────────────────────────────────────────────
 
 export async function generateMetadata(
-  { params }: { params: { slug: string } }
+  { params }: Props
 ): Promise<Metadata> {
-  const post = await getPost(params.slug);
+  const { slug } = await params;
+  const post = await getPost(slug);
   if (!post) return { title: "Post Not Found | InsurancePortal" };
   return {
     title: `${post.title} | InsurancePortal Blog`,
@@ -339,8 +366,9 @@ export async function generateMetadata(
 
 // ── page ─────────────────────────────────────────────────────────────────────
 
-export default async function BlogPostPage({ params }: { params: { slug: string } }) {
-  const post = await getPost(params.slug);
+export default async function BlogPostPage({ params }: Props) {
+  const { slug } = await params;
+  const post = await getPost(slug);
   if (!post) notFound();
 
   const related = await getRelated(post.category, post.slug);

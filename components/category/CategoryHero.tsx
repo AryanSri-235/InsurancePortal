@@ -69,7 +69,7 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
   return (
     <section className="bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/60">
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-16 lg:pt-16 lg:pb-20">
-        <div className="grid lg:grid-cols-2 gap-14 items-start">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start">
 
           {/* ── Left copy ── */}
           <div>
@@ -114,31 +114,19 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
             </p>
 
             {/* Trust badges */}
-            <div className="flex flex-wrap gap-2 mb-8">
+            <div className="flex flex-col gap-3.5 mb-8">
               {config.trustBadges.map((badge, i) => {
                 const text = typeof badge === "string" ? badge : ((badge as Record<string, string>).label ?? (badge as Record<string, string>).text ?? "");
                 return (
-                  <span key={i} className="inline-flex items-center gap-1.5 bg-white border border-gray-200 shadow-sm rounded-full px-3 py-1.5 text-xs font-semibold text-gray-700">
-                    <svg className="w-3.5 h-3.5 text-emerald-500 shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
-                      <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                    </svg>
-                    {text}
-                  </span>
-                );
-              })}
-            </div>
-
-            {/* Highlight stat cards */}
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-              {config.highlights.slice(0, 4).map((h, i) => {
-                const icon  = typeof h === "string" ? "" : ((h as Record<string, string>).icon ?? "");
-                const value = typeof h === "string" ? h  : ((h as Record<string, string>).value ?? (h as Record<string, string>).title ?? "");
-                const label = typeof h === "string" ? "" : ((h as Record<string, string>).label ?? (h as Record<string, string>).description ?? "");
-                return (
-                  <div key={i} className="bg-white rounded-2xl border border-gray-100 shadow-sm p-4 text-center">
-                    {icon && <div className="text-2xl mb-1.5">{icon}</div>}
-                    <div className="font-bold text-sm text-gray-900 leading-tight">{value}</div>
-                    {label && <div className="text-gray-400 text-xs mt-0.5">{label}</div>}
+                  <div key={i} className="flex items-center gap-3">
+                    <div className="w-6 h-6 rounded-full bg-blue-50 border border-blue-200 flex items-center justify-center shrink-0 shadow-sm">
+                      <svg className="w-3.5 h-3.5 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
+                        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                      </svg>
+                    </div>
+                    <span className="text-gray-700 text-base font-semibold">
+                      {text}
+                    </span>
                   </div>
                 );
               })}

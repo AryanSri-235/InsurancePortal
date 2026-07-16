@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useState } from "react";
 import Link from "next/link";
@@ -18,6 +18,10 @@ import {
   ExternalLink,
   LogOut,
   Menu,
+  FileText,
+  ChevronLeft,
+  ChevronRight,
+  MessageSquare,
 } from "lucide-react";
 
 const allNavGroups = [
@@ -60,6 +64,11 @@ const allNavGroups = [
         label: "Newsletter",
         icon: <Bell className="w-4 h-4" />,
       },
+      {
+        href: "/admin/reviews",
+        label: "Customer Reviews",
+        icon: <MessageSquare className="w-4 h-4" />,
+      },
     ],
   },
   {
@@ -95,6 +104,11 @@ const allNavGroups = [
         label: "Policies",
         icon: <Shield className="w-4 h-4" />,
       },
+      {
+        href: "/admin/blog",
+        label: "Blog Posts",
+        icon: <FileText className="w-4 h-4" />,
+      },
     ],
   },
 ];
@@ -120,6 +134,7 @@ interface Props {
 
 export default function AdminShell({ children, session }: Props) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
   const navGroups = getNavGroups(session.role);
@@ -134,29 +149,46 @@ export default function AdminShell({ children, session }: Props) {
     setSidebarOpen(false);
   }
 
-  const sidebarContent = (
+  const renderSidebarContent = (collapsed: boolean) => (
     <>
       {/* Logo */}
-      <div className="px-4 py-5 border-b border-slate-800/60 flex items-center justify-between">
-        <Link href="/admin/dashboard" onClick={closeSidebar} className="flex items-center gap-2 group">
-          <img src="/logo-dark-zoomed.png" alt="NPS Insurance.in" className="h-20 w-auto object-contain group-hover:opacity-90 transition-opacity" />
-          <p className="text-slate-500 text-[10px] font-medium">Admin Panel</p>
+      <div className={`px-4 py-5 border-b border-slate-800/60 flex items-center justify-between gap-2 ${collapsed ? "flex-col justify-center gap-3" : ""}`}>
+        <Link href="/admin/dashboard" onClick={closeSidebar} className="flex items-center gap-2 group justify-center">
+          {collapsed ? (
+            <span className="w-8 h-8 rounded-lg bg-blue-600 flex items-center justify-center text-white font-bold text-sm shadow-md">N</span>
+          ) : (
+            <img src="/logo-dark-zoomed.png" alt="NPS Insurance.in" className="h-20 w-auto object-contain group-hover:opacity-90 transition-opacity" />
+          )}
         </Link>
-        {/* Close button — mobile only */}
+        {/* Desktop Collapse/Expand Toggle — hidden on mobile */}
         <button
-          onClick={closeSidebar}
-          className="md:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
-          aria-label="Close menu"
+          onClick={() => setIsCollapsed(!isCollapsed)}
+          className="hidden md:flex w-7 h-7 rounded-full bg-blue-600 hover:bg-blue-500 text-white items-center justify-center cursor-pointer shadow-md shadow-black/30 hover:scale-110 transition-all duration-200 focus:outline-none flex-shrink-0 border border-blue-400/20"
+          title={collapsed ? "Expand Sidebar" : "Collapse Sidebar"}
         >
-          <X className="w-5 h-5" />
+          {collapsed ? <ChevronRight className="w-4 h-4" /> : <ChevronLeft className="w-4 h-4" />}
         </button>
+        {/* Close button — mobile only */}
+        {!collapsed && (
+          <button
+            onClick={closeSidebar}
+            className="md:hidden text-slate-400 hover:text-white p-1 rounded-lg hover:bg-slate-800 transition-colors"
+            aria-label="Close menu"
+          >
+            <X className="w-5 h-5" />
+          </button>
+        )}
       </div>
 
       {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-5 overflow-y-auto">
+      <nav className="flex-1 px-3 py-4 space-y-5 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {navGroups.map((group) => (
           <div key={group.label}>
-            <p className="text-slate-500 text-[10px] font-semibold uppercase tracking-widest px-2 mb-1.5">{group.label}</p>
+            {!collapsed ? (
+              <p className="text-slate-500 text-[10px] font-semibold uppercase tracking-widest px-2 mb-1.5">{group.label}</p>
+            ) : (
+              <div className="h-px bg-slate-800/40 my-3" />
+            )}
             <div className="space-y-0.5">
               {group.items.map((item) => {
                 const active = pathname.startsWith(item.href);
@@ -165,17 +197,18 @@ export default function AdminShell({ children, session }: Props) {
                     key={item.href}
                     href={item.href}
                     onClick={closeSidebar}
-                    className={`flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group ${
+                    className={`flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-sm font-medium transition-all duration-150 group relative ${
                       active
                         ? "bg-blue-600 text-white shadow-md shadow-blue-900/30"
                         : "text-slate-400 hover:text-white hover:bg-slate-800"
-                    }`}
+                    } ${collapsed ? "justify-center" : ""}`}
+                    title={collapsed ? item.label : undefined}
                   >
                     <span className={`transition-colors flex-shrink-0 ${active ? "text-white" : "text-slate-500 group-hover:text-slate-300"}`}>
                       {item.icon}
                     </span>
-                    <span className="flex-1">{item.label}</span>
-                    {"badge" in item && item.badge && (
+                    {!collapsed && <span className="flex-1">{item.label}</span>}
+                    {!collapsed && "badge" in item && item.badge && (
                       <span className="text-[10px] font-bold bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded-full border border-blue-500/30">
                         {item.badge}
                       </span>
@@ -194,17 +227,19 @@ export default function AdminShell({ children, session }: Props) {
           href="/"
           target="_blank"
           onClick={closeSidebar}
-          className="flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-colors"
+          className={`flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-sm text-slate-400 hover:text-white hover:bg-slate-800 transition-colors ${collapsed ? "justify-center" : ""}`}
+          title={collapsed ? "View Live Site" : undefined}
         >
           <ExternalLink className="w-4 h-4 flex-shrink-0" />
-          View Live Site
+          {!collapsed && <span>View Live Site</span>}
         </Link>
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-sm text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors"
+          className={`w-full flex items-center gap-2.5 px-2.5 py-2.5 rounded-lg text-sm text-slate-400 hover:text-red-400 hover:bg-red-500/10 transition-colors ${collapsed ? "justify-center" : ""}`}
+          title={collapsed ? "Logout" : undefined}
         >
           <LogOut className="w-4 h-4 flex-shrink-0" />
-          Logout
+          {!collapsed && <span>Logout</span>}
         </button>
       </div>
     </>
@@ -214,8 +249,8 @@ export default function AdminShell({ children, session }: Props) {
     <div className="flex min-h-screen bg-slate-100">
 
       {/* ── Desktop sidebar (always visible) ── */}
-      <aside className="hidden md:flex w-56 h-screen sticky top-0 bg-slate-900 flex-col flex-shrink-0 overflow-hidden">
-        {sidebarContent}
+      <aside className={`hidden md:flex h-screen sticky top-0 bg-slate-900 flex-col flex-shrink-0 overflow-hidden transition-all duration-300 ${isCollapsed ? "w-16" : "w-56"}`}>
+        {renderSidebarContent(isCollapsed)}
       </aside>
 
       {/* ── Mobile drawer overlay ── */}
@@ -232,7 +267,7 @@ export default function AdminShell({ children, session }: Props) {
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        {sidebarContent}
+        {renderSidebarContent(false)}
       </aside>
 
       {/* ── Main content area ── */}

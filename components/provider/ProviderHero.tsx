@@ -1,7 +1,6 @@
 import { Provider } from "@prisma/client";
 import Link from "next/link";
 import { categoryLabel } from "@/lib/utils";
-import { Download } from "lucide-react";
 
 interface Props {
   provider: Provider;
@@ -148,19 +147,12 @@ export default function ProviderHero({ provider, category, policyCount }: Props)
           >
             View All Plans
           </a>
-          <a
-            href="#quote"
+          <Link
+            href="/"
             className="border-2 border-blue-200 text-blue-600 bg-blue-50 px-6 py-3 rounded-xl font-bold hover:bg-blue-100 transition-colors"
           >
             Get Quote
-          </a>
-          <a
-            href={(provider as Record<string, unknown>).brochureUrl as string ?? "#"}
-            className="border-2 border-gray-200 text-gray-600 px-6 py-3 rounded-xl font-medium hover:border-gray-300 transition-colors flex items-center gap-2"
-          >
-            <Download className="w-4 h-4" />
-            Download Brochure
-          </a>
+          </Link>
         </div>
       </div>
     </section>

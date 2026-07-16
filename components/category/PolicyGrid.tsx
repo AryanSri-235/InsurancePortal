@@ -20,12 +20,12 @@ const CAT: Record<string, {
     avatarBg: "bg-blue-50 border-blue-200", avatarText: "text-blue-600",
   },
   health: {
-    bar: "from-green-500 to-green-600",
-    providerPill: "bg-green-50 text-green-700 border border-green-100",
-    border: "hover:border-green-200 hover:shadow-green-100/80",
-    shadow: "shadow-green-100",
-    btnFrom: "from-green-600", btnTo: "to-green-700", btnShadow: "shadow-green-200",
-    avatarBg: "bg-green-50 border-green-200", avatarText: "text-green-600",
+    bar: "from-blue-500 to-blue-600",
+    providerPill: "bg-blue-50 text-blue-700 border border-blue-100",
+    border: "hover:border-blue-200 hover:shadow-blue-100/80",
+    shadow: "shadow-blue-100",
+    btnFrom: "from-blue-600", btnTo: "to-blue-700", btnShadow: "shadow-blue-200",
+    avatarBg: "bg-blue-50 border-blue-200", avatarText: "text-blue-600",
   },
   motor: {
     bar: "from-blue-500 to-blue-600",
@@ -106,9 +106,9 @@ export default function PolicyGrid({ policies, category }: { policies: PolicyWit
                 </div>
               )}
               {policy.provider.claimSettlementRatio && (
-                <div className="bg-green-50 border-2 border-green-100 rounded-2xl p-3">
+                <div className={`border-2 rounded-2xl p-3 ${c.avatarBg}`}>
                   <p className="text-xs text-gray-400 mb-1">Claim Ratio</p>
-                  <p className="text-sm font-black text-green-700">{policy.provider.claimSettlementRatio}%</p>
+                  <p className={`text-sm font-black ${c.avatarText}`}>{policy.provider.claimSettlementRatio}%</p>
                 </div>
               )}
               {policy.eligibilityAge && (
@@ -124,8 +124,8 @@ export default function PolicyGrid({ policies, category }: { policies: PolicyWit
               <ul className="space-y-2 mb-6 flex-1">
                 {policy.keyBenefits.slice(0, 3).map((b, idx) => (
                   <li key={idx} className="flex items-start gap-2.5 text-xs text-gray-600">
-                    <div className="w-4 h-4 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
-                      <Check className="w-2.5 h-2.5 text-green-600" />
+                    <div className={`w-4 h-4 rounded-full ${c.avatarBg} flex items-center justify-center flex-shrink-0 mt-0.5`}>
+                      <Check className={`w-2.5 h-2.5 ${c.avatarText}`} />
                     </div>
                     {b}
                   </li>

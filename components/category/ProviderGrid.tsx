@@ -12,14 +12,14 @@ interface Props {
 
 const CAT_ACCENT: Record<string, { border: string; avatarBg: string; avatarText: string; statBg: string; statText: string; btnFrom: string; btnTo: string; shadow: string }> = {
   term:   { border: "hover:border-blue-200 hover:shadow-blue-100/80",   avatarBg: "bg-blue-50 border-blue-100",   avatarText: "text-blue-600",  statBg: "bg-blue-50 border-blue-100",  statText: "text-blue-700",  btnFrom: "from-blue-600",  btnTo: "to-blue-700",  shadow: "shadow-blue-200"  },
-  health: { border: "hover:border-green-200 hover:shadow-green-100/80", avatarBg: "bg-green-50 border-green-100", avatarText: "text-green-600", statBg: "bg-green-50 border-green-100", statText: "text-green-700", btnFrom: "from-green-600", btnTo: "to-green-700", shadow: "shadow-green-200" },
+  health: { border: "hover:border-blue-200 hover:shadow-blue-100/80",   avatarBg: "bg-blue-50 border-blue-100",   avatarText: "text-blue-600",  statBg: "bg-blue-50 border-blue-100",  statText: "text-blue-700",  btnFrom: "from-blue-600",  btnTo: "to-blue-700",  shadow: "shadow-blue-200"  },
   motor:  { border: "hover:border-blue-200 hover:shadow-blue-100/80",   avatarBg: "bg-blue-50 border-blue-100",   avatarText: "text-blue-600",  statBg: "bg-blue-50 border-blue-100",  statText: "text-blue-700",  btnFrom: "from-blue-600",  btnTo: "to-blue-700",  shadow: "shadow-blue-200"  },
   life:   { border: "hover:border-green-200 hover:shadow-green-100/80", avatarBg: "bg-green-50 border-green-100", avatarText: "text-green-600", statBg: "bg-green-50 border-green-100", statText: "text-green-700", btnFrom: "from-green-600", btnTo: "to-green-700", shadow: "shadow-green-200" },
 };
 
 const BAR_GRAD: Record<string, string> = {
   term:   "from-blue-500 to-blue-600",
-  health: "from-green-500 to-green-600",
+  health: "from-blue-500 to-blue-600",
   motor:  "from-blue-500 to-blue-600",
   life:   "from-green-500 to-green-600",
 };
@@ -178,9 +178,9 @@ export default function ProviderGrid({ providers, category }: Props) {
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-3 mb-5">
                   {p.claimSettlementRatio && (
-                    <div className="bg-green-50 border-2 border-green-100 rounded-2xl p-3">
+                    <div className={`border-2 rounded-2xl p-3 ${accent.statBg}`}>
                       <p className="text-xs text-gray-400 mb-1">Claim Ratio</p>
-                      <p className="text-base font-black text-green-700">{p.claimSettlementRatio}%</p>
+                      <p className={`text-base font-black ${accent.statText}`}>{p.claimSettlementRatio}%</p>
                     </div>
                   )}
                   {p.solvencyRatio && (

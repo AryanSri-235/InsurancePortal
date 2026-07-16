@@ -1,20 +1,11 @@
 import type { Metadata } from "next";
 import { db } from "@/lib/db";
 import NewsletterForm from "@/components/NewsletterForm";
+import BlogListClient from "@/components/blog/BlogListClient";
 
 export const metadata: Metadata = {
   title: "Insurance Blog | InsurancePortal",
   description: "Expert tips, guides and news on term, health, life and motor insurance in India.",
-};
-
-const categories = ["All", "Term Insurance", "Health Insurance", "Motor Insurance", "Life Insurance", "Guides"];
-
-const catColors: Record<string, string> = {
-  "Term Insurance": "bg-blue-100 text-blue-700",
-  "Health Insurance": "bg-emerald-100 text-emerald-700",
-  "Motor Insurance": "bg-orange-100 text-orange-700",
-  "Life Insurance": "bg-violet-100 text-violet-700",
-  "Guides": "bg-gray-100 text-gray-700",
 };
 
 const fallbackPosts = [
@@ -26,20 +17,36 @@ const fallbackPosts = [
   { id: 6, slug: "claim-settlement-ratio", title: "Claim Settlement Ratio: What It Means and Why It Matters", excerpt: "The most important number when comparing insurers — yet most people ignore it. Here's what a 'good' ratio looks like.", category: "Guides", publishedAt: new Date("2026-04-01"), author: "Rajesh Mehta" },
 ];
 
-const catBar: Record<string, string> = {
-  "Term Insurance": "from-blue-500 to-indigo-500",
-  "Health Insurance": "from-emerald-500 to-teal-500",
-  "Motor Insurance": "from-orange-500 to-amber-500",
-  "Life Insurance": "from-violet-500 to-purple-500",
-  "Guides": "from-gray-400 to-gray-500",
-};
-
 export default async function BlogPage() {
-  let posts = fallbackPosts;
+  let posts: any[] = [];
   try {
-    const dbPosts = await db.blogPost.findMany({ where: { publishedAt: { not: null } }, orderBy: { publishedAt: "desc" }, take: 12 });
-    if (dbPosts.length > 0) posts = dbPosts as typeof fallbackPosts;
-  } catch {}
+    posts = await db.blogPost.findMany({
+      where: { isPublished: true },
+      orderBy: { publishedAt: "desc" },
+    });
+  } catch (e) {
+    console.error("Failed to fetch blog posts:", e);
+  }
+
+  const serializedPosts = posts.map(p => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt,
+    category: p.category,
+    publishedAt: p.publishedAt ? p.publishedAt.toISOString() : null,
+    author: p.author,
+  }));
+
+  const serializedFallback = fallbackPosts.map(p => ({
+    id: p.id,
+    slug: p.slug,
+    title: p.title,
+    excerpt: p.excerpt,
+    category: p.category,
+    publishedAt: p.publishedAt.toISOString(),
+    author: p.author,
+  }));
 
   return (
     <div className="bg-white">
@@ -56,52 +63,9 @@ export default async function BlogPage() {
         </div>
       </section>
 
+      {/* Interactive Posts Grid with Client Filter */}
       <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Category filter */}
-          <div className="flex flex-wrap gap-2 mb-12 justify-center">
-            {categories.map((cat) => (
-              <span key={cat}
-                className={`px-5 py-2 rounded-full text-sm font-bold border-2 transition-all duration-200 cursor-default ${
-                  cat === "All"
-                    ? "bg-gradient-to-r from-blue-600 to-indigo-600 text-white border-transparent shadow-lg shadow-blue-200"
-                    : "bg-white border-gray-100 text-gray-600"
-                }`}>
-                {cat}
-              </span>
-            ))}
-          </div>
-
-          {/* Posts grid */}
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-5">
-            {posts.map((post, i) => (
-              <div
-                key={post.id}
-                style={{ animationDelay: `${i * 0.07}s` }}
-                className="animate-fade-in-up bg-white border-2 border-gray-100 rounded-3xl overflow-hidden flex flex-col hover:border-blue-100 hover:shadow-2xl hover:shadow-blue-50/80 hover:-translate-y-1.5 transition-all duration-300"
-              >
-                {/* Colour bar */}
-                <div className={`h-1.5 bg-gradient-to-r ${catBar[post.category] ?? "from-blue-500 to-indigo-500"}`} />
-
-                <div className="p-7 flex flex-col flex-1">
-                  <span className={`self-start text-xs font-bold px-3 py-1 rounded-full mb-5 ${catColors[post.category] ?? "bg-gray-100 text-gray-600"}`}>
-                    {post.category}
-                  </span>
-                  <h2 className="font-black text-gray-900 text-xl leading-snug mb-3">
-                    {post.title}
-                  </h2>
-                  <p className="text-sm text-gray-500 leading-relaxed flex-1">{post.excerpt}</p>
-                  <div className="mt-6 pt-5 border-t border-gray-100 flex items-center justify-between">
-                    <div>
-                      <p className="text-xs font-bold text-gray-700">{post.author}</p>
-                      <p className="text-xs text-gray-400">{new Date(post.publishedAt!).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</p>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <BlogListClient initialPosts={serializedPosts} fallbackPosts={serializedFallback} />
       </section>
 
       {/* Newsletter CTA */}

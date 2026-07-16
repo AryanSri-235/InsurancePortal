@@ -82,7 +82,7 @@ export default async function CategoryPage({ config }: Props) {
             <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">Compare Insurers</p>
             <h2 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">
               Top{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-green-600 bg-clip-text text-transparent">
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
                 {config.label} Providers
               </span>
             </h2>

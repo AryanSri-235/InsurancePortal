@@ -7,11 +7,13 @@ export const PAGE_ACCESS: Record<string, AdminRole[]> = {
   "due-dates":        ["superadmin", "renewal"],
   "contact-messages": ["superadmin"],
   newsletter:         ["superadmin"],
+  reviews:            ["superadmin"],
   policies:           ["superadmin", "ram"],
   "registered-users": ["superadmin"],
   "user-lookup":      ["superadmin"],
   "users":            ["superadmin"],
   "providers":        ["superadmin", "ram"],
+  blog:               ["superadmin"],
 };
 
 export function canAccess(role: string, page: string): boolean {
