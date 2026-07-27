@@ -65,7 +65,7 @@ export default function FaqSection({ faqs }: { faqs: Faq[] }) {
           <div className="absolute inset-0 opacity-[0.08]" style={{ backgroundImage: "radial-gradient(circle, white 1px, transparent 1px)", backgroundSize: "20px 20px" }} />
           <div className="relative p-8 text-center text-white">
             <p className="text-xl font-bold mb-1">Still have questions?</p>
-            <p className="text-blue-100 text-sm mb-6">Our experts are available Mon–Sat, 9 AM – 7 PM</p>
+            <p className="text-blue-100 text-sm mb-6">Our experts are available 24×7</p>
             <a
               href="tel:+918076175709"
               className="inline-flex items-center gap-2 bg-white text-blue-700 font-bold px-7 py-3.5 rounded-2xl text-sm hover:bg-blue-50 transition-colors shadow-xl"

@@ -88,7 +88,7 @@ export default function LeadPopup() {
 
             <div className="mt-4 flex items-center gap-2 text-xs text-gray-400 justify-center">
               <ShieldCheck className="w-3.5 h-3.5 text-blue-600 flex-shrink-0" />
-              256-bit SSL · IRDAI Registered · No spam
+              IRDAI Registered · No spam
             </div>
           </div>
         </div>

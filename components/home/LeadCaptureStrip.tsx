@@ -133,7 +133,7 @@ export default function LeadCaptureStrip() {
           </div>
 
           <div className="flex flex-wrap justify-center gap-x-6 gap-y-1 mt-5 text-blue-200 text-xs">
-            {["100% Free", "No Spam Calls", "IRDAI Registered", "256-bit SSL Secure"].map((t) => (
+            {["100% Free", "No Spam Calls", "IRDAI Registered"].map((t) => (
               <span key={t} className="flex items-center gap-1.5">
                 <CheckCircle className="w-3.5 h-3.5 text-emerald-400" />
                 {t}

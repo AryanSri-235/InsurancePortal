@@ -1,64 +1,81 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { type LucideIcon, SmilePlus, Handshake, ClipboardList, BadgeCheck, Target, Lock, Phone, Award, Shield } from "lucide-react";
+import { type LucideIcon, Award, Users, ClipboardList, Handshake, Target, Phone, BadgeCheck, Shield, Star, HeartHandshake, Clock, LifeBuoy } from "lucide-react";
 
 export const metadata: Metadata = {
-  title: "About Us | InsurancePortal",
-  description: "Learn about InsurancePortal — India's trusted IRDAI-registered insurance comparison platform.",
+  title: "About Us | NPS Insurance Solutions",
+  description: "NPS Insurance Solutions — founded and led by Neeraj Pratap Singh with 35+ years of experience in the insurance industry. Trusted by thousands of Indian families.",
 };
 
 const stats: { value: string; label: string; icon: LucideIcon; bg: string; color: string }[] = [
-  { value: "1L+", label: "Happy Customers", icon: SmilePlus, bg: "bg-blue-50 border-blue-100", color: "text-blue-600" },
-  { value: "50+", label: "Insurance Partners", icon: Handshake, bg: "bg-indigo-50 border-indigo-100", color: "text-indigo-600" },
-  { value: "200+", label: "Plans Available", icon: ClipboardList, bg: "bg-emerald-50 border-emerald-100", color: "text-emerald-600" },
-  { value: "99%", label: "Claim Support Rate", icon: BadgeCheck, bg: "bg-violet-50 border-violet-100", color: "text-violet-600" },
+  { value: "35+", label: "Years of Experience", icon: Award,         bg: "bg-blue-50 border-blue-100",    color: "text-blue-600" },
+  { value: "50+", label: "Insurance Partners",  icon: Handshake,     bg: "bg-indigo-50 border-indigo-100", color: "text-indigo-600" },
+  { value: "6+",  label: "Insurance Types",     icon: ClipboardList, bg: "bg-emerald-50 border-emerald-100", color: "text-emerald-600" },
+  { value: "100%",label: "Claim Support",       icon: BadgeCheck,    bg: "bg-violet-50 border-violet-100", color: "text-violet-600" },
 ];
 
-const values: { icon: LucideIcon; title: string; desc: string; from: string; to: string; accent: string; iconBg: string }[] = [
-  { icon: Target, title: "Truly Unbiased", desc: "We never push a plan for commission. Our only goal is your best interest.", from: "#3b82f6", to: "#6366f1", accent: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80", iconBg: "bg-blue-50" },
-  { icon: Lock, title: "Privacy First", desc: "Your data is never sold. 256-bit encryption on every interaction.", from: "#10b981", to: "#14b8a6", accent: "border-emerald-200 hover:border-emerald-300 hover:shadow-emerald-100/80", iconBg: "bg-emerald-50" },
-  { icon: Phone, title: "Always There", desc: "Expert advisors available Mon–Sat 9 AM–7 PM. Claim support 24×7.", from: "#f97316", to: "#f59e0b", accent: "border-orange-200 hover:border-orange-300 hover:shadow-orange-100/80", iconBg: "bg-orange-50" },
-  { icon: Award, title: "IRDAI Compliant", desc: "Fully licensed IRDAI Web Aggregator. Every recommendation is regulation-compliant.", from: "#8b5cf6", to: "#a855f7", accent: "border-violet-200 hover:border-violet-300 hover:shadow-violet-100/80", iconBg: "bg-violet-50" },
-];
-
-const team = [
-  { name: "Rajesh Mehta", role: "CEO & Co-Founder", avatar: "RM", color: "from-blue-500 to-indigo-600" },
-  { name: "Priya Sharma", role: "Head of Advisory", avatar: "PS", color: "from-emerald-500 to-teal-600" },
-  { name: "Amit Verma", role: "CTO", avatar: "AV", color: "from-violet-500 to-purple-600" },
-  { name: "Sunita Patel", role: "Customer Experience", avatar: "SP", color: "from-rose-500 to-pink-600" },
-];
-
-const milestones = [
-  { year: "2020", event: "Founded in Mumbai with a mission to simplify insurance" },
-  { year: "2021", event: "IRDAI Web Aggregator license obtained (WBA000000)" },
-  { year: "2022", event: "Crossed 10,000 happy customers and 20 insurance partners" },
-  { year: "2023", event: "Launched 24×7 claim support and expanded to motor insurance" },
-  { year: "2024", event: "Crossed 50,000 customers. Introduced health family floater comparison" },
-  { year: "2026", event: "1 lakh+ customers. 50+ partners. India's most trusted portal" },
+const whyChoose: { icon: LucideIcon; title: string; desc: string; from: string; to: string; accent: string; iconBg: string }[] = [
+  {
+    icon: Award,
+    title: "35+ Years of Proven Expertise",
+    desc: "Decades of hands-on experience navigating the insurance landscape, market changes, and evolving customer needs.",
+    from: "#3b82f6", to: "#6366f1", accent: "border-blue-200 hover:border-blue-300 hover:shadow-blue-100/80", iconBg: "bg-blue-50",
+  },
+  {
+    icon: Target,
+    title: "Personalized Guidance",
+    desc: "Every client receives tailored advice based on their unique life stage, financial goals, and risk profile.",
+    from: "#10b981", to: "#14b8a6", accent: "border-emerald-200 hover:border-emerald-300 hover:shadow-emerald-100/80", iconBg: "bg-emerald-50",
+  },
+  {
+    icon: ClipboardList,
+    title: "Comprehensive Solutions",
+    desc: "Life, health, motor, term plans, retirement and pension plans — all under one roof.",
+    from: "#f97316", to: "#f59e0b", accent: "border-orange-200 hover:border-orange-300 hover:shadow-orange-100/80", iconBg: "bg-orange-50",
+  },
+  {
+    icon: HeartHandshake,
+    title: "Client-First Approach",
+    desc: "Honest, transparent advice with no pressure, no hidden terms — just solutions that genuinely fit your needs.",
+    from: "#ec4899", to: "#f43f5e", accent: "border-pink-200 hover:border-pink-300 hover:shadow-pink-100/80", iconBg: "bg-pink-50",
+  },
+  {
+    icon: Clock,
+    title: "Long-Term Relationships",
+    desc: "Many clients have stayed with us for years — a testament to the trust built through consistent, reliable service.",
+    from: "#8b5cf6", to: "#a855f7", accent: "border-violet-200 hover:border-violet-300 hover:shadow-violet-100/80", iconBg: "bg-violet-50",
+  },
+  {
+    icon: LifeBuoy,
+    title: "End-to-End Support",
+    desc: "From policy selection to claims assistance, we stand by our clients at every step.",
+    from: "#0ea5e9", to: "#06b6d4", accent: "border-sky-200 hover:border-sky-300 hover:shadow-sky-100/80", iconBg: "bg-sky-50",
+  },
 ];
 
 export default function AboutPage() {
   return (
     <div className="bg-white">
-      {/* Hero */}
+
+      {/* ── Hero ── */}
       <section className="bg-gradient-to-br from-blue-50 via-white to-indigo-50 py-24 text-center relative overflow-hidden">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-40 pointer-events-none" />
         <div className="absolute -bottom-20 -left-20 w-72 h-72 bg-indigo-100 rounded-full blur-3xl opacity-40 pointer-events-none" />
         <div className="relative max-w-3xl mx-auto px-4">
           <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">About Us</p>
           <h1 className="text-5xl lg:text-6xl font-black text-gray-900 tracking-tight mb-5">
-            India&apos;s Most Trusted{" "}
+            NPS Insurance{" "}
             <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-              Insurance Platform
+              Solutions
             </span>
           </h1>
           <p className="text-gray-500 text-xl leading-relaxed max-w-2xl mx-auto">
-            We built InsurancePortal because buying insurance in India was broken — confusing, biased, and full of jargon. We fixed that.
+            Your Trusted Partner in Insurance, Backed by 35+ Years of Experience.
           </p>
         </div>
       </section>
 
-      {/* Stats */}
+      {/* ── Stats ── */}
       <section className="py-16 bg-white border-b border-gray-100">
         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -79,23 +96,23 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Story */}
+      {/* ── About NPS ── */}
       <section className="py-24 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">Our Story</p>
+              <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">About Us</p>
               <h2 className="text-4xl font-black text-gray-900 tracking-tight mb-5">
-                Started with a{" "}
+                A Legacy Built on{" "}
                 <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  simple question
+                  Trust
                 </span>
               </h2>
               <p className="text-gray-500 leading-relaxed mb-4">
-                In 2020, our founders tried to buy term insurance for their families and got lost in a maze of agents, jargon, and hidden fees. They spent weeks comparing plans manually — something that should take minutes.
+                NPS Insurance Solutions is founded and led by Neeraj Pratap Singh, a seasoned insurance professional with over 35 years of dedicated experience in the insurance industry. What began as a personal commitment to helping people protect what matters most has grown into a trusted name synonymous with reliability, integrity, and personalized service.
               </p>
               <p className="text-gray-500 leading-relaxed mb-6">
-                So they built InsurancePortal: a platform that compares 200+ plans from 50+ IRDAI-registered insurers in real-time, with zero bias and zero spam. Today, over 1 lakh Indians trust us to protect what matters most.
+                With decades spent understanding the evolving needs of individuals, families, and businesses, NPS Insurance Solutions has built a legacy rooted in trust, transparency, and long-term client relationships.
               </p>
               <Link href="/#lead-form" className="btn-shine inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-bold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg shadow-blue-200 hover:-translate-y-0.5">
                 Get Free Quote →
@@ -105,7 +122,7 @@ export default function AboutPage() {
               <Shield className="w-16 h-16 text-blue-600 mb-5 mx-auto" />
               <p className="text-2xl font-black text-gray-900 mb-2">IRDAI Registered</p>
               <p className="text-gray-500 text-sm mb-1">Web Aggregator License No.</p>
-              <p className="text-blue-600 font-bold">WBA000000</p>
+              <p className="text-blue-600 font-bold text-lg">0006012K</p>
               <div className="mt-5 pt-5 border-t border-blue-100 text-xs text-gray-400">
                 Regulated by the Insurance Regulatory and Development Authority of India
               </div>
@@ -114,19 +131,59 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Values */}
-      <section className="py-24 bg-gray-50 relative overflow-hidden">
+      {/* ── About Neeraj ── */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-2 gap-12 items-center">
+            {/* Avatar card */}
+            <div className="flex flex-col items-center text-center bg-white border-2 border-blue-100 rounded-3xl p-10 card-hover">
+              <div className="w-28 h-28 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-black text-3xl mb-5 shadow-xl shadow-blue-200">
+                NPS
+              </div>
+              <p className="text-2xl font-black text-gray-900 mb-1">Neeraj Pratap Singh</p>
+              <p className="text-blue-600 font-semibold text-sm mb-4">Founder &amp; Principal Advisor</p>
+              <div className="flex items-center gap-1.5 text-amber-500 mb-4">
+                {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-amber-400" />)}
+              </div>
+              <p className="text-gray-400 text-sm italic">&ldquo;Insurance isn&apos;t just a policy — it&apos;s a promise.&rdquo;</p>
+            </div>
+
+            {/* Bio */}
+            <div>
+              <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">Leadership</p>
+              <h2 className="text-4xl font-black text-gray-900 tracking-tight mb-5">
+                35+ Years of{" "}
+                <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
+                  Dedication
+                </span>
+              </h2>
+              <p className="text-gray-500 leading-relaxed mb-4">
+                With a career spanning more than three and a half decades in the insurance sector, Neeraj Pratap Singh has guided thousands of clients through some of life&apos;s most important financial decisions — from securing their family&apos;s future to safeguarding their assets and investments.
+              </p>
+              <p className="text-gray-500 leading-relaxed mb-4">
+                His deep industry knowledge, combined with a genuine commitment to client welfare, has made him a trusted advisor across generations of policyholders.
+              </p>
+              <p className="text-gray-500 leading-relaxed">
+                His philosophy is simple: insurance isn&apos;t just a policy, it&apos;s a promise — and every recommendation is made with the client&apos;s best interest at heart.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Why Choose Us ── */}
+      <section className="py-24 bg-white relative overflow-hidden">
         <div className="absolute -top-40 -right-40 w-96 h-96 bg-blue-100 rounded-full blur-3xl opacity-40 pointer-events-none" />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">What We Stand For</p>
+            <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">Why Choose Us</p>
             <h2 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">
-              Our{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Values</span>
+              What Makes Us{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Different</span>
             </h2>
           </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {values.map((v, i) => {
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {whyChoose.map((v, i) => {
               const Icon = v.icon;
               return (
                 <div key={v.title} style={{ animationDelay: `${i * 0.08}s` }}
@@ -145,74 +202,54 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* Timeline */}
-      <section className="py-24 bg-white">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* ── Mission & Vision ── */}
+      <section className="py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">Journey</p>
+            <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">Our Purpose</p>
             <h2 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">
-              Our{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Milestones</span>
+              Mission &amp;{" "}
+              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">Vision</span>
             </h2>
           </div>
-          <div className="relative">
-            <div className="absolute left-8 top-0 bottom-0 w-px bg-gradient-to-b from-blue-200 via-indigo-200 to-transparent" />
-            <div className="space-y-6">
-              {milestones.map((m, i) => (
-                <div key={m.year} style={{ animationDelay: `${i * 0.1}s` }}
-                  className="animate-fade-in-up flex items-start gap-6 group">
-                  <div className="w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl flex items-center justify-center text-white font-black text-sm flex-shrink-0 shadow-lg shadow-blue-200 group-hover:scale-105 transition-transform duration-300 z-10">
-                    {m.year}
-                  </div>
-                  <div className="bg-white border-2 border-gray-100 rounded-2xl p-5 flex-1 group-hover:border-blue-100 group-hover:shadow-lg transition-all duration-300 mt-2">
-                    <p className="text-gray-700 text-sm leading-relaxed">{m.event}</p>
-                  </div>
-                </div>
-              ))}
+          <div className="grid md:grid-cols-2 gap-8">
+            <div className="bg-white border-2 border-blue-100 rounded-3xl p-10 card-hover">
+              <div className="w-14 h-14 rounded-2xl bg-blue-50 flex items-center justify-center mb-6">
+                <Target className="w-7 h-7 text-blue-600" />
+              </div>
+              <h3 className="text-2xl font-black text-gray-900 mb-4">Our Mission</h3>
+              <p className="text-gray-500 leading-relaxed">
+                To simplify insurance for every individual and family by offering honest guidance, dependable service, and solutions that provide real financial security — building on the trust earned over 35+ years in this industry.
+              </p>
+            </div>
+            <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-10 text-white card-hover">
+              <div className="w-14 h-14 rounded-2xl bg-white/20 flex items-center justify-center mb-6">
+                <Users className="w-7 h-7 text-white" />
+              </div>
+              <h3 className="text-2xl font-black mb-4">Our Vision</h3>
+              <p className="text-blue-100 leading-relaxed">
+                To be the most trusted insurance advisory name, known for putting people before policies and relationships before transactions.
+              </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Team */}
-      <section className="py-24 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16">
-            <p className="text-blue-600 text-sm font-semibold uppercase tracking-widest mb-3">The Team</p>
-            <h2 className="text-4xl lg:text-5xl font-black text-gray-900 tracking-tight">
-              People Behind{" "}
-              <span className="bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">the Portal</span>
-            </h2>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-            {team.map((t, i) => (
-              <div key={t.name} style={{ animationDelay: `${i * 0.08}s` }}
-                className="animate-fade-in-up group bg-white border-2 border-gray-100 rounded-3xl p-6 text-center hover:border-blue-100 hover:shadow-2xl hover:shadow-blue-50/80 hover:-translate-y-2 transition-all duration-300">
-                <div className={`w-16 h-16 mx-auto rounded-2xl bg-gradient-to-br ${t.color} flex items-center justify-center text-white font-black text-lg mb-4 group-hover:scale-110 transition-transform duration-300 shadow-md`}>
-                  {t.avatar}
-                </div>
-                <p className="font-bold text-gray-900 text-sm">{t.name}</p>
-                <p className="text-xs text-gray-400 mt-1">{t.role}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* CTA */}
+      {/* ── CTA ── */}
       <section className="py-24 bg-white">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="bg-gradient-to-br from-blue-600 to-indigo-700 rounded-3xl p-6 sm:p-8 lg:p-12 text-white text-center relative overflow-hidden">
             <div className="absolute top-0 right-0 w-64 h-64 bg-white/5 rounded-full blur-2xl pointer-events-none" />
-            <p className="text-blue-200 text-sm font-semibold uppercase tracking-widest mb-3">Start Today</p>
-            <h2 className="text-4xl font-black mb-3">Ready to find the right plan?</h2>
-            <p className="text-blue-100 mb-8 text-lg">Compare 200+ plans from 50+ insurers — free, in under 2 minutes.</p>
+            <p className="text-blue-200 text-sm font-semibold uppercase tracking-widest mb-3">Get Started</p>
+            <h2 className="text-4xl font-black mb-3">Ready to protect what matters?</h2>
+            <p className="text-blue-100 mb-8 text-lg">Talk to our expert advisor — free, honest guidance with no pressure.</p>
             <Link href="/#lead-form" className="bg-white text-blue-600 font-bold px-8 py-4 rounded-2xl hover:bg-blue-50 transition-colors duration-200 inline-block shadow-xl text-lg">
               Get Free Quote →
             </Link>
           </div>
         </div>
       </section>
+
     </div>
   );
 }

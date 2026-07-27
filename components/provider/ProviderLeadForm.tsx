@@ -101,7 +101,7 @@ export default function ProviderLeadForm({ providerName, category }: Props) {
 
       <div className="mt-5 pt-4 border-t border-gray-100 flex items-center gap-2 text-xs text-gray-400">
         <ShieldCheck className="w-4 h-4 text-green-500 flex-shrink-0" />
-        Your data is protected by 256-bit SSL encryption
+        Your data is safe & protected
       </div>
     </div>
   );

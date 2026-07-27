@@ -10,8 +10,6 @@ interface FormState {
   phone: string;
   age: string;
   gender: "Male" | "Female" | "";
-  income: string;
-  smoke: "Yes" | "No" | "";
 }
 
 // Map config accent to Tailwind badge classes (light bg, colored text/border)
@@ -29,7 +27,7 @@ const ACCENT_CLASSES: Record<string, { badge: string; dot: string; btn: string; 
 const FALLBACK = ACCENT_CLASSES.blue;
 
 export default function CategoryHero({ config }: { config: CategoryConfig }) {
-  const [form, setForm] = useState<FormState>({ name: "", phone: "", age: "", gender: "", income: "", smoke: "" });
+  const [form, setForm] = useState<FormState>({ name: "", phone: "", age: "", gender: "" });
   const [loading, setLoading] = useState(false);
 
   const accent = ACCENT_CLASSES[config.color.accent ?? "blue"] ?? FALLBACK;
@@ -48,7 +46,7 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
         body: JSON.stringify({ name: form.name, phone: form.phone, category: config.slug, leadType: "quote" }),
       });
       if (res.ok) {
-        setForm({ name: "", phone: "", age: "", gender: "", income: "", smoke: "" });
+        setForm({ name: "", phone: "", age: "", gender: "" });
         Swal.fire({
           icon: "success",
           title: "You're all set!",
@@ -153,51 +151,24 @@ export default function CategoryHero({ config }: { config: CategoryConfig }) {
                     className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-gray-50 transition-colors"
                   />
 
-                  <div className="grid grid-cols-2 gap-3">
-                    <input
-                      type="number"
-                      placeholder="Your age"
-                      min={18} max={75}
-                      value={form.age}
-                      onChange={(e) => setForm({ ...form, age: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-gray-50 transition-colors"
-                    />
-                    <select
-                      value={form.income}
-                      onChange={(e) => setForm({ ...form, income: e.target.value })}
-                      className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-gray-50 text-gray-700 transition-colors"
-                    >
-                      <option value="">Annual Income</option>
-                      <option value="lt3">{"< ₹3 LPA"}</option>
-                      <option value="3-5">₹3–5 LPA</option>
-                      <option value="5-10">₹5–10 LPA</option>
-                      <option value="10-25">₹10–25 LPA</option>
-                      <option value="25+">₹25 LPA+</option>
-                    </select>
-                  </div>
+                  <input
+                    type="number"
+                    placeholder="Your age"
+                    min={18} max={75}
+                    value={form.age}
+                    onChange={(e) => setForm({ ...form, age: e.target.value })}
+                    className="w-full border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-gray-50 transition-colors"
+                  />
 
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <p className="text-xs text-gray-500 font-semibold mb-2">Gender</p>
-                      <div className="flex gap-2">
-                        {(["Male", "Female"] as const).map((g) => (
-                          <button key={g} type="button" onClick={() => setForm({ ...form, gender: g })}
-                            className={`flex-1 border rounded-xl px-3 py-2.5 text-sm font-semibold transition-all ${form.gender === g ? "bg-blue-600 text-white border-blue-600" : "border-gray-200 text-gray-600 hover:border-gray-300 bg-gray-50"}`}>
-                            {g}
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div>
-                      <p className="text-xs text-gray-500 font-semibold mb-2">Tobacco / Smoke?</p>
-                      <div className="flex gap-2">
-                        {(["No", "Yes"] as const).map((s) => (
-                          <button key={s} type="button" onClick={() => setForm({ ...form, smoke: s })}
-                            className={`flex-1 border rounded-xl px-3 py-2.5 text-sm font-semibold transition-all ${form.smoke === s ? "bg-blue-600 text-white border-blue-600" : "border-gray-200 text-gray-600 hover:border-gray-300 bg-gray-50"}`}>
-                            {s}
-                          </button>
-                        ))}
-                      </div>
+                  <div>
+                    <p className="text-xs text-gray-500 font-semibold mb-2">Gender</p>
+                    <div className="flex gap-2">
+                      {(["Male", "Female"] as const).map((g) => (
+                        <button key={g} type="button" onClick={() => setForm({ ...form, gender: g })}
+                          className={`flex-1 border rounded-xl px-3 py-2.5 text-sm font-semibold transition-all ${form.gender === g ? "bg-blue-600 text-white border-blue-600" : "border-gray-200 text-gray-600 hover:border-gray-300 bg-gray-50"}`}>
+                          {g}
+                        </button>
+                      ))}
                     </div>
                   </div>
 

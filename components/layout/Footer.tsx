@@ -75,7 +75,6 @@ const socials = [
 ];
 
 const badges = [
-  { icon: Lock,       label: "256-bit SSL" },
   { icon: BadgeCheck, label: "IRDAI Registered" },
   { icon: Award,      label: "4.8★ Rated" },
   { icon: Users,      label: "1L+ Customers" },
@@ -257,7 +256,7 @@ export default function Footer() {
             &copy; 2026 InsurancePortal. All rights reserved.
           </p>
           <p className="text-xs text-gray-700 text-center max-w-lg order-1 md:order-2 leading-relaxed">
-            Insurance is the subject matter of solicitation. Please read the policy brochure carefully before concluding the sale. IRDAI Reg. No. WBA000000
+            Insurance is the subject matter of solicitation. Please read the policy brochure carefully before concluding the sale. IRDAI Reg. No. 0006012K
           </p>
           <div className="flex items-center gap-2 text-xs text-gray-600 order-3">
             <span className="flex items-center gap-1.5">

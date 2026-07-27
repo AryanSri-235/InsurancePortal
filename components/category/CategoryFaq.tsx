@@ -64,7 +64,7 @@ export default function CategoryFaq({ faqs, title }: { faqs: FaqItem[]; title: s
           <div className="absolute top-0 right-0 w-48 h-48 bg-white/5 rounded-full blur-2xl pointer-events-none" />
           <p className="text-blue-200 text-sm font-semibold uppercase tracking-widest mb-3">Still Unsure?</p>
           <h3 className="text-3xl font-black mb-3">Talk to an Expert — Free</h3>
-          <p className="text-blue-100 mb-7">Our certified advisors are available Mon–Sat, 9 AM – 7 PM.</p>
+          <p className="text-blue-100 mb-7">Our certified advisors are available 24×7.</p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <a href="tel:+918076175709" className="bg-white text-blue-600 font-bold px-6 py-3 rounded-2xl hover:bg-blue-50 transition-colors shadow-xl">
               <Phone className="w-4 h-4 inline-block align-text-bottom mr-1" />Call: +91 80761 75709

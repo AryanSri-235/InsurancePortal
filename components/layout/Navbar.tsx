@@ -77,7 +77,7 @@ const LEGAL_LINKS: NavLink[] = [
   { label: "Privacy Policy",     href: "/privacy-policy", icon: Lock,          desc: "How we handle your data" },
   { label: "Terms of Service",   href: "/terms",          icon: FileText,      desc: "Rules for using our platform" },
   { label: "Disclaimer",         href: "/disclaimer",     icon: AlertTriangle, desc: "Important disclosures" },
-  { label: "IRDAI Registration", href: "/irdai",          icon: Landmark,      desc: "Reg. No. WBA000000" },
+  { label: "IRDAI Registration", href: "/irdai",          icon: Landmark,      desc: "Reg. No. 0006012K" },
 ];
 
 type DropdownKey = "plans" | "company" | "legal" | null;
@@ -139,7 +139,7 @@ export default function Navbar() {
       <div className="bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-xs py-2 text-center font-medium hidden md:block">
         <span className="opacity-90">✦ Compare 200+ plans from 50+ top insurers &mdash; 100% Free, No Spam</span>
         <span className="mx-4 opacity-40">|</span>
-        <span className="opacity-90">☎ Expert helpline: <span className="font-bold">+91 80761 75709</span> &middot; Mon&ndash;Sat 9 AM&ndash;7 PM</span>
+        <span className="opacity-90">☎ Expert helpline: <span className="font-bold">+91 80761 75709</span> &middot; Available 24&times;7</span>
       </div>
 
       <header
@@ -295,7 +295,7 @@ export default function Navbar() {
                     );
                   })}
                   <div className="border-t border-gray-100 mt-1 pt-2 px-3 pb-1">
-                    <p className="text-[10px] text-gray-400">IRDAI Reg. No. WBA000000 &middot; &copy; 2026 InsurancePortal</p>
+                    <p className="text-[10px] text-gray-400">IRDAI Reg. No. 0006012K &middot; &copy; 2026 InsurancePortal</p>
                   </div>
                 </div>
               </div>

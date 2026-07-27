@@ -34,7 +34,7 @@ function getInitials(name: string) {
 
 const TIGHT_PADDING = new Set([
   "sbi-general", "royal-sundaram", "niva-bupa", "magma-general",
-  "galaxy-health", "manipal-cigna", "universal-sompo", "shriram-general", "liberty-general",
+  "galaxy-health", "shriram-general", "liberty-general",
 ]);
 
 function PartnerStrip({ partners }: { partners: Partner[] }) {
