@@ -77,7 +77,6 @@ const LEGAL_LINKS: NavLink[] = [
   { label: "Privacy Policy",     href: "/privacy-policy", icon: Lock,          desc: "How we handle your data" },
   { label: "Terms of Service",   href: "/terms",          icon: FileText,      desc: "Rules for using our platform" },
   { label: "Disclaimer",         href: "/disclaimer",     icon: AlertTriangle, desc: "Important disclosures" },
-  { label: "IRDAI Registration", href: "/irdai",          icon: Landmark,      desc: "Reg. No. 0006012K" },
 ];
 
 type DropdownKey = "plans" | "company" | "legal" | null;
