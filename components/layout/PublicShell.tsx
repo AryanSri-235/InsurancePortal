@@ -11,8 +11,7 @@ export default function PublicShell({ children }: { children: React.ReactNode })
   const isAuthOrPanel =
     pathname.startsWith("/account") ||
     pathname === "/login" ||
-    pathname === "/complete-profile" ||
-    pathname === "/forgot-password";
+    pathname === "/complete-profile";
 
   if (isAdmin || isAuthOrPanel) return <>{children}</>;
 
