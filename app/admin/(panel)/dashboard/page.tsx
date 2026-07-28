@@ -16,6 +16,8 @@ import {
   Mail,
   Calendar,
   ExternalLink,
+  RefreshCw,
+  CheckCircle2,
 } from "lucide-react";
 
 export const dynamic = "force-dynamic";
@@ -42,6 +44,9 @@ async function getStats() {
     dueDatesUpcoming,
     totalUsers,
     usersToday,
+    totalRenewed,
+    renewedThisMonth,
+    recentRenewals,
   ] = await Promise.all([
     safeCount(() => db.lead.count()),
     safeCount(() => db.lead.count({ where: { createdAt: { gte: startOfDay } } })),
@@ -61,11 +66,31 @@ async function getStats() {
     })),
     safeCount(() => db.user.count()),
     safeCount(() => db.user.count({ where: { createdAt: { gte: startOfDay } } })),
+    safeCount(() => db.dueDate.count({ where: { status: "renewed" } })),
+    safeCount(() => db.dueDate.count({ where: { status: "renewed", dueDate: { gte: startOfMonth } } })),
+    db.dueDate.findMany({
+      where: { status: "renewed" },
+      orderBy: { dueDate: "desc" },
+      take: 6,
+      select: { id: true, policyHolderName: true, phone: true, policyNumber: true, dueDate: true, notes: true, bankName: true },
+    }).catch(() => [] as { id: number; policyHolderName: string; phone: string; policyNumber: string | null; dueDate: Date; notes: string | null; bankName: string | null }[]),
   ]);
 
   const conversionRate = totalLeads > 0 ? ((convertedLeads / totalLeads) * 100).toFixed(1) : "0";
-  return { totalLeads, leadsToday, leadsThisMonth, newLeads, convertedLeads, conversionRate, totalPolicies, totalProviders, leadsByCategory, recentLeads, dueDatesUpcoming, totalUsers, usersToday };
+  return { totalLeads, leadsToday, leadsThisMonth, newLeads, convertedLeads, conversionRate, totalPolicies, totalProviders, leadsByCategory, recentLeads, dueDatesUpcoming, totalUsers, usersToday, totalRenewed, renewedThisMonth, recentRenewals };
 }
+
+function parseFrequency(notes: string | null): "monthly" | "quarterly" | "annually" | null {
+  if (!notes) return null;
+  const m = notes.match(/Frequency:\s*(monthly|quarterly|annually)/i);
+  return m ? (m[1].toLowerCase() as "monthly" | "quarterly" | "annually") : null;
+}
+
+const FREQ_BADGE: Record<string, { label: string; className: string }> = {
+  monthly:   { label: "Monthly",   className: "bg-purple-50 text-purple-700 border-purple-200" },
+  quarterly: { label: "Quarterly", className: "bg-teal-50 text-teal-700 border-teal-200" },
+  annually:  { label: "Annually",  className: "bg-gray-100 text-gray-600 border-gray-200" },
+};
 
 const STATUS_BADGE: Record<string, string> = {
   new: "bg-blue-50 text-blue-700 border-blue-100",
@@ -143,6 +168,15 @@ export default async function DashboardPage() {
       iconBg: "bg-pink-50 text-pink-600",
       accent: "border-l-pink-500",
       href: "/admin/registered-users",
+    },
+    {
+      label: "Renewals",
+      value: stats.totalRenewed,
+      sub: `${stats.renewedThisMonth} this month`,
+      icon: <RefreshCw className="w-5 h-5" />,
+      iconBg: "bg-teal-50 text-teal-600",
+      accent: "border-l-teal-500",
+      href: "/admin/due-dates",
     },
   ];
 
@@ -306,6 +340,58 @@ export default async function DashboardPage() {
             </div>
           </div>
         </div>
+      </div>
+
+      {/* Recent Renewals */}
+      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 bg-gray-50/60">
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+            <h2 className="font-semibold text-gray-900 text-sm">Recent Renewals</h2>
+            <span className="text-xs text-emerald-700 bg-emerald-50 border border-emerald-100 px-2 py-0.5 rounded-full font-semibold">{stats.totalRenewed} total</span>
+          </div>
+          <Link href="/admin/due-dates" className="text-blue-600 text-xs font-semibold hover:text-blue-700 flex items-center gap-1">
+            View all <span>→</span>
+          </Link>
+        </div>
+
+        {stats.recentRenewals.length === 0 ? (
+          <div className="flex flex-col items-center justify-center py-12 text-gray-400">
+            <RefreshCw className="w-7 h-7 mb-2 opacity-30" />
+            <p className="text-sm">No renewals yet</p>
+          </div>
+        ) : (
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 divide-y sm:divide-y-0 sm:divide-x divide-gray-50">
+            {stats.recentRenewals.map((r) => {
+              const freq = parseFrequency(r.notes);
+              const freqBadge = freq ? FREQ_BADGE[freq] : null;
+              const providerLine = r.bankName ?? null;
+              return (
+                <div key={r.id} className="flex items-start gap-3 px-5 py-4 hover:bg-gray-50/70 transition-colors">
+                  {/* Green dot */}
+                  <div className="mt-1 w-8 h-8 rounded-full bg-emerald-50 border border-emerald-200 flex items-center justify-center flex-shrink-0">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-500" />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-semibold text-gray-900 truncate">{r.policyHolderName}</p>
+                    <p className="text-xs text-gray-400 truncate">{r.phone}{r.policyNumber ? ` · ${r.policyNumber}` : ""}</p>
+                    {providerLine && <p className="text-xs text-gray-400 truncate mt-0.5">{providerLine}</p>}
+                    <div className="flex items-center gap-2 mt-1.5 flex-wrap">
+                      <span className="text-xs text-gray-500">
+                        {new Date(r.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
+                      </span>
+                      {freqBadge && (
+                        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${freqBadge.className}`}>
+                          ↻ {freqBadge.label}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
     </div>
   );
