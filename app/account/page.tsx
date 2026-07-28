@@ -32,7 +32,15 @@ async function getUserLeads(phone: string) {
     }),
   ]);
 
-  return { leads, upcomingDueDates, allDueDates };
+  // Fetch the raw `category` column (not yet in Prisma schema — added via raw SQL migration)
+  // $queryRawUnsafe is safe here because ids are integers from Prisma, never user input
+  const ids = allDueDates.map(d => d.id);
+  const categoryRows: Array<{ id: number; category: string | null }> = ids.length > 0
+    ? await db.$queryRawUnsafe(`SELECT id, category FROM due_dates WHERE id IN (${ids.join(",")})`)
+    : [];
+  const categoryMap = new Map(categoryRows.map(r => [r.id, r.category ?? null]));
+
+  return { leads, upcomingDueDates, allDueDates, categoryMap };
 }
 
 const CAT_LABEL: Record<string, string> = {
@@ -43,6 +51,17 @@ const CAT_LABEL: Record<string, string> = {
 const CAT_COLOR: Record<string, string> = {
   term: "#004aad", life: "#7C3AED", health: "#059669", motor: "#EA580C",
   car: "#EA580C", "two-wheeler": "#D97706", travel: "#0891B2", home: "#16A34A",
+};
+
+function parseFrequency(notes: string | null): "monthly" | "quarterly" | "annually" | null {
+  const match = notes?.match(/Frequency:\s*(monthly|quarterly|annually)/i);
+  return (match?.[1]?.toLowerCase() as "monthly" | "quarterly" | "annually") ?? null;
+}
+
+const FREQ_STYLE: Record<string, { color: string; bg: string; border: string }> = {
+  monthly:   { color: "#6D28D9", bg: "#F5F3FF", border: "#DDD6FE" },
+  quarterly: { color: "#0F766E", bg: "#F0FDFA", border: "#99F6E4" },
+  annually:  { color: "#374151", bg: "#F9FAFB", border: "#E5E7EB" },
 };
 
 function daysUntil(date: Date) {
@@ -65,7 +84,7 @@ export default async function AccountPage() {
   const session = await getUserSession();
   if (!session) redirect("/login");
 
-  const { leads, upcomingDueDates, allDueDates } = await getUserLeads(session.phone);
+  const { leads, upcomingDueDates, allDueDates, categoryMap } = await getUserLeads(session.phone);
 
   const user = await db.user.findUnique({
     where: { id: session.id },
@@ -74,7 +93,9 @@ export default async function AccountPage() {
 
   if (!user) redirect("/login");
 
-  const quoteRequests = leads.filter((l) => l.leadType === "quote");
+  const quoteRequests  = leads.filter((l) => l.leadType === "quote");
+  const activeDueDates = allDueDates.filter(d => d.status === "pending" || d.status === "notified");
+  const renewedHistory = [...allDueDates.filter(d => d.status === "renewed")].sort((a, b) => new Date(b.dueDate).getTime() - new Date(a.dueDate).getTime());
   const initials = (user.name ?? "U").split(" ").map((n) => n[0]).join("").slice(0, 2).toUpperCase();
   const memberSince = new Date(user.createdAt).toLocaleDateString("en-IN", { month: "short", year: "numeric" });
 
@@ -446,7 +467,7 @@ export default async function AccountPage() {
 
         /* ── Stats grid ── */
         .acct-stats {
-          display: grid; grid-template-columns: repeat(3, 1fr);
+          display: grid; grid-template-columns: repeat(4, 1fr);
           gap: 14px; margin-bottom: 28px;
         }
 
@@ -499,7 +520,7 @@ export default async function AccountPage() {
           }
           .acct-stats {
             grid-template-columns: repeat(2, 1fr);
-            gap: 10px; margin-bottom: 18px;
+            gap: 10px; margin-bottom: 18px; font-size: 13px;
           }
           .acct-profile-grid {
             grid-template-columns: repeat(2, 1fr);
@@ -563,9 +584,10 @@ export default async function AccountPage() {
           {/* ── Stats row ── */}
           <div className="acct-stats">
             {[
-              { label: "Quote Requests",   value: quoteRequests.length,      accent: "#186874",  note: "submitted by you" },
-              { label: "Tracked Renewals", value: allDueDates.length,         accent: "#7C3AED",  note: "policies on record" },
-              { label: "Due This Month",   value: upcomingDueDates.length,    accent: upcomingDueDates.length > 0 ? "#EA580C" : "#059669", note: upcomingDueDates.length > 0 ? "need attention" : "you're all clear" },
+              { label: "Quote Requests",   value: quoteRequests.length,       accent: "#186874",  note: "submitted by you" },
+              { label: "Active Policies",  value: activeDueDates.length,      accent: "#7C3AED",  note: "being tracked" },
+              { label: "Times Renewed",    value: renewedHistory.length,       accent: "#059669",  note: renewedHistory.length > 0 ? "successful renewals" : "no renewals yet" },
+              { label: "Due This Month",   value: upcomingDueDates.length,    accent: upcomingDueDates.length > 0 ? "#EA580C" : "#0891B2", note: upcomingDueDates.length > 0 ? "need attention" : "you're all clear" },
             ].map((s) => (
               <div key={s.label} style={{ background: "#fff", borderRadius: 12, padding: "16px 18px", borderLeft: `3px solid ${s.accent}`, boxShadow: "0 1px 3px rgba(0,0,0,0.06)" }}>
                 <p style={{ fontSize: 10, fontWeight: 700, color: "#8899B4", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 8 }}>{s.label}</p>
@@ -593,7 +615,11 @@ export default async function AccountPage() {
                         <div key={d.id} style={{ background: "#fff", borderRadius: 8, padding: "10px 12px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, border: "1px solid #FDE68A", flexWrap: "wrap" }}>
                           <div style={{ minWidth: 0 }}>
                             <p style={{ fontSize: 13, fontWeight: 600, color: "#0B1120" }}>{d.policyNumber ?? "Policy"}</p>
-                            {d.policy && <p style={{ fontSize: 11, color: "#8899B4", marginTop: 1 }}>{d.policy.provider.name} · {d.policy.name}</p>}
+                            {(d.policy || d.bankName) && (
+                              <p style={{ fontSize: 11, color: "#8899B4", marginTop: 1 }}>
+                                {d.policy ? `${d.policy.provider.name} · ${d.policy.name}` : d.bankName}
+                              </p>
+                            )}
                           </div>
                           <div style={{ textAlign: "right", flexShrink: 0 }}>
                             <p style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{t.label}</p>
@@ -608,22 +634,22 @@ export default async function AccountPage() {
             </div>
           )}
 
-          {/* ── Renewals ── */}
+          {/* ── Active Policy Renewals ── */}
           <div id="renewals" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", marginBottom: 20, overflow: "hidden" }}>
             <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", borderBottom: "1px solid #F1F5F9" }}>
               <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
                 <Calendar width={15} height={15} stroke="#186874" strokeWidth={1.8} />
-                <span style={{ fontWeight: 700, fontSize: 13, color: "#0B1120" }}>Policy Renewals</span>
+                <span style={{ fontWeight: 700, fontSize: 13, color: "#0B1120" }}>Active Policy Renewals</span>
               </div>
-              <span style={{ fontSize: 11, color: "#8899B4", background: "#F1F5F9", padding: "2px 8px", borderRadius: 20, fontWeight: 600 }}>{allDueDates.length} total</span>
+              <span style={{ fontSize: 11, color: "#8899B4", background: "#F1F5F9", padding: "2px 8px", borderRadius: 20, fontWeight: 600 }}>{activeDueDates.length} active</span>
             </div>
 
-            {allDueDates.length === 0 ? (
+            {activeDueDates.length === 0 ? (
               <div style={{ padding: "48px 20px", display: "flex", flexDirection: "column", alignItems: "center", gap: 8 }}>
                 <div style={{ width: 44, height: 44, borderRadius: 12, background: "#F1F5F9", display: "flex", alignItems: "center", justifyContent: "center" }}>
                   <Clipboard width={20} height={20} stroke="#94A3B8" strokeWidth={1.5} />
                 </div>
-                <p style={{ fontSize: 13, fontWeight: 600, color: "#334155" }}>No renewals tracked yet</p>
+                <p style={{ fontSize: 13, fontWeight: 600, color: "#334155" }}>No active renewals tracked</p>
                 <p style={{ fontSize: 12, color: "#94A3B8", textAlign: "center", maxWidth: 260 }}>Our advisors will add your policy renewal dates after you request a quote.</p>
                 <div style={{ marginTop: 4 }}>
                   <QuickQuoteButton name={user.name ?? ""} phone={user.phone} email={user.email} city={user.city} small />
@@ -631,13 +657,16 @@ export default async function AccountPage() {
               </div>
             ) : (
               <div>
-                {allDueDates.map((d, i) => {
+                {activeDueDates.map((d, i) => {
                   const t = daysUntil(d.dueDate);
-                  const catColor = d.policy ? (CAT_COLOR[d.policy.category] ?? "#186874") : "#186874";
-                  const catLabel = d.policy ? (CAT_LABEL[d.policy.category] ?? d.policy.category) : "Policy";
+                  const rawCat = d.policy?.category ?? categoryMap.get(d.id) ?? null;
+                  const catColor = CAT_COLOR[rawCat ?? ""] ?? "#186874";
+                  const catLabel = CAT_LABEL[rawCat ?? ""] ?? (rawCat ? rawCat.charAt(0).toUpperCase() + rawCat.slice(1).replace(/-/g, " ") : "Policy");
+                  const providerLine = d.policy ? `${d.policy.provider.name} · ${d.policy.name}` : d.bankName ?? null;
+                  const freq = parseFrequency(d.notes);
+                  const freqStyle = freq ? FREQ_STYLE[freq] : null;
                   return (
-                    <div key={d.id} className="acct-renewal-row" style={{ borderBottom: i < allDueDates.length - 1 ? "1px solid #F8FAFC" : "none" }}>
-                      {/* Left: dot + category + details */}
+                    <div key={d.id} className="acct-renewal-row" style={{ borderBottom: i < activeDueDates.length - 1 ? "1px solid #F8FAFC" : "none" }}>
                       <div className="acct-renewal-left">
                         <div style={{ width: 10, height: 10, borderRadius: "50%", background: t.dot, flexShrink: 0 }} />
                         <span style={{ fontSize: 10, fontWeight: 700, color: catColor, background: `${catColor}15`, border: `1px solid ${catColor}30`, borderRadius: 6, padding: "2px 7px", flexShrink: 0, letterSpacing: "0.04em", textTransform: "uppercase" }}>
@@ -647,18 +676,20 @@ export default async function AccountPage() {
                           <p style={{ fontSize: 13, fontWeight: 600, color: "#0B1120", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                             {d.policyNumber ?? "Policy Renewal"}
                           </p>
-                          {d.policy && (
-                            <p style={{ fontSize: 11, color: "#8899B4", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{d.policy.provider.name} · {d.policy.name}</p>
-                          )}
+                          {providerLine && <p style={{ fontSize: 11, color: "#8899B4", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{providerLine}</p>}
                         </div>
                       </div>
-                      {/* Right: date + status + button */}
                       <div className="acct-renewal-right">
                         <div className="acct-renewal-date">
                           <p style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{t.label}</p>
                           <p style={{ fontSize: 11, color: "#94A3B8" }}>{new Date(d.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</p>
                         </div>
-                        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 20, background: d.status === "renewed" ? "#ECFDF5" : d.status === "lapsed" ? "#FFF1F2" : "#FFFBEB", color: d.status === "renewed" ? "#065F46" : d.status === "lapsed" ? "#9F1239" : "#92400E", border: `1px solid ${d.status === "renewed" ? "#A7F3D0" : d.status === "lapsed" ? "#FECDD3" : "#FDE68A"}`, flexShrink: 0 }}>
+                        {freqStyle && freq && (
+                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "capitalize", padding: "3px 8px", borderRadius: 20, background: freqStyle.bg, color: freqStyle.color, border: `1px solid ${freqStyle.border}`, flexShrink: 0 }}>
+                            ↻ {freq}
+                          </span>
+                        )}
+                        <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 20, background: "#FFFBEB", color: "#92400E", border: "1px solid #FDE68A", flexShrink: 0 }}>
                           {d.status}
                         </span>
                       </div>
@@ -668,6 +699,77 @@ export default async function AccountPage() {
               </div>
             )}
           </div>
+
+          {/* ── Renewal History ── */}
+          {renewedHistory.length > 0 && (
+            <div id="renewal-history" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", marginBottom: 20, overflow: "hidden" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: "14px 16px", borderBottom: "1px solid #F1F5F9" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <ExternalLink width={15} height={15} stroke="#059669" strokeWidth={1.8} />
+                  <span style={{ fontWeight: 700, fontSize: 13, color: "#0B1120" }}>Renewal History</span>
+                </div>
+                <span style={{ fontSize: 11, color: "#059669", background: "#ECFDF5", padding: "2px 8px", borderRadius: 20, fontWeight: 600, border: "1px solid #A7F3D0" }}>
+                  {renewedHistory.length} renewed
+                </span>
+              </div>
+
+              {/* Timeline */}
+              <div style={{ padding: "16px 20px" }}>
+                <div style={{ position: "relative" }}>
+                  {/* Vertical line */}
+                  <div style={{ position: "absolute", left: 11, top: 12, bottom: 12, width: 2, background: "linear-gradient(to bottom, #A7F3D0, #E5E7EB)", borderRadius: 2 }} />
+
+                  <div style={{ display: "flex", flexDirection: "column", gap: 0 }}>
+                    {renewedHistory.map((d, i) => {
+                      const rawCat = d.policy?.category ?? categoryMap.get(d.id) ?? null;
+                      const catColor = CAT_COLOR[rawCat ?? ""] ?? "#186874";
+                      const catLabel = CAT_LABEL[rawCat ?? ""] ?? (rawCat ? rawCat.charAt(0).toUpperCase() + rawCat.slice(1).replace(/-/g, " ") : "Policy");
+                      const providerLine = d.policy ? `${d.policy.provider.name} · ${d.policy.name}` : d.bankName ?? null;
+                      const freq = parseFrequency(d.notes);
+                      const freqStyle = freq ? FREQ_STYLE[freq] : null;
+                      const dateStr = new Date(d.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+                      return (
+                        <div key={d.id} style={{ display: "flex", alignItems: "flex-start", gap: 14, paddingBottom: i < renewedHistory.length - 1 ? 16 : 0 }}>
+                          {/* Timeline dot */}
+                          <div style={{ width: 24, height: 24, borderRadius: "50%", background: "#ECFDF5", border: "2px solid #34D399", display: "flex", alignItems: "center", justifyContent: "center", flexShrink: 0, zIndex: 1 }}>
+                            <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#059669" }} />
+                          </div>
+
+                          {/* Content card */}
+                          <div style={{ flex: 1, background: "#F8FAFC", borderRadius: 10, padding: "10px 14px", border: "1px solid #E2E8F0", minWidth: 0 }}>
+                            <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 8, flexWrap: "wrap" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: 6, minWidth: 0 }}>
+                                <span style={{ fontSize: 10, fontWeight: 700, color: catColor, background: `${catColor}15`, border: `1px solid ${catColor}30`, borderRadius: 6, padding: "1px 6px", flexShrink: 0, textTransform: "uppercase", letterSpacing: "0.04em" }}>
+                                  {catLabel}
+                                </span>
+                                <p style={{ fontSize: 13, fontWeight: 600, color: "#0B1120", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                  {d.policyNumber ?? "Policy"}
+                                </p>
+                              </div>
+                              <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
+                                {freqStyle && freq && (
+                                  <span style={{ fontSize: 10, fontWeight: 700, textTransform: "capitalize", padding: "2px 7px", borderRadius: 20, background: freqStyle.bg, color: freqStyle.color, border: `1px solid ${freqStyle.border}` }}>
+                                    ↻ {freq}
+                                  </span>
+                                )}
+                                <span style={{ fontSize: 10, fontWeight: 700, color: "#059669", background: "#ECFDF5", border: "1px solid #A7F3D0", padding: "2px 7px", borderRadius: 20 }}>
+                                  ✓ Renewed
+                                </span>
+                              </div>
+                            </div>
+                            <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 5 }}>
+                              {providerLine && <p style={{ fontSize: 11, color: "#8899B4", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>{providerLine}</p>}
+                              <p style={{ fontSize: 11, color: "#94A3B8", flexShrink: 0 }}>Due {dateStr}</p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
 
           {/* ── Quotes ── */}
           <div id="quotes" style={{ background: "#fff", borderRadius: 12, boxShadow: "0 1px 3px rgba(0,0,0,0.06)", marginBottom: 20, overflow: "hidden" }}>

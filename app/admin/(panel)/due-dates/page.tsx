@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Plus, X, Search, Calendar, AlertTriangle, Bell, Download, RefreshCw } from "lucide-react";
+import { Plus, X, Search, Calendar, AlertTriangle, Bell, Download, RefreshCw, History } from "lucide-react";
 import Swal from "sweetalert2";
 
 interface DueDate {
@@ -128,6 +128,46 @@ export default function DueDatesPage() {
         .then(r => r.json())
         .then(d => d.success && setProviders(d.data.map((p: { id: number; name: string }) => ({ id: p.id, name: p.name }))));
     }
+  }
+
+  function showHistory(item: DueDate) {
+    const history = items
+      .filter(d => d.phone === item.phone && d.policyNumber && d.policyNumber === item.policyNumber)
+      .sort((a, b) => new Date(a.dueDate).getTime() - new Date(b.dueDate).getTime());
+
+    if (history.length === 0) {
+      Swal.fire({ icon: "info", title: "No History", text: "No related renewal records found for this policy." });
+      return;
+    }
+
+    const rows = history.map((d, i) => {
+      const freq = parseFrequency(d.notes);
+      const freqChip = freq ? `<span style="font-size:10px;font-weight:700;padding:2px 7px;border-radius:20px;background:${freq === "monthly" ? "#F5F3FF" : freq === "quarterly" ? "#F0FDFA" : "#F9FAFB"};color:${freq === "monthly" ? "#6D28D9" : freq === "quarterly" ? "#0F766E" : "#374151"};border:1px solid ${freq === "monthly" ? "#DDD6FE" : freq === "quarterly" ? "#99F6E4" : "#E5E7EB"}">↻ ${freq}</span>` : "";
+      const statusColor = d.status === "renewed" ? "#059669" : d.status === "lapsed" ? "#DC2626" : d.status === "notified" ? "#2563EB" : "#D97706";
+      const statusBg = d.status === "renewed" ? "#ECFDF5" : d.status === "lapsed" ? "#FEF2F2" : d.status === "notified" ? "#EFF6FF" : "#FFFBEB";
+      const dot = i === history.length - 1 ? "●" : "○";
+      return `
+        <div style="display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:${i < history.length - 1 ? "1px solid #F1F5F9" : "none"}">
+          <div style="width:22px;text-align:center;color:${d.status === "renewed" ? "#059669" : "#CBD5E1"};font-size:14px;padding-top:1px;flex-shrink:0">${dot}</div>
+          <div style="flex:1;text-align:left">
+            <div style="font-size:13px;font-weight:600;color:#0B1120">${new Date(d.dueDate).toLocaleDateString("en-IN", { day:"numeric", month:"short", year:"numeric" })}</div>
+            <div style="font-size:11px;color:#8899B4;margin-top:2px">${d.policyHolderName}</div>
+          </div>
+          <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+            ${freqChip}
+            <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:${statusBg};color:${statusColor};border:1px solid ${statusBg === "#ECFDF5" ? "#A7F3D0" : statusBg === "#FEF2F2" ? "#FECDD3" : statusBg === "#EFF6FF" ? "#BFDBFE" : "#FDE68A"};text-transform:capitalize">${d.status}</span>
+          </div>
+        </div>`;
+    }).join("");
+
+    Swal.fire({
+      title: `<span style="font-size:15px;font-weight:700">Renewal History</span>`,
+      html: `<div style="font-size:12px;color:#8899B4;margin-bottom:12px;text-align:left">Policy: <b style="color:#0B1120">${item.policyNumber}</b> &nbsp;·&nbsp; ${item.policyHolderName} &nbsp;·&nbsp; ${item.phone}</div><div>${rows}</div>`,
+      width: 460,
+      showConfirmButton: false,
+      showCloseButton: true,
+      padding: "20px 24px",
+    });
   }
 
   async function quickNotify(id: number) {
@@ -686,6 +726,15 @@ export default function DueDatesPage() {
                                 ? <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
                                 : <Bell className="w-3.5 h-3.5" />
                               }
+                            </button>
+                          )}
+                          {item.policyNumber && (
+                            <button
+                              onClick={() => showHistory(item)}
+                              title="View Renewal History"
+                              className="p-1.5 rounded-lg border border-gray-200 text-gray-400 hover:bg-purple-50 hover:border-purple-200 hover:text-purple-600 transition-all"
+                            >
+                              <History className="w-3.5 h-3.5" />
                             </button>
                           )}
                         </div>
