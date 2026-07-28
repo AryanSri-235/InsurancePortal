@@ -34,6 +34,19 @@ function getDaysUntil(dateStr: string): number {
   return Math.ceil((new Date(dateStr).getTime() - Date.now()) / 86400000);
 }
 
+function parseFrequency(notes: string | null): "monthly" | "quarterly" | "annually" {
+  const match = notes?.match(/Frequency:\s*(monthly|quarterly|annually)/i);
+  return (match?.[1]?.toLowerCase() as "monthly" | "quarterly" | "annually") ?? "annually";
+}
+
+function calculateNextDueDate(currentDueDate: string, frequency: "monthly" | "quarterly" | "annually"): Date {
+  const d = new Date(currentDueDate);
+  if (frequency === "monthly")   d.setMonth(d.getMonth() + 1);
+  else if (frequency === "quarterly") d.setMonth(d.getMonth() + 3);
+  else d.setFullYear(d.getFullYear() + 1);
+  return d;
+}
+
 function DaysCell({ days }: { days: number }) {
   if (days < 0) return (
     <span className="inline-flex items-center gap-1 text-xs font-bold text-red-600 bg-red-50 border border-red-100 px-2 py-0.5 rounded-full">
@@ -58,9 +71,7 @@ export default function DueDatesPage() {
   const [saving, setSaving] = useState(false);
   const [filters, setFilters] = useState({ search: "", status: "", urgency: "", provider: "", category: "" });
   const [providers, setProviders] = useState<Provider[]>([]);
-  const [renewedModal, setRenewedModal] = useState<DueDate | null>(null);
-  const [newDueDate, setNewDueDate] = useState("");
-  const [renewedSaving, setRenewedSaving] = useState(false);
+  const [renewingId, setRenewingId] = useState<number | null>(null);
 
   async function fetchItems() {
     setLoading(true);
@@ -87,7 +98,55 @@ export default function DueDatesPage() {
   async function updateStatus(id: number, status: string, currentStatus: string) {
     if (status === "renewed") {
       const item = items.find(i => i.id === id);
-      if (item) { setRenewedModal(item); setNewDueDate(""); }
+      if (!item) return;
+
+      const frequency = parseFrequency(item.notes);
+      const nextDate = calculateNextDueDate(item.dueDate, frequency);
+      const nextDateFormatted = nextDate.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+      const freqLabel = frequency.charAt(0).toUpperCase() + frequency.slice(1);
+
+      const result = await Swal.fire({
+        icon: "question",
+        title: "Confirm Renewal",
+        html: `Mark <b>${item.policyHolderName}</b>&apos;s policy as renewed?<br/>
+               <span style="color:#6b7280;font-size:13px;margin-top:6px;display:block">
+                 Next renewal: <b>${nextDateFormatted}</b><br/>
+                 Frequency: <b>${freqLabel}</b>
+               </span>`,
+        showCancelButton: true,
+        confirmButtonText: "Yes, Renew",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#059669",
+        reverseButtons: true,
+      });
+      if (!result.isConfirmed) return;
+
+      setRenewingId(id);
+      try {
+        await fetch("/api/admin/due-dates", {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ id, status: "renewed" }),
+        });
+        await fetch("/api/admin/due-dates", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            policyHolderName: item.policyHolderName,
+            phone: item.phone,
+            email: item.email ?? "",
+            policyNumber: item.policyNumber ?? "",
+            bankName: item.bankName ?? "",
+            category: item.category ?? "",
+            dueDate: nextDate.toISOString().split("T")[0],
+            notes: item.notes ?? "",
+            status: "pending",
+          }),
+        });
+        fetchItems();
+      } finally {
+        setRenewingId(null);
+      }
       return;
     }
 
@@ -112,39 +171,6 @@ export default function DueDatesPage() {
       body: JSON.stringify({ id, status }),
     });
     setItems((prev) => prev.map((d) => d.id === id ? { ...d, status } : d));
-  }
-
-  async function confirmRenewed() {
-    if (!renewedModal || !newDueDate) return;
-    setRenewedSaving(true);
-    try {
-      // Mark current entry as renewed
-      await fetch("/api/admin/due-dates", {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ id: renewedModal.id, status: "renewed" }),
-      });
-      // Create new pending entry for next cycle with same details
-      await fetch("/api/admin/due-dates", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          policyHolderName: renewedModal.policyHolderName,
-          phone: renewedModal.phone,
-          email: renewedModal.email ?? "",
-          policyNumber: renewedModal.policyNumber ?? "",
-          bankName: renewedModal.bankName ?? "",
-          category: renewedModal.category ?? "",
-          dueDate: newDueDate,
-          notes: renewedModal.notes ?? "",
-          status: "pending",
-        }),
-      });
-      setRenewedModal(null);
-      fetchItems();
-    } finally {
-      setRenewedSaving(false);
-    }
   }
 
   async function handleAdd(e: React.FormEvent) {
@@ -502,8 +528,9 @@ export default function DueDatesPage() {
                       <td className="px-4 py-3.5">
                         <select
                           value={item.status}
+                          disabled={renewingId === item.id}
                           onChange={(e) => updateStatus(item.id, e.target.value, item.status)}
-                          className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500 bg-white text-gray-700 transition-colors"
+                          className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500 bg-white text-gray-700 transition-colors disabled:opacity-50"
                         >
                           {STATUS_OPTIONS.map((s) => (
                             <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
@@ -519,56 +546,6 @@ export default function DueDatesPage() {
         </div>
       </div>
 
-      {/* Renewed modal — capture next due date */}
-      {renewedModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
-          <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
-            <div className="bg-emerald-50 border-b border-emerald-100 px-5 py-4 flex items-center gap-3">
-              <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
-                <Calendar className="w-4 h-4 text-emerald-600" />
-              </div>
-              <div>
-                <p className="font-bold text-gray-900 text-sm">Mark as Renewed</p>
-                <p className="text-xs text-gray-500">{renewedModal.policyHolderName} · {renewedModal.phone}</p>
-              </div>
-            </div>
-            <div className="p-5 space-y-4">
-              <p className="text-sm text-gray-600">
-                Enter the next renewal due date. A new pending entry will be created automatically.
-              </p>
-              <div>
-                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
-                  Next Renewal Date <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="date"
-                  value={newDueDate}
-                  onChange={(e) => setNewDueDate(e.target.value)}
-                  min={new Date().toISOString().split("T")[0]}
-                  className="w-full border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-emerald-500 focus:ring-1 focus:ring-emerald-500"
-                  autoFocus
-                />
-              </div>
-              <div className="flex gap-2 pt-1">
-                <button
-                  onClick={confirmRenewed}
-                  disabled={renewedSaving || !newDueDate}
-                  className="flex-1 bg-emerald-600 hover:bg-emerald-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold py-2.5 rounded-lg transition-colors"
-                >
-                  {renewedSaving ? "Saving..." : "Confirm Renewal"}
-                </button>
-                <button
-                  onClick={() => setRenewedModal(null)}
-                  disabled={renewedSaving}
-                  className="border border-gray-200 text-gray-600 text-sm font-medium px-4 py-2.5 rounded-lg hover:bg-gray-50 transition-colors"
-                >
-                  Cancel
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }

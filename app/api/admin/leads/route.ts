@@ -91,7 +91,7 @@ export async function PATCH(req: NextRequest) {
   }
 
   try {
-    const { id, status, renewalDate, policyNumber, providerName, category } = await req.json();
+    const { id, status, renewalDate, policyNumber, providerName, category, renewalFrequency } = await req.json();
     const validStatuses = ["new", "contacted", "converted", "lost"];
     if (!id || !validStatuses.includes(status)) {
       return NextResponse.json({ error: "Invalid data" }, { status: 422 });
@@ -120,7 +120,7 @@ export async function PATCH(req: NextRequest) {
           bankName: providerName.trim(),
           dueDate: new Date(renewalDate),
           status: "pending",
-          notes: `Auto-created from lead #${lead.id}`,
+          notes: `Auto-created from lead #${lead.id}. Frequency: ${renewalFrequency ?? "annually"}`,
         },
       });
       // Set category via raw SQL — Prisma client needs a restart to recognise the new column

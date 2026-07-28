@@ -63,6 +63,7 @@ export default function LeadsPage() {
   const [renewalPolicyNum, setRenewalPolicyNum] = useState("");
   const [renewalProvider, setRenewalProvider] = useState("");
   const [renewalCategory, setRenewalCategory] = useState("");
+  const [renewalFrequency, setRenewalFrequency] = useState("annually");
   const [renewalSaving, setRenewalSaving] = useState(false);
   const [renewalError, setRenewalError] = useState("");
   const [providers, setProviders] = useState<Provider[]>([]);
@@ -97,6 +98,7 @@ export default function LeadsPage() {
       setRenewalPolicyNum("");
       setRenewalProvider("");
       setRenewalCategory(lead.category ?? "");
+      setRenewalFrequency("annually");
       setRenewalError("");
       if (providers.length === 0) {
         fetch("/api/admin/providers")
@@ -152,12 +154,30 @@ export default function LeadsPage() {
           policyNumber: renewalPolicyNum.trim(),
           providerName: renewalProvider,
           category: renewalCategory,
+          renewalFrequency,
         }),
       });
       const data = await res.json();
       if (!res.ok) { setRenewalError(data.error ?? "Something went wrong."); return; }
-      setLeads((prev) => prev.map((l) => l.id === renewalModal.leadId ? { ...l, status: "converted" } : l));
+      const leadId = renewalModal.leadId;
+      const leadName = renewalModal.name;
+      setLeads((prev) => prev.map((l) => l.id === leadId ? { ...l, status: "converted" } : l));
       setRenewalModal(null);
+      const freqLabel = renewalFrequency.charAt(0).toUpperCase() + renewalFrequency.slice(1);
+      const renewalFormatted = new Date(renewalDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+      Swal.fire({
+        icon: "success",
+        title: "Lead Converted!",
+        html: `<b>${leadName}</b> has been converted.<br/>
+               <span style="color:#6b7280;font-size:13px">
+                 Policy: <b>${renewalPolicyNum.trim()}</b> · ${renewalProvider}<br/>
+                 Renewal: <b>${renewalFormatted}</b> · <b>${freqLabel}</b>
+               </span>`,
+        confirmButtonColor: "#059669",
+        confirmButtonText: "Done",
+        timer: 6000,
+        timerProgressBar: true,
+      });
     } finally {
       setRenewalSaving(false);
     }
@@ -442,6 +462,28 @@ export default function LeadsPage() {
                     <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g, " ")}</option>
                   ))}
                 </select>
+              </div>
+
+              <div>
+                <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
+                  Premium Frequency <span className="text-red-500">*</span>
+                </label>
+                <div className="grid grid-cols-3 gap-2">
+                  {(["monthly", "quarterly", "annually"] as const).map((f) => (
+                    <button
+                      key={f}
+                      type="button"
+                      onClick={() => setRenewalFrequency(f)}
+                      className={`py-2 rounded-lg text-sm font-semibold border transition-all ${
+                        renewalFrequency === f
+                          ? "bg-emerald-600 text-white border-emerald-600"
+                          : "border-gray-200 text-gray-600 hover:border-emerald-300 bg-gray-50"
+                      }`}
+                    >
+                      {f.charAt(0).toUpperCase() + f.slice(1)}
+                    </button>
+                  ))}
+                </div>
               </div>
 
               <div className="flex gap-2 pt-1">
