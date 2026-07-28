@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState, useMemo } from "react";
-import { Plus, X, Search, Calendar, AlertTriangle } from "lucide-react";
+import { Plus, X, Search, Calendar, AlertTriangle, Bell, Download, RefreshCw } from "lucide-react";
 import Swal from "sweetalert2";
 
 interface DueDate {
@@ -28,6 +28,12 @@ const STATUS_BADGE: Record<string, string> = {
   lapsed:   "bg-red-50 text-red-600 border-red-100",
 };
 
+const FREQ_BADGE: Record<string, string> = {
+  monthly:   "bg-purple-50 text-purple-700",
+  quarterly: "bg-teal-50 text-teal-700",
+  annually:  "bg-gray-100 text-gray-600",
+};
+
 const STATUS_OPTIONS = ["pending", "notified", "renewed", "lapsed"];
 
 function getDaysUntil(dateStr: string): number {
@@ -41,10 +47,32 @@ function parseFrequency(notes: string | null): "monthly" | "quarterly" | "annual
 
 function calculateNextDueDate(currentDueDate: string, frequency: "monthly" | "quarterly" | "annually"): Date {
   const d = new Date(currentDueDate);
-  if (frequency === "monthly")   d.setMonth(d.getMonth() + 1);
+  if (frequency === "monthly")        d.setMonth(d.getMonth() + 1);
   else if (frequency === "quarterly") d.setMonth(d.getMonth() + 3);
-  else d.setFullYear(d.getFullYear() + 1);
+  else                                d.setFullYear(d.getFullYear() + 1);
   return d;
+}
+
+function exportToCSV(data: DueDate[]) {
+  const headers = ["Name", "Phone", "Email", "Provider", "Category", "Policy #", "Due Date", "Status", "Frequency", "Notes"];
+  const rows = data.map(d => [
+    d.policyHolderName, d.phone, d.email ?? "", d.bankName ?? "", d.category ?? "",
+    d.policyNumber ?? "",
+    new Date(d.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" }),
+    d.status,
+    parseFrequency(d.notes),
+    (d.notes ?? "").replace(/\s*Frequency:\s*(monthly|quarterly|annually)/i, "").trim(),
+  ]);
+  const csv = [headers, ...rows]
+    .map(r => r.map(v => `"${String(v).replace(/"/g, '""')}"`).join(","))
+    .join("\n");
+  const blob = new Blob(["﻿" + csv], { type: "text/csv;charset=utf-8;" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `due-dates-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
 }
 
 function DaysCell({ days }: { days: number }) {
@@ -67,11 +95,18 @@ export default function DueDatesPage() {
   const [items, setItems] = useState<DueDate[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
-  const [form, setForm] = useState({ policyHolderName: "", phone: "", email: "", policyNumber: "", dueDate: "", notes: "", bankName: "", category: "" });
-  const [saving, setSaving] = useState(false);
-  const [filters, setFilters] = useState({ search: "", status: "", urgency: "", provider: "", category: "" });
-  const [providers, setProviders] = useState<Provider[]>([]);
+  const [form, setForm] = useState({
+    policyHolderName: "", phone: "", email: "", policyNumber: "",
+    dueDate: "", notes: "", bankName: "", category: "", frequency: "annually",
+  });
+  const [saving, setSaving]         = useState(false);
   const [renewingId, setRenewingId] = useState<number | null>(null);
+  const [notifyingId, setNotifyingId] = useState<number | null>(null);
+  const [providers, setProviders]   = useState<Provider[]>([]);
+  const [filters, setFilters] = useState({
+    search: "", status: "", urgency: "", provider: "",
+    category: "", frequency: "", dateFrom: "", dateTo: "",
+  });
 
   async function fetchItems() {
     setLoading(true);
@@ -95,6 +130,20 @@ export default function DueDatesPage() {
     }
   }
 
+  async function quickNotify(id: number) {
+    setNotifyingId(id);
+    try {
+      await fetch("/api/admin/due-dates", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status: "notified" }),
+      });
+      setItems(prev => prev.map(d => d.id === id ? { ...d, status: "notified" } : d));
+    } finally {
+      setNotifyingId(null);
+    }
+  }
+
   async function updateStatus(id: number, status: string, currentStatus: string) {
     if (status === "renewed") {
       const item = items.find(i => i.id === id);
@@ -108,10 +157,9 @@ export default function DueDatesPage() {
       const result = await Swal.fire({
         icon: "question",
         title: "Confirm Renewal",
-        html: `Mark <b>${item.policyHolderName}</b>&apos;s policy as renewed?<br/>
+        html: `Mark <b>${item.policyHolderName}</b>'s policy as renewed?<br/>
                <span style="color:#6b7280;font-size:13px;margin-top:6px;display:block">
-                 Next renewal: <b>${nextDateFormatted}</b><br/>
-                 Frequency: <b>${freqLabel}</b>
+                 Next renewal: <b>${nextDateFormatted}</b> &nbsp;·&nbsp; Frequency: <b>${freqLabel}</b>
                </span>`,
         showCancelButton: true,
         confirmButtonText: "Yes, Renew",
@@ -170,21 +218,25 @@ export default function DueDatesPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ id, status }),
     });
-    setItems((prev) => prev.map((d) => d.id === id ? { ...d, status } : d));
+    setItems(prev => prev.map(d => d.id === id ? { ...d, status } : d));
   }
 
   async function handleAdd(e: React.FormEvent) {
     e.preventDefault();
     setSaving(true);
     try {
+      const baseNotes = form.notes.trim();
+      const notesWithFreq = baseNotes
+        ? `${baseNotes} Frequency: ${form.frequency}`
+        : `Frequency: ${form.frequency}`;
       const res = await fetch("/api/admin/due-dates", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, notes: notesWithFreq }),
       });
       if (res.ok) {
         setShowForm(false);
-        setForm({ policyHolderName: "", phone: "", email: "", policyNumber: "", dueDate: "", notes: "", bankName: "", category: "" });
+        setForm({ policyHolderName: "", phone: "", email: "", policyNumber: "", dueDate: "", notes: "", bankName: "", category: "", frequency: "annually" });
         fetchItems();
       }
     } finally {
@@ -194,45 +246,106 @@ export default function DueDatesPage() {
 
   const filtered = useMemo(() => {
     return items.filter((item) => {
-      const days = getDaysUntil(item.dueDate);
-      const matchSearch   = !filters.search   || [item.policyHolderName, item.phone, item.policyNumber ?? ""].some(v => v.toLowerCase().includes(filters.search.toLowerCase()));
-      const matchStatus   = !filters.status   || item.status === filters.status;
-      const matchProvider = !filters.provider || (item.bankName ?? "").toLowerCase().includes(filters.provider.toLowerCase());
-      const matchCategory = !filters.category || item.category === filters.category;
-      const matchUrgency  = !filters.urgency  || (
-        filters.urgency === "overdue"   ? days < 0 :
-        filters.urgency === "critical"  ? days >= 0 && days <= 7 :
-        filters.urgency === "soon"      ? days > 7 && days <= 30 :
-        filters.urgency === "upcoming"  ? days > 30 : true
+      const days   = getDaysUntil(item.dueDate);
+      const freq   = parseFrequency(item.notes);
+      const due    = new Date(item.dueDate);
+      const matchSearch    = !filters.search    || [item.policyHolderName, item.phone, item.policyNumber ?? ""].some(v => v.toLowerCase().includes(filters.search.toLowerCase()));
+      const matchStatus    = !filters.status    || item.status === filters.status;
+      const matchProvider  = !filters.provider  || (item.bankName ?? "").toLowerCase().includes(filters.provider.toLowerCase());
+      const matchCategory  = !filters.category  || item.category === filters.category;
+      const matchFrequency = !filters.frequency || freq === filters.frequency;
+      const matchDateFrom  = !filters.dateFrom  || due >= new Date(filters.dateFrom);
+      const matchDateTo    = !filters.dateTo    || due <= new Date(filters.dateTo + "T23:59:59");
+      const matchUrgency   = !filters.urgency   || (
+        filters.urgency === "overdue"  ? days < 0 :
+        filters.urgency === "critical" ? days >= 0 && days <= 7 :
+        filters.urgency === "soon"     ? days > 7 && days <= 30 :
+        filters.urgency === "upcoming" ? days > 30 : true
       );
-      return matchSearch && matchStatus && matchProvider && matchCategory && matchUrgency;
+      return matchSearch && matchStatus && matchProvider && matchCategory && matchFrequency && matchDateFrom && matchDateTo && matchUrgency;
     });
   }, [items, filters]);
 
-  // Derive unique provider names from loaded items for the filter dropdown
   const providerOptions = useMemo(() =>
     [...new Set(items.map(i => i.bankName).filter(Boolean))].sort() as string[],
   [items]);
 
-  const overdueCount = items.filter(i => getDaysUntil(i.dueDate) < 0 && i.status === "pending").length;
-  const criticalCount = items.filter(i => { const d = getDaysUntil(i.dueDate); return d >= 0 && d <= 7 && i.status === "pending"; }).length;
-  const hasFilters = !!(filters.search || filters.status || filters.urgency || filters.provider || filters.category);
+  const stats = useMemo(() => {
+    const now        = new Date();
+    const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+    const monthEnd   = new Date(now.getFullYear(), now.getMonth() + 1, 0, 23, 59, 59);
+    const pending    = items.filter(i => i.status === "pending");
+    return {
+      pending:          pending.length,
+      overdue:          pending.filter(i => getDaysUntil(i.dueDate) < 0).length,
+      dueThisMonth:     pending.filter(i => { const d = new Date(i.dueDate); return d >= monthStart && d <= monthEnd; }).length,
+      renewed:          items.filter(i => i.status === "renewed").length,
+      monthly:          pending.filter(i => parseFrequency(i.notes) === "monthly").length,
+      quarterly:        pending.filter(i => parseFrequency(i.notes) === "quarterly").length,
+      annually:         pending.filter(i => parseFrequency(i.notes) === "annually").length,
+    };
+  }, [items]);
+
+  const overdueCount   = stats.overdue;
+  const criticalCount  = items.filter(i => { const d = getDaysUntil(i.dueDate); return d >= 0 && d <= 7 && i.status === "pending"; }).length;
+  const hasFilters     = !!(filters.search || filters.status || filters.urgency || filters.provider || filters.category || filters.frequency || filters.dateFrom || filters.dateTo);
+  const clearFilters   = () => setFilters({ search: "", status: "", urgency: "", provider: "", category: "", frequency: "", dateFrom: "", dateTo: "" });
 
   return (
     <div className="space-y-5 max-w-7xl">
+
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-gray-900">Due Date Tracker</h1>
           <p className="text-gray-400 text-sm">Track policy renewal dates and notify customers</p>
         </div>
-        <button
-          onClick={openForm}
-          className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
-        >
-          <Plus className="w-4 h-4" />
-          Add Entry
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => exportToCSV(filtered)}
+            className="border border-gray-200 text-gray-600 px-3 py-2 rounded-lg text-sm font-medium hover:bg-gray-50 transition-colors flex items-center gap-2"
+          >
+            <Download className="w-4 h-4" />
+            Export CSV
+          </button>
+          <button
+            onClick={fetchItems}
+            className="border border-gray-200 text-gray-500 p-2 rounded-lg hover:bg-gray-50 transition-colors"
+            title="Refresh"
+          >
+            <RefreshCw className="w-4 h-4" />
+          </button>
+          <button
+            onClick={openForm}
+            className="bg-blue-600 text-white px-4 py-2 rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors flex items-center gap-2 shadow-sm"
+          >
+            <Plus className="w-4 h-4" />
+            Add Entry
+          </button>
+        </div>
+      </div>
+
+      {/* Stats bar */}
+      <div className="grid grid-cols-4 lg:grid-cols-7 gap-2">
+        {[
+          { label: "Pending",        value: stats.pending,       color: "text-amber-700   bg-amber-50   border-amber-100",   click: () => setFilters(f => ({ ...f, status: "pending",  frequency: "" })) },
+          { label: "Overdue",        value: stats.overdue,       color: "text-red-700     bg-red-50     border-red-100",     click: () => setFilters(f => ({ ...f, urgency: "overdue", status: "pending" })) },
+          { label: "This Month",     value: stats.dueThisMonth,  color: "text-orange-700  bg-orange-50  border-orange-100",  click: null },
+          { label: "Renewed Total",  value: stats.renewed,       color: "text-emerald-700 bg-emerald-50 border-emerald-100", click: () => setFilters(f => ({ ...f, status: "renewed",  frequency: "" })) },
+          { label: "Monthly",        value: stats.monthly,       color: "text-purple-700  bg-purple-50  border-purple-100",  click: () => setFilters(f => ({ ...f, frequency: "monthly",   status: "pending" })) },
+          { label: "Quarterly",      value: stats.quarterly,     color: "text-teal-700    bg-teal-50    border-teal-100",    click: () => setFilters(f => ({ ...f, frequency: "quarterly", status: "pending" })) },
+          { label: "Annually",       value: stats.annually,      color: "text-gray-700    bg-gray-50    border-gray-200",    click: () => setFilters(f => ({ ...f, frequency: "annually",  status: "pending" })) },
+        ].map(({ label, value, color, click }) => (
+          <button
+            key={label}
+            onClick={click ?? undefined}
+            disabled={!click}
+            className={`border rounded-xl px-3 py-2.5 text-center transition-all ${color} ${click ? "hover:opacity-80 cursor-pointer" : "cursor-default"}`}
+          >
+            <div className="text-xl font-bold">{value}</div>
+            <div className="text-[9px] font-semibold uppercase tracking-widest mt-0.5 opacity-70 leading-tight">{label}</div>
+          </button>
+        ))}
       </div>
 
       {/* Alert pills */}
@@ -272,12 +385,12 @@ export default function DueDatesPage() {
           </div>
           <form onSubmit={handleAdd} className="p-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {[
-              { field: "policyHolderName", label: "Policy Holder Name", req: true, type: "text", placeholder: "Rajesh Kumar" },
-              { field: "phone", label: "Phone Number", req: true, type: "tel", placeholder: "98XXXXXXXX" },
-              { field: "email", label: "Email Address", req: false, type: "email", placeholder: "optional" },
-              { field: "policyNumber", label: "Policy Number", req: true, type: "text", placeholder: "POL-XXXXXXXX" },
-              { field: "dueDate", label: "Renewal Date", req: true, type: "date", placeholder: "" },
-              { field: "notes", label: "Notes", req: false, type: "text", placeholder: "Any special instructions..." },
+              { field: "policyHolderName", label: "Policy Holder Name", req: true,  type: "text",  placeholder: "Rajesh Kumar" },
+              { field: "phone",            label: "Phone Number",        req: true,  type: "tel",   placeholder: "98XXXXXXXX" },
+              { field: "email",            label: "Email Address",       req: false, type: "email", placeholder: "optional" },
+              { field: "policyNumber",     label: "Policy Number",       req: true,  type: "text",  placeholder: "POL-XXXXXXXX" },
+              { field: "dueDate",          label: "Renewal Date",        req: true,  type: "date",  placeholder: "" },
+              { field: "notes",            label: "Notes",               req: false, type: "text",  placeholder: "Any special instructions..." },
             ].map(({ field, label, req, type, placeholder }) => (
               <div key={field}>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
@@ -299,35 +412,40 @@ export default function DueDatesPage() {
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
                 Provider <span className="text-red-500">*</span>
               </label>
-              <select
-                required
-                value={form.bankName}
-                onChange={(e) => setForm({ ...form, bankName: e.target.value })}
-                className={inputCls + " w-full"}
-              >
+              <select required value={form.bankName} onChange={(e) => setForm({ ...form, bankName: e.target.value })} className={inputCls + " w-full"}>
                 <option value="">Select provider...</option>
-                {providers.map((p) => (
-                  <option key={p.id} value={p.name}>{p.name}</option>
-                ))}
+                {providers.map((p) => <option key={p.id} value={p.name}>{p.name}</option>)}
               </select>
             </div>
 
-            {/* Insurance Category */}
+            {/* Category */}
             <div>
               <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
                 Insurance Category <span className="text-red-500">*</span>
               </label>
-              <select
-                required
-                value={form.category}
-                onChange={(e) => setForm({ ...form, category: e.target.value })}
-                className={inputCls + " w-full"}
-              >
+              <select required value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className={inputCls + " w-full"}>
                 <option value="">Select category...</option>
-                {CATEGORY_OPTIONS.map((c) => (
-                  <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g, " ")}</option>
-                ))}
+                {CATEGORY_OPTIONS.map((c) => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g, " ")}</option>)}
               </select>
+            </div>
+
+            {/* Renewal Frequency */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
+                Renewal Frequency <span className="text-red-500">*</span>
+              </label>
+              <div className="flex gap-2">
+                {(["monthly", "quarterly", "annually"] as const).map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => setForm(prev => ({ ...prev, frequency: f }))}
+                    className={`flex-1 py-2 text-xs font-semibold rounded-lg border transition-all capitalize ${form.frequency === f ? "bg-blue-600 text-white border-blue-600" : "bg-white text-gray-600 border-gray-200 hover:border-blue-300"}`}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
             </div>
 
             <div className="sm:col-span-2 lg:col-span-3 flex gap-3 pt-1">
@@ -359,7 +477,7 @@ export default function DueDatesPage() {
       )}
 
       {/* Filter bar */}
-      <div className="bg-white rounded-xl border border-gray-200 p-4">
+      <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
         <div className="flex flex-wrap items-end gap-3">
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Search</span>
@@ -377,25 +495,25 @@ export default function DueDatesPage() {
 
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Status</span>
-            <select
-              value={filters.status}
-              onChange={(e) => setFilters({ ...filters, status: e.target.value })}
-              className={inputCls}
-            >
+            <select value={filters.status} onChange={(e) => setFilters({ ...filters, status: e.target.value })} className={inputCls}>
               <option value="">All Statuses</option>
-              {STATUS_OPTIONS.map((s) => (
-                <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
-              ))}
+              {STATUS_OPTIONS.map((s) => <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>)}
+            </select>
+          </div>
+
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Frequency</span>
+            <select value={filters.frequency} onChange={(e) => setFilters({ ...filters, frequency: e.target.value })} className={inputCls}>
+              <option value="">All Frequencies</option>
+              <option value="monthly">Monthly</option>
+              <option value="quarterly">Quarterly</option>
+              <option value="annually">Annually</option>
             </select>
           </div>
 
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Urgency</span>
-            <select
-              value={filters.urgency}
-              onChange={(e) => setFilters({ ...filters, urgency: e.target.value })}
-              className={inputCls}
-            >
+            <select value={filters.urgency} onChange={(e) => setFilters({ ...filters, urgency: e.target.value })} className={inputCls}>
               <option value="">All</option>
               <option value="overdue">Overdue</option>
               <option value="critical">Due in 7 days</option>
@@ -406,45 +524,52 @@ export default function DueDatesPage() {
 
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Provider</span>
-            <select
-              value={filters.provider}
-              onChange={(e) => setFilters({ ...filters, provider: e.target.value })}
-              className={inputCls}
-            >
+            <select value={filters.provider} onChange={(e) => setFilters({ ...filters, provider: e.target.value })} className={inputCls}>
               <option value="">All Providers</option>
-              {providerOptions.map((p) => (
-                <option key={p} value={p}>{p}</option>
-              ))}
+              {providerOptions.map((p) => <option key={p} value={p}>{p}</option>)}
             </select>
           </div>
 
           <div className="flex flex-col gap-1">
             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Category</span>
-            <select
-              value={filters.category}
-              onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-              className={inputCls}
-            >
+            <select value={filters.category} onChange={(e) => setFilters({ ...filters, category: e.target.value })} className={inputCls}>
               <option value="">All Categories</option>
-              {CATEGORY_OPTIONS.map((c) => (
-                <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g, " ")}</option>
-              ))}
+              {CATEGORY_OPTIONS.map((c) => <option key={c} value={c}>{c.charAt(0).toUpperCase() + c.slice(1).replace(/-/g, " ")}</option>)}
             </select>
           </div>
 
           {hasFilters && (
             <button
-              onClick={() => setFilters({ search: "", status: "", urgency: "", provider: "", category: "" })}
+              onClick={clearFilters}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
-              <X className="w-3.5 h-3.5" />
-              Clear
+              <X className="w-3.5 h-3.5" /> Clear all
             </button>
           )}
 
           <span className="ml-auto text-xs text-gray-400 self-end pb-2">
             {filtered.length} of {items.length} entries
           </span>
+        </div>
+
+        {/* Date range row */}
+        <div className="flex flex-wrap items-end gap-3 border-t border-gray-100 pt-3">
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Due Date From</span>
+            <input type="date" value={filters.dateFrom} onChange={(e) => setFilters({ ...filters, dateFrom: e.target.value })} className={inputCls} />
+          </div>
+          <div className="flex flex-col gap-1">
+            <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Due Date To</span>
+            <input type="date" value={filters.dateTo} onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })} className={inputCls} />
+          </div>
+          {(filters.dateFrom || filters.dateTo) && (
+            <button
+              onClick={() => setFilters(f => ({ ...f, dateFrom: "", dateTo: "" }))}
+              className="text-xs text-gray-500 hover:text-gray-700 border border-gray-200 px-3 py-2 rounded-lg transition-colors self-end"
+            >
+              Clear dates
+            </button>
+          )}
         </div>
       </div>
 
@@ -461,12 +586,12 @@ export default function DueDatesPage() {
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Due Date</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Days Left</th>
                 <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Status</th>
-                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Update</th>
+                <th className="text-left px-4 py-3 text-xs font-semibold text-gray-500 uppercase tracking-wide">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-50">
               {loading ? (
-                Array.from({ length: 4 }).map((_, i) => (
+                Array.from({ length: 5 }).map((_, i) => (
                   <tr key={i}>
                     {Array.from({ length: 8 }).map((_, j) => (
                       <td key={j} className="px-4 py-3.5">
@@ -483,11 +608,13 @@ export default function DueDatesPage() {
                       <p className="text-sm font-medium">
                         {items.length === 0 ? "No entries yet" : "No entries match filters"}
                       </p>
+                      {hasFilters && (
+                        <button onClick={clearFilters} className="mt-2 text-blue-600 text-sm font-semibold hover:underline">
+                          Clear filters
+                        </button>
+                      )}
                       {items.length === 0 && (
-                        <button
-                          onClick={openForm}
-                          className="mt-3 text-blue-600 text-sm font-semibold hover:underline"
-                        >
+                        <button onClick={openForm} className="mt-3 text-blue-600 text-sm font-semibold hover:underline">
                           + Add first entry
                         </button>
                       )}
@@ -496,25 +623,36 @@ export default function DueDatesPage() {
                 </tr>
               ) : (
                 filtered.map((item) => {
-                  const days = getDaysUntil(item.dueDate);
+                  const days      = getDaysUntil(item.dueDate);
                   const isOverdue = days < 0 && item.status === "pending";
+                  const freq      = parseFrequency(item.notes);
+                  const cleanNotes = (item.notes ?? "").replace(/\s*Frequency:\s*(monthly|quarterly|annually)/i, "").trim();
                   return (
                     <tr key={item.id} className={`hover:bg-gray-50/80 transition-colors ${isOverdue ? "bg-red-50/30" : ""}`}>
                       <td className="px-4 py-3.5">
                         <div className="font-semibold text-gray-900">{item.policyHolderName}</div>
                         {item.email && <div className="text-xs text-gray-400 mt-0.5">{item.email}</div>}
-                        {item.notes && <div className="text-xs text-gray-400 mt-0.5 truncate max-w-[160px]" title={item.notes}>{item.notes}</div>}
+                        {cleanNotes && <div className="text-xs text-gray-400 mt-0.5 truncate max-w-[160px]" title={cleanNotes}>{cleanNotes}</div>}
                       </td>
                       <td className="px-4 py-3.5">
                         <span className="font-mono text-gray-700 text-sm">{item.phone}</span>
                       </td>
                       <td className="px-4 py-3.5">
                         {item.bankName && <div className="text-sm text-gray-700 font-medium">{item.bankName}</div>}
-                        {item.category && <span className="text-[11px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded capitalize">{item.category.replace(/-/g, " ")}</span>}
+                        <div className="flex items-center gap-1 mt-0.5 flex-wrap">
+                          {item.category && (
+                            <span className="text-[10px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded capitalize">
+                              {item.category.replace(/-/g, " ")}
+                            </span>
+                          )}
+                          <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${FREQ_BADGE[freq]}`}>
+                            {freq.slice(0, 3)}
+                          </span>
+                        </div>
                         {!item.bankName && !item.category && <span className="text-gray-300">—</span>}
                       </td>
                       <td className="px-4 py-3.5 text-gray-500 text-xs font-mono">{item.policyNumber ?? "—"}</td>
-                      <td className="px-4 py-3.5 text-gray-700 text-sm">
+                      <td className="px-4 py-3.5 text-gray-700 text-sm whitespace-nowrap">
                         {new Date(item.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                       </td>
                       <td className="px-4 py-3.5">
@@ -526,16 +664,31 @@ export default function DueDatesPage() {
                         </span>
                       </td>
                       <td className="px-4 py-3.5">
-                        <select
-                          value={item.status}
-                          disabled={renewingId === item.id}
-                          onChange={(e) => updateStatus(item.id, e.target.value, item.status)}
-                          className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500 bg-white text-gray-700 transition-colors disabled:opacity-50"
-                        >
-                          {STATUS_OPTIONS.map((s) => (
-                            <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
-                          ))}
-                        </select>
+                        <div className="flex items-center gap-1.5">
+                          <select
+                            value={item.status}
+                            disabled={renewingId === item.id || notifyingId === item.id}
+                            onChange={(e) => updateStatus(item.id, e.target.value, item.status)}
+                            className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500 bg-white text-gray-700 transition-colors disabled:opacity-50"
+                          >
+                            {STATUS_OPTIONS.map((s) => (
+                              <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                            ))}
+                          </select>
+                          {item.status === "pending" && (
+                            <button
+                              onClick={() => quickNotify(item.id)}
+                              disabled={notifyingId === item.id || renewingId === item.id}
+                              title="Mark as Notified"
+                              className="p-1.5 rounded-lg border border-gray-200 text-gray-400 hover:bg-blue-50 hover:border-blue-200 hover:text-blue-600 transition-all disabled:opacity-40"
+                            >
+                              {notifyingId === item.id
+                                ? <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24"><circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" /><path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" /></svg>
+                                : <Bell className="w-3.5 h-3.5" />
+                              }
+                            </button>
+                          )}
+                        </div>
                       </td>
                     </tr>
                   );
