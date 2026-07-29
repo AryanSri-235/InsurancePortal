@@ -123,7 +123,7 @@ export default function ProvidersSection({ providers }: { providers: Provider[] 
                   <p className="text-xs font-bold text-gray-800 text-center leading-tight line-clamp-2">
                     {provider.name}
                   </p>
-                  {provider.claimSettlementRatio && (
+                  {!!provider.claimSettlementRatio && (
                     <span className="text-[10px] font-bold text-blue-600 bg-blue-50 border border-blue-100 px-2 py-0.5 rounded-full">
                       {provider.claimSettlementRatio}% CSR
                     </span>

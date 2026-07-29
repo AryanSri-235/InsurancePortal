@@ -129,11 +129,9 @@ export default function HealthSpecific() {
                 <p className="text-gray-600 mb-3 leading-relaxed">
                   {content.description}
                 </p>
-                {content.caveat && (
-                  <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800 mb-3">
+                {content.caveat ? <div className="bg-blue-50 border border-blue-200 rounded-lg px-4 py-3 text-sm text-blue-800 mb-3">
                     {content.caveat}
-                  </div>
-                )}
+                  </div> : null}
                 <div className="flex items-center gap-2 mt-4">
                   <span className="text-sm text-gray-500">Typical premium:</span>
                   <span className="font-semibold text-blue-700 text-sm bg-blue-100 px-3 py-1 rounded-full">

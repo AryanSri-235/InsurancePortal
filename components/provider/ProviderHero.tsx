@@ -1,6 +1,6 @@
 import { Provider } from "@prisma/client";
 import Link from "next/link";
-import { categoryLabel } from "@/lib/utils";
+import { categoryLabel, categoryRoute } from "@/lib/utils";
 
 interface Props {
   provider: Provider;
@@ -46,7 +46,7 @@ export default function ProviderHero({ provider, category, policyCount }: Props)
           </Link>
           <span className="text-gray-300">›</span>
           <Link
-            href={`/${category}-insurance`}
+            href={categoryRoute(category)}
             className="hover:text-blue-600 transition-colors"
           >
             {categoryLabel(category)}
@@ -83,9 +83,7 @@ export default function ProviderHero({ provider, category, policyCount }: Props)
             <h1 className="text-3xl lg:text-4xl font-black text-gray-900 leading-tight">
               {provider.name}
             </h1>
-            {provider.tagline && (
-              <p className="text-gray-500 text-base mt-1">{provider.tagline}</p>
-            )}
+            {provider.tagline ? <p className="text-gray-500 text-base mt-1">{provider.tagline}</p> : null}
 
             {/* Badges */}
             <div className="flex flex-wrap items-center gap-2 mt-3">
@@ -117,14 +115,12 @@ export default function ProviderHero({ provider, category, policyCount }: Props)
               <p className="text-xs text-gray-400 mt-0.5">Solvency Ratio</p>
             </div>
           )}
-          {showNetworkHospitals && (
-            <div>
+          {showNetworkHospitals ? <div>
               <p className="text-xl font-black text-blue-600">
                 {provider.networkHospitals!.toLocaleString("en-IN")}+
               </p>
               <p className="text-xs text-gray-400 mt-0.5">Network Hospitals</p>
-            </div>
-          )}
+            </div> : null}
           <div>
             <p className="text-xl font-black text-blue-600">{policyCount}</p>
             <p className="text-xs text-gray-400 mt-0.5">Plans Available</p>

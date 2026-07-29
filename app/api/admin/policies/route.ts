@@ -25,7 +25,8 @@ export async function GET(req: NextRequest) {
           ? { provider: { name: { contains: session.bankName!, mode: "insensitive" as const } } }
           : {}),
       },
-      include: { provider: { select: { name: true } } },
+      // slug is needed to build the public /{category}/{provider}/{policy} link
+      include: { provider: { select: { name: true, slug: true } } },
       orderBy: [{ category: "asc" }, { name: "asc" }],
     });
     return NextResponse.json({ success: true, data: policies });
@@ -39,7 +40,7 @@ const policySchema = z.object({
   name: z.string().min(2),
   slug: z.string().min(2),
   providerId: z.number(),
-  category: z.enum(["term", "life", "health", "motor", "travel", "home", "personal-accident", "fire", "marine", "pension", "commercial", "crop", "cyber"]),
+  category: z.enum(["term", "life", "health", "motor", "car", "two-wheeler", "family-health", "group-health", "travel", "home", "guaranteed-return", "child-savings", "retirement"]),
   subCategory: z.string().optional(),
   description: z.string().optional(),
   premiumStartsFrom: z.number().optional(),
@@ -55,7 +56,7 @@ const policySchema = z.object({
 
 export async function POST(req: NextRequest) {
   const session = await getSession();
-  if (!session || ["sales", "renewal"].includes(session.role)) {
+  if (!session || !["superadmin", "ram"].includes(session.role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -91,7 +92,7 @@ const patchSchema = policySchema.partial();
 
 export async function PATCH(req: NextRequest) {
   const session = await getSession();
-  if (!session || ["sales", "renewal"].includes(session.role)) {
+  if (!session || !["superadmin", "ram"].includes(session.role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -129,7 +130,7 @@ export async function PATCH(req: NextRequest) {
 
 export async function DELETE(req: NextRequest) {
   const session = await getSession();
-  if (!session || session.role !== "superadmin") {
+  if (!session || !["superadmin", "ram"].includes(session.role)) {
     return NextResponse.json({ error: "Forbidden" }, { status: 403 });
   }
 
@@ -137,6 +138,20 @@ export async function DELETE(req: NextRequest) {
     const { id } = await req.json();
     if (typeof id !== "number") {
       return NextResponse.json({ error: "Invalid ID" }, { status: 400 });
+    }
+
+    // RAM can only delete policies belonging to their provider
+    if (session.role === "ram") {
+      if (!session.bankName) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
+      const existing = await db.policy.findUnique({
+        where: { id },
+        include: { provider: { select: { name: true } } },
+      });
+      if (!existing || !existing.provider.name.toLowerCase().includes(session.bankName.toLowerCase())) {
+        return NextResponse.json({ error: "Forbidden" }, { status: 403 });
+      }
     }
 
     await db.$transaction([

@@ -38,7 +38,7 @@ export default function PhoneLookup() {
             className="pl-10 pr-3 py-2 border border-gray-200 rounded-lg text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 w-44 transition-colors"
           />
         </div>
-        {error && <p className="text-[10px] text-red-500 font-medium">{error}</p>}
+        {error ? <p className="text-[10px] text-red-500 font-medium">{error}</p> : null}
       </div>
       <button
         type="submit"

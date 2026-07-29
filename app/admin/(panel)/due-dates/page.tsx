@@ -19,7 +19,7 @@ interface DueDate {
 
 interface Provider { id: number; name: string; }
 
-const CATEGORY_OPTIONS = ["term", "life", "health", "motor", "car", "two-wheeler", "family-health", "group-health", "travel", "home", "term-women", "return-premium", "guaranteed-return", "child-savings", "retirement"];
+const CATEGORY_OPTIONS = ["term", "life", "health", "motor", "car", "two-wheeler", "family-health", "group-health", "travel", "home", "term-women", "term-rop", "guaranteed-return", "child-savings", "retirement"];
 
 const STATUS_BADGE: Record<string, string> = {
   pending:  "bg-amber-50 text-amber-700 border-amber-100",
@@ -75,7 +75,11 @@ function exportToCSV(data: DueDate[]) {
   URL.revokeObjectURL(url);
 }
 
-function DaysCell({ days }: { days: number }) {
+function DaysCell({ days, status }: { days: number; status?: string }) {
+  // Closed cycles have no countdown — the live one moved to the next due date.
+  if (status === "renewed" || status === "lapsed") {
+    return <span className="text-xs text-gray-300">—</span>;
+  }
   if (days < 0) return (
     <span className="inline-flex items-center gap-1 text-xs font-bold text-red-600 bg-red-50 border border-red-100 px-2 py-0.5 rounded-full">
       <span className="w-1.5 h-1.5 bg-red-500 rounded-full animate-pulse" />
@@ -296,12 +300,15 @@ export default function DueDatesPage() {
       const matchFrequency = !filters.frequency || freq === filters.frequency;
       const matchDateFrom  = !filters.dateFrom  || due >= new Date(filters.dateFrom);
       const matchDateTo    = !filters.dateTo    || due <= new Date(filters.dateTo + "T23:59:59");
-      const matchUrgency   = !filters.urgency   || (
+      // Urgency describes work still to be done, so it only applies to open
+      // cycles — a renewed or lapsed row is never "overdue" or "due in 7 days".
+      const isActionable   = item.status === "pending" || item.status === "notified";
+      const matchUrgency   = !filters.urgency   || (isActionable && (
         filters.urgency === "overdue"  ? days < 0 :
         filters.urgency === "critical" ? days >= 0 && days <= 7 :
         filters.urgency === "soon"     ? days > 7 && days <= 30 :
         filters.urgency === "upcoming" ? days > 30 : true
-      );
+      ));
       return matchSearch && matchStatus && matchProvider && matchCategory && matchFrequency && matchDateFrom && matchDateTo && matchUrgency;
     });
   }, [items, filters]);
@@ -412,8 +419,7 @@ export default function DueDatesPage() {
       )}
 
       {/* Add form */}
-      {showForm && (
-        <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      {showForm ? <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100 bg-gray-50/60">
             <h2 className="font-semibold text-gray-900 text-sm flex items-center gap-2">
               <Plus className="w-4 h-4 text-gray-400" />
@@ -434,7 +440,7 @@ export default function DueDatesPage() {
             ].map(({ field, label, req, type, placeholder }) => (
               <div key={field}>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
-                  {label} {req && <span className="text-red-500">*</span>}
+                  {label} {req ? <span className="text-red-500">*</span> : null}
                 </label>
                 <input
                   required={req}
@@ -513,8 +519,7 @@ export default function DueDatesPage() {
               </button>
             </div>
           </form>
-        </div>
-      )}
+        </div> : null}
 
       {/* Filter bar */}
       <div className="bg-white rounded-xl border border-gray-200 p-4 space-y-3">
@@ -578,14 +583,12 @@ export default function DueDatesPage() {
             </select>
           </div>
 
-          {hasFilters && (
-            <button
+          {hasFilters ? <button
               onClick={clearFilters}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
               <X className="w-3.5 h-3.5" /> Clear all
-            </button>
-          )}
+            </button> : null}
 
           <span className="ml-auto text-xs text-gray-400 self-end pb-2">
             {filtered.length} of {items.length} entries
@@ -602,14 +605,12 @@ export default function DueDatesPage() {
             <span className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest">Due Date To</span>
             <input type="date" value={filters.dateTo} onChange={(e) => setFilters({ ...filters, dateTo: e.target.value })} className={inputCls} />
           </div>
-          {(filters.dateFrom || filters.dateTo) && (
-            <button
+          {(filters.dateFrom || filters.dateTo) ? <button
               onClick={() => setFilters(f => ({ ...f, dateFrom: "", dateTo: "" }))}
               className="text-xs text-gray-500 hover:text-gray-700 border border-gray-200 px-3 py-2 rounded-lg transition-colors self-end"
             >
               Clear dates
-            </button>
-          )}
+            </button> : null}
         </div>
       </div>
 
@@ -648,11 +649,9 @@ export default function DueDatesPage() {
                       <p className="text-sm font-medium">
                         {items.length === 0 ? "No entries yet" : "No entries match filters"}
                       </p>
-                      {hasFilters && (
-                        <button onClick={clearFilters} className="mt-2 text-blue-600 text-sm font-semibold hover:underline">
+                      {hasFilters ? <button onClick={clearFilters} className="mt-2 text-blue-600 text-sm font-semibold hover:underline">
                           Clear filters
-                        </button>
-                      )}
+                        </button> : null}
                       {items.length === 0 && (
                         <button onClick={openForm} className="mt-3 text-blue-600 text-sm font-semibold hover:underline">
                           + Add first entry
@@ -671,20 +670,18 @@ export default function DueDatesPage() {
                     <tr key={item.id} className={`hover:bg-gray-50/80 transition-colors ${isOverdue ? "bg-red-50/30" : ""}`}>
                       <td className="px-4 py-3.5">
                         <div className="font-semibold text-gray-900">{item.policyHolderName}</div>
-                        {item.email && <div className="text-xs text-gray-400 mt-0.5">{item.email}</div>}
-                        {cleanNotes && <div className="text-xs text-gray-400 mt-0.5 truncate max-w-[160px]" title={cleanNotes}>{cleanNotes}</div>}
+                        {item.email ? <div className="text-xs text-gray-400 mt-0.5">{item.email}</div> : null}
+                        {cleanNotes ? <div className="text-xs text-gray-400 mt-0.5 truncate max-w-[160px]" title={cleanNotes}>{cleanNotes}</div> : null}
                       </td>
                       <td className="px-4 py-3.5">
                         <span className="font-mono text-gray-700 text-sm">{item.phone}</span>
                       </td>
                       <td className="px-4 py-3.5">
-                        {item.bankName && <div className="text-sm text-gray-700 font-medium">{item.bankName}</div>}
+                        {item.bankName ? <div className="text-sm text-gray-700 font-medium">{item.bankName}</div> : null}
                         <div className="flex items-center gap-1 mt-0.5 flex-wrap">
-                          {item.category && (
-                            <span className="text-[10px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded capitalize">
+                          {item.category ? <span className="text-[10px] font-semibold bg-blue-50 text-blue-700 px-1.5 py-0.5 rounded capitalize">
                               {item.category.replace(/-/g, " ")}
-                            </span>
-                          )}
+                            </span> : null}
                           <span className={`text-[10px] font-bold px-1.5 py-0.5 rounded uppercase ${FREQ_BADGE[freq]}`}>
                             {freq.slice(0, 3)}
                           </span>
@@ -696,7 +693,7 @@ export default function DueDatesPage() {
                         {new Date(item.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                       </td>
                       <td className="px-4 py-3.5">
-                        <DaysCell days={days} />
+                        <DaysCell days={days} status={item.status} />
                       </td>
                       <td className="px-4 py-3.5">
                         <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border capitalize ${STATUS_BADGE[item.status] ?? "bg-gray-50 text-gray-600 border-gray-100"}`}>
@@ -728,15 +725,13 @@ export default function DueDatesPage() {
                               }
                             </button>
                           )}
-                          {item.policyNumber && (
-                            <button
+                          {item.policyNumber ? <button
                               onClick={() => showHistory(item)}
                               title="View Renewal History"
                               className="p-1.5 rounded-lg border border-gray-200 text-gray-400 hover:bg-purple-50 hover:border-purple-200 hover:text-purple-600 transition-all"
                             >
                               <History className="w-3.5 h-3.5" />
-                            </button>
-                          )}
+                            </button> : null}
                         </div>
                       </td>
                     </tr>

@@ -208,11 +208,9 @@ export default function AdminShell({ children, session }: Props) {
                       {item.icon}
                     </span>
                     {!collapsed && <span className="flex-1">{item.label}</span>}
-                    {!collapsed && "badge" in item && item.badge && (
-                      <span className="text-[10px] font-bold bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded-full border border-blue-500/30">
+                    {!collapsed && "badge" in item && item.badge ? <span className="text-[10px] font-bold bg-blue-500/20 text-blue-300 px-1.5 py-0.5 rounded-full border border-blue-500/30">
                         {item.badge}
-                      </span>
-                    )}
+                      </span> : null}
                   </Link>
                 );
               })}
@@ -254,12 +252,10 @@ export default function AdminShell({ children, session }: Props) {
       </aside>
 
       {/* ── Mobile drawer overlay ── */}
-      {sidebarOpen && (
-        <div
+      {sidebarOpen ? <div
           className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
           onClick={closeSidebar}
-        />
-      )}
+        /> : null}
 
       {/* ── Mobile drawer ── */}
       <aside
@@ -297,7 +293,7 @@ export default function AdminShell({ children, session }: Props) {
               <p className="text-sm font-semibold text-gray-900 leading-tight">{session.name}</p>
               <p className="text-xs text-gray-400">
                 {ROLE_LABELS[session.role] ?? session.role}
-                {session.bankName && <span className="ml-1 text-blue-500">· {session.bankName}</span>}
+                {session.bankName ? <span className="ml-1 text-blue-500">· {session.bankName}</span> : null}
               </p>
             </div>
             <div className="w-8 h-8 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center text-white font-bold text-sm shadow-md shadow-blue-200 flex-shrink-0">

@@ -112,15 +112,13 @@ export default function ContactMessagesPage() {
             </select>
           </div>
 
-          {hasFilters && (
-            <button
+          {hasFilters ? <button
               onClick={() => setFilters({ search: "", subject: "", page: 1 })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
               <X className="w-3.5 h-3.5" />
               Clear
-            </button>
-          )}
+            </button> : null}
         </div>
       </div>
 
@@ -143,7 +141,7 @@ export default function ContactMessagesPage() {
           <div className="bg-white rounded-xl border border-gray-200 py-16 flex flex-col items-center text-gray-400">
             <Mail className="w-10 h-10 mb-3 opacity-30" />
             <p className="font-medium text-sm">No messages yet</p>
-            {hasFilters && <p className="text-xs mt-1">Try adjusting your filters</p>}
+            {hasFilters ? <p className="text-xs mt-1">Try adjusting your filters</p> : null}
           </div>
         ) : (
           messages.map(msg => {
@@ -165,11 +163,9 @@ export default function ContactMessagesPage() {
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-semibold text-gray-900 text-sm">{msg.name}</span>
-                      {msg.subject && (
-                        <span className="text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 px-2 py-0.5 rounded-full">
+                      {msg.subject ? <span className="text-xs font-medium bg-blue-50 text-blue-700 border border-blue-100 px-2 py-0.5 rounded-full">
                           {msg.subject}
-                        </span>
-                      )}
+                        </span> : null}
                     </div>
                     <p className="text-xs text-gray-400 mt-0.5">{msg.email}{msg.phone ? ` · ${msg.phone}` : ""}</p>
                   </div>
@@ -183,8 +179,7 @@ export default function ContactMessagesPage() {
                 </div>
 
                 {/* Expanded body */}
-                {isOpen && (
-                  <div className="px-5 pb-5 border-t border-gray-100 pt-4">
+                {isOpen ? <div className="px-5 pb-5 border-t border-gray-100 pt-4">
                     <div className="grid sm:grid-cols-3 gap-4 mb-4 text-sm">
                       <div>
                         <p className="text-[10px] font-semibold text-gray-400 uppercase tracking-widest mb-1">Full Name</p>
@@ -229,8 +224,7 @@ export default function ContactMessagesPage() {
                         </button>
                       </div>
                     </div>
-                  </div>
-                )}
+                  </div> : null}
               </div>
             );
           })

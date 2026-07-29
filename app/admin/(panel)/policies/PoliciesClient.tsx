@@ -4,6 +4,7 @@ import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import { Plus, X, Search, ShieldCheck, Star, Pencil, ExternalLink, Trash2 } from "lucide-react";
 import Swal from "sweetalert2";
+import { categoryRoute } from "@/lib/utils";
 
 interface Policy {
   id: number;
@@ -15,39 +16,39 @@ interface Policy {
   coverAmount: string | null;
   isFeatured: boolean;
   isActive: boolean;
-  provider: { name: string };
+  provider: { name: string; slug?: string };
 }
 
 const CATEGORY_OPTIONS: Record<string, string> = {
-  term:              "Term Insurance",
-  life:              "Life Insurance",
-  health:            "Health Insurance",
-  motor:             "Motor Insurance",
-  travel:            "Travel Insurance",
-  home:              "Home Insurance",
-  "personal-accident": "Personal Accident",
-  fire:              "Fire Insurance",
-  marine:            "Marine Insurance",
-  pension:           "Pension / Retirement",
-  commercial:        "Commercial / Business",
-  crop:              "Crop Insurance",
-  cyber:             "Cyber Insurance",
+  term:               "Term Insurance",
+  life:               "Life Insurance",
+  health:             "Health Insurance",
+  motor:              "Motor Insurance",
+  car:                "Car Insurance",
+  "two-wheeler":      "Two Wheeler Insurance",
+  "family-health":    "Family Health Insurance",
+  "group-health":     "Group Health Insurance",
+  travel:             "Travel Insurance",
+  home:               "Home Insurance",
+  "guaranteed-return": "Guaranteed Return Plans",
+  "child-savings":    "Child Savings Plans",
+  retirement:         "Retirement Plans",
 };
 
 const CAT_BADGE: Record<string, string> = {
-  term:              "bg-blue-50 text-blue-700 border-blue-100",
-  life:              "bg-violet-50 text-violet-700 border-violet-100",
-  health:            "bg-emerald-50 text-emerald-700 border-emerald-100",
-  motor:             "bg-orange-50 text-orange-700 border-orange-100",
-  travel:            "bg-sky-50 text-sky-700 border-sky-100",
-  home:              "bg-amber-50 text-amber-700 border-amber-100",
-  "personal-accident": "bg-red-50 text-red-700 border-red-100",
-  fire:              "bg-rose-50 text-rose-700 border-rose-100",
-  marine:            "bg-cyan-50 text-cyan-700 border-cyan-100",
-  pension:           "bg-teal-50 text-teal-700 border-teal-100",
-  commercial:        "bg-indigo-50 text-indigo-700 border-indigo-100",
-  crop:              "bg-lime-50 text-lime-700 border-lime-100",
-  cyber:             "bg-purple-50 text-purple-700 border-purple-100",
+  term:               "bg-blue-50 text-blue-700 border-blue-100",
+  life:               "bg-violet-50 text-violet-700 border-violet-100",
+  health:             "bg-emerald-50 text-emerald-700 border-emerald-100",
+  motor:              "bg-orange-50 text-orange-700 border-orange-100",
+  car:                "bg-amber-50 text-amber-700 border-amber-100",
+  "two-wheeler":      "bg-yellow-50 text-yellow-700 border-yellow-100",
+  "family-health":    "bg-teal-50 text-teal-700 border-teal-100",
+  "group-health":     "bg-cyan-50 text-cyan-700 border-cyan-100",
+  travel:             "bg-sky-50 text-sky-700 border-sky-100",
+  home:               "bg-lime-50 text-lime-700 border-lime-100",
+  "guaranteed-return": "bg-green-50 text-green-700 border-green-100",
+  "child-savings":    "bg-pink-50 text-pink-700 border-pink-100",
+  retirement:         "bg-indigo-50 text-indigo-700 border-indigo-100",
 };
 
 const inputCls = "border border-gray-200 rounded-lg px-3 py-2 text-sm bg-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors text-gray-700 placeholder-gray-400";
@@ -303,15 +304,13 @@ export default function PoliciesClient({ role }: { role: string }) {
             />
           </div>
 
-          {hasFilters && (
-            <button
+          {hasFilters ? <button
               onClick={() => setFilters({ category: "", search: "", providerId: "", isActive: "", isFeatured: "", minPremium: "", maxPremium: "" })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
               <X className="w-3.5 h-3.5" />
               Clear
-            </button>
-          )}
+            </button> : null}
         </div>
       </div>
 
@@ -350,7 +349,7 @@ export default function PoliciesClient({ role }: { role: string }) {
                     <div className="flex flex-col items-center justify-center py-14 text-gray-400">
                       <ShieldCheck className="w-8 h-8 mb-2 opacity-40" />
                       <p className="text-sm font-medium">No policies found</p>
-                      {hasFilters && <p className="text-xs mt-1">Try adjusting your filters</p>}
+                      {hasFilters ? <p className="text-xs mt-1">Try adjusting your filters</p> : null}
                     </div>
                   </td>
                 </tr>
@@ -414,7 +413,7 @@ export default function PoliciesClient({ role }: { role: string }) {
                           </button>
                         )}
                         <Link
-                          href={`/${policy.category}-insurance/${policy.slug}`}
+                          href={`${categoryRoute(policy.category)}/${policy.provider.slug ?? ""}/${policy.slug}`}
                           target="_blank"
                           className="text-xs font-semibold text-blue-600 hover:text-blue-700 flex items-center gap-1"
                         >

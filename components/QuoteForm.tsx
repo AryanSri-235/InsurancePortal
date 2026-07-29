@@ -16,7 +16,7 @@ const INSURANCE_TYPES = [
   { value: "travel",                 label: "Travel Insurance" },
   { value: "home",                   label: "Home Insurance" },
   { value: "term-women",             label: "Term Insurance for Women" },
-  { value: "return-premium",         label: "Term Plans with Return of Premium" },
+  { value: "term-rop",               label: "Term Plans with Return of Premium" },
   { value: "guaranteed-return",      label: "Guaranteed Return Plans" },
   { value: "child-savings",          label: "Child Savings Plans" },
   { value: "retirement",             label: "Retirement Plans" },
@@ -146,8 +146,7 @@ export default function QuoteForm({ compact, onSuccess, utmSource = "hero" }: Pr
       </div>
 
       {/* Specific policy dropdown */}
-      {form.category && (
-        <div>
+      {form.category ? <div>
           <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
             Specific plan <span className="normal-case font-normal text-gray-400">(optional)</span>
           </label>
@@ -171,8 +170,7 @@ export default function QuoteForm({ compact, onSuccess, utmSource = "hero" }: Pr
               ))}
             </select>
           )}
-        </div>
-      )}
+        </div> : null}
 
       {/* Submit */}
       <button

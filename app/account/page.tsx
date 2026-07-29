@@ -21,7 +21,9 @@ async function getUserLeads(phone: string) {
       include: { policy: { include: { provider: true } } },
     }),
     db.dueDate.findMany({
-      where: { phone, dueDate: { gte: now, lte: thirtyDaysOut }, status: { not: "lapsed" } },
+      // Only cycles still needing action — a renewed row's countdown has moved
+      // to the next due date, so counting it here raises a false alarm.
+      where: { phone, dueDate: { gte: now, lte: thirtyDaysOut }, status: { in: ["pending", "notified"] } },
       orderBy: { dueDate: "asc" },
       include: { policy: { include: { provider: true } } },
     }),
@@ -615,11 +617,9 @@ export default async function AccountPage() {
                         <div key={d.id} style={{ background: "#fff", borderRadius: 8, padding: "10px 12px", display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, border: "1px solid #FDE68A", flexWrap: "wrap" }}>
                           <div style={{ minWidth: 0 }}>
                             <p style={{ fontSize: 13, fontWeight: 600, color: "#0B1120" }}>{d.policyNumber ?? "Policy"}</p>
-                            {(d.policy || d.bankName) && (
-                              <p style={{ fontSize: 11, color: "#8899B4", marginTop: 1 }}>
+                            {(d.policy || d.bankName) ? <p style={{ fontSize: 11, color: "#8899B4", marginTop: 1 }}>
                                 {d.policy ? `${d.policy.provider.name} · ${d.policy.name}` : d.bankName}
-                              </p>
-                            )}
+                              </p> : null}
                           </div>
                           <div style={{ textAlign: "right", flexShrink: 0 }}>
                             <p style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{t.label}</p>
@@ -676,7 +676,7 @@ export default async function AccountPage() {
                           <p style={{ fontSize: 13, fontWeight: 600, color: "#0B1120", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                             {d.policyNumber ?? "Policy Renewal"}
                           </p>
-                          {providerLine && <p style={{ fontSize: 11, color: "#8899B4", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{providerLine}</p>}
+                          {providerLine ? <p style={{ fontSize: 11, color: "#8899B4", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{providerLine}</p> : null}
                         </div>
                       </div>
                       <div className="acct-renewal-right">
@@ -684,11 +684,9 @@ export default async function AccountPage() {
                           <p style={{ fontSize: 12, fontWeight: 700, color: t.text }}>{t.label}</p>
                           <p style={{ fontSize: 11, color: "#94A3B8" }}>{new Date(d.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</p>
                         </div>
-                        {freqStyle && freq && (
-                          <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "capitalize", padding: "3px 8px", borderRadius: 20, background: freqStyle.bg, color: freqStyle.color, border: `1px solid ${freqStyle.border}`, flexShrink: 0 }}>
+                        {freqStyle && freq ? <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "capitalize", padding: "3px 8px", borderRadius: 20, background: freqStyle.bg, color: freqStyle.color, border: `1px solid ${freqStyle.border}`, flexShrink: 0 }}>
                             ↻ {freq}
-                          </span>
-                        )}
+                          </span> : null}
                         <span style={{ fontSize: 10, fontWeight: 700, letterSpacing: "0.04em", textTransform: "uppercase", padding: "3px 8px", borderRadius: 20, background: "#FFFBEB", color: "#92400E", border: "1px solid #FDE68A", flexShrink: 0 }}>
                           {d.status}
                         </span>
@@ -747,18 +745,16 @@ export default async function AccountPage() {
                                 </p>
                               </div>
                               <div style={{ display: "flex", alignItems: "center", gap: 6, flexShrink: 0 }}>
-                                {freqStyle && freq && (
-                                  <span style={{ fontSize: 10, fontWeight: 700, textTransform: "capitalize", padding: "2px 7px", borderRadius: 20, background: freqStyle.bg, color: freqStyle.color, border: `1px solid ${freqStyle.border}` }}>
+                                {freqStyle && freq ? <span style={{ fontSize: 10, fontWeight: 700, textTransform: "capitalize", padding: "2px 7px", borderRadius: 20, background: freqStyle.bg, color: freqStyle.color, border: `1px solid ${freqStyle.border}` }}>
                                     ↻ {freq}
-                                  </span>
-                                )}
+                                  </span> : null}
                                 <span style={{ fontSize: 10, fontWeight: 700, color: "#059669", background: "#ECFDF5", border: "1px solid #A7F3D0", padding: "2px 7px", borderRadius: 20 }}>
                                   ✓ Renewed
                                 </span>
                               </div>
                             </div>
                             <div style={{ display: "flex", alignItems: "center", gap: 10, marginTop: 5 }}>
-                              {providerLine && <p style={{ fontSize: 11, color: "#8899B4", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>{providerLine}</p>}
+                              {providerLine ? <p style={{ fontSize: 11, color: "#8899B4", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", flex: 1 }}>{providerLine}</p> : null}
                               <p style={{ fontSize: 11, color: "#94A3B8", flexShrink: 0 }}>Due {dateStr}</p>
                             </div>
                           </div>
@@ -806,9 +802,7 @@ export default async function AccountPage() {
                         </span>
                         <div style={{ minWidth: 0 }}>
                           <p style={{ fontSize: 13, fontWeight: 600, color: "#0B1120" }}>{catLabel} Quote</p>
-                          {lead.policy && (
-                            <p style={{ fontSize: 11, color: "#8899B4", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{lead.policy.provider.name} · {lead.policy.name}</p>
-                          )}
+                          {lead.policy ? <p style={{ fontSize: 11, color: "#8899B4", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>{lead.policy.provider.name} · {lead.policy.name}</p> : null}
                         </div>
                       </div>
                       <div className="acct-quote-right">

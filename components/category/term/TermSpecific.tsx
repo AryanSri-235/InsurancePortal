@@ -200,9 +200,7 @@ export default function TermSpecific() {
                           : "border-gray-300"
                       }`}
                     >
-                      {isChecked && (
-                        <Check className="w-3 h-3 text-white" strokeWidth={3} />
-                      )}
+                      {isChecked ? <Check className="w-3 h-3 text-white" strokeWidth={3} /> : null}
                     </div>
                   </div>
                 </div>

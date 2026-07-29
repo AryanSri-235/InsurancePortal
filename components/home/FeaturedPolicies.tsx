@@ -5,6 +5,7 @@ import { useRef, useState, useEffect } from "react";
 import { Policy, Provider } from "@prisma/client";
 import BgDecorations from "./BgDecorations";
 import { Check } from "lucide-react";
+import { categoryRoute } from "@/lib/utils";
 
 type PolicyWithProvider = Policy & {
   provider: Pick<Provider, "name" | "slug" | "logoUrl" | "claimSettlementRatio">;
@@ -12,10 +13,17 @@ type PolicyWithProvider = Policy & {
 
 const CAT_LABEL: Record<string, string> = {
   term: "Term", health: "Health", motor: "Motor", life: "Life",
-  travel: "Travel", home: "Home", "personal-accident": "PA",
-  fire: "Fire", marine: "Marine", pension: "Pension",
-  commercial: "Commercial", crop: "Crop", cyber: "Cyber",
+  car: "Car", "two-wheeler": "2 Wheeler", "family-health": "Family Health",
+  "group-health": "Group Health", travel: "Travel", home: "Home",
+  "term-women": "Term (Women)", "term-rop": "Term ROP",
+  "guaranteed-return": "Guaranteed Return", "child-savings": "Child Savings",
+  retirement: "Retirement",
 };
+
+// Category route is not always `/{category}-insurance` — e.g. retirement → /retirement-plans
+function policyHref(policy: PolicyWithProvider): string {
+  return `${categoryRoute(policy.category)}/${policy.provider.slug}/${policy.slug}`;
+}
 
 const ACCENT = [
   { pill: "bg-blue-100 text-blue-700",   grad: "from-blue-600 to-blue-700",   border: "group-hover:border-blue-200",   shadow: "group-hover:shadow-blue-100/60"   },
@@ -23,6 +31,8 @@ const ACCENT = [
 ];
 
 const CARD_W = 300; // px — keeps cards consistent
+const CARD_GAP = 20; // px — applied as margin so one copy is an exact multiple of the track
+const MIN_CARDS = 14; // enough to span a wide viewport twice over, so the strip never runs dry
 
 export default function FeaturedPolicies({ policies: initialPolicies = [] }: { policies?: PolicyWithProvider[] }) {
   const [policies, setPolicies] = useState<PolicyWithProvider[]>(initialPolicies);
@@ -41,8 +51,12 @@ export default function FeaturedPolicies({ policies: initialPolicies = [] }: { p
 
   if (!policies || !policies.length) return null;
 
-  // Triple the list for a seamless loop
-  const items = [...policies, ...policies, ...policies];
+  // Repeat the list enough times to fill a wide viewport — with only 2 featured
+  // plans a fixed 3× strip is narrower than the screen and leaves a visible gap.
+  const reps = Math.max(3, Math.ceil(MIN_CARDS / policies.length));
+  const items = Array.from({ length: reps }, () => policies).flat();
+  // Scroll exactly one copy per cycle, so the loop is seamless at any rep count.
+  const shift = 100 / reps;
   // Animation duration: ~4s per card
   const duration = policies.length * 4;
 
@@ -77,10 +91,11 @@ export default function FeaturedPolicies({ policies: initialPolicies = [] }: { p
 
           <div
             ref={trackRef}
-            className="flex gap-5 py-4 px-4"
+            className="flex py-4"
             style={{
               width: "max-content",
               animation: `marquee ${duration}s linear infinite`,
+              ["--marquee-shift" as string]: `-${shift}%`,
             }}
             onMouseEnter={() => {
               if (trackRef.current) trackRef.current.style.animationPlayState = "paused";
@@ -96,7 +111,7 @@ export default function FeaturedPolicies({ policies: initialPolicies = [] }: { p
                 <div
                   key={`${policy.id}-${i}`}
                   className={`group flex-shrink-0 flex flex-col bg-white rounded-3xl border-2 border-gray-100 shadow-sm hover:shadow-2xl hover:-translate-y-2 transition-all duration-300 overflow-hidden ${accent.border} ${accent.shadow}`}
-                  style={{ width: `${CARD_W}px` }}
+                  style={{ width: `${CARD_W}px`, marginRight: `${CARD_GAP}px` }}
                 >
                   {/* Top gradient bar */}
                   <div className={`h-1.5 w-full bg-gradient-to-r ${accent.grad} flex-shrink-0`} />
@@ -124,7 +139,7 @@ export default function FeaturedPolicies({ policies: initialPolicies = [] }: { p
 
                     {/* Stats grid */}
                     <div className="grid grid-cols-2 gap-2 mb-4">
-                      {policy.premiumStartsFrom && (
+                      {!!policy.premiumStartsFrom && (
                         <div className="bg-gray-50 rounded-xl p-2.5 border border-gray-100">
                           <p className="text-[10px] text-gray-400 mb-0.5">Premium from</p>
                           <p className="text-sm font-bold text-gray-900">
@@ -133,24 +148,20 @@ export default function FeaturedPolicies({ policies: initialPolicies = [] }: { p
                           </p>
                         </div>
                       )}
-                      {policy.coverAmount && (
-                        <div className="bg-gray-50 rounded-xl p-2.5 border border-gray-100">
+                      {policy.coverAmount ? <div className="bg-gray-50 rounded-xl p-2.5 border border-gray-100">
                           <p className="text-[10px] text-gray-400 mb-0.5">Cover</p>
                           <p className="text-sm font-bold text-gray-900 truncate">{policy.coverAmount}</p>
-                        </div>
-                      )}
-                      {policy.provider.claimSettlementRatio && (
+                        </div> : null}
+                      {!!policy.provider.claimSettlementRatio && (
                         <div className="bg-blue-50 rounded-xl p-2.5 border border-blue-100">
                           <p className="text-[10px] text-gray-400 mb-0.5">Claim Ratio</p>
                           <p className="text-sm font-bold text-blue-700">{policy.provider.claimSettlementRatio}%</p>
                         </div>
                       )}
-                      {policy.policyTerm && (
-                        <div className="bg-gray-50 rounded-xl p-2.5 border border-gray-100">
+                      {policy.policyTerm ? <div className="bg-gray-50 rounded-xl p-2.5 border border-gray-100">
                           <p className="text-[10px] text-gray-400 mb-0.5">Policy Term</p>
                           <p className="text-sm font-bold text-gray-900 truncate">{policy.policyTerm}</p>
-                        </div>
-                      )}
+                        </div> : null}
                     </div>
 
                     {/* Key benefits */}
@@ -166,7 +177,7 @@ export default function FeaturedPolicies({ policies: initialPolicies = [] }: { p
                     )}
 
                     <Link
-                      href={`/${policy.category}-insurance/${policy.provider.slug}/${policy.slug}`}
+                      href={policyHref(policy)}
                       className={`btn-shine mt-auto block w-full text-center bg-gradient-to-r ${accent.grad} text-white py-2.5 rounded-2xl text-xs font-bold shadow-md hover:shadow-lg hover:-translate-y-0.5 transition-all duration-200`}
                     >
                       View Plan Details →

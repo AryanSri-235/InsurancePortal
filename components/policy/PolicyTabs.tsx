@@ -50,12 +50,10 @@ export default function PolicyTabs({ policy }: { policy: PolicyWithRiders }) {
               ))}
           </div>
 
-          {policy.description && (
-            <div>
+          {policy.description ? <div>
               <h3 className="font-semibold text-gray-900 mb-2">About this Plan</h3>
               <p className="text-sm text-gray-600 leading-relaxed">{policy.description}</p>
-            </div>
-          )}
+            </div> : null}
 
           {policy.riders.length > 0 && (
             <div>
@@ -65,15 +63,11 @@ export default function PolicyTabs({ policy }: { policy: PolicyWithRiders }) {
                   <div key={rider.id} className="flex items-start justify-between border border-gray-100 rounded-xl p-4">
                     <div>
                       <p className="font-medium text-gray-900 text-sm">{rider.name}</p>
-                      {rider.description && (
-                        <p className="text-xs text-gray-500 mt-0.5">{rider.description}</p>
-                      )}
+                      {rider.description ? <p className="text-xs text-gray-500 mt-0.5">{rider.description}</p> : null}
                     </div>
-                    {rider.extraPremium && (
-                      <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-full flex-shrink-0 ml-3">
+                    {rider.extraPremium ? <span className="text-xs font-semibold text-blue-600 bg-blue-50 px-2 py-1 rounded-full flex-shrink-0 ml-3">
                         +₹{rider.extraPremium}/mo
-                      </span>
-                    )}
+                      </span> : null}
                   </div>
                 ))}
               </div>

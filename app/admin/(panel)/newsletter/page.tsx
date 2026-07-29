@@ -139,15 +139,13 @@ export default function NewsletterPage() {
             </select>
           </div>
 
-          {hasFilters && (
-            <button
+          {hasFilters ? <button
               onClick={() => setFilters({ search: "", source: "", page: 1 })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 border border-red-100 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
               <X className="w-3.5 h-3.5" />
               Clear
-            </button>
-          )}
+            </button> : null}
         </div>
       </div>
 

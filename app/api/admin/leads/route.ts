@@ -103,13 +103,18 @@ export async function PATCH(req: NextRequest) {
       if (!category?.trim()) return NextResponse.json({ error: "Category is required" }, { status: 422 });
     }
 
+    // A lead that is already converted has its renewal on file — converting it
+    // again (e.g. status toggled away and back) must not duplicate the due date.
+    const before = await db.lead.findUnique({ where: { id }, select: { status: true } });
+    const alreadyConverted = before?.status === "converted";
+
     const lead = await db.lead.update({
       where: { id },
       data: { status },
       select: { id: true, name: true, phone: true, email: true, category: true, policyId: true, status: true },
     });
 
-    if (status === "converted") {
+    if (status === "converted" && !alreadyConverted) {
       const due = await db.dueDate.create({
         data: {
           policyHolderName: lead.name,

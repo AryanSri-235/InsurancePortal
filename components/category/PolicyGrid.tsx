@@ -77,20 +77,16 @@ export default function PolicyGrid({ policies, category }: { policies: PolicyWit
                   <h3 className="font-black text-gray-900 text-base leading-tight">{policy.name}</h3>
                 </div>
               </div>
-              {policy.isFeatured && (
-                <span className="inline-flex items-center gap-1 flex-shrink-0 bg-green-50 text-green-700 border-2 border-green-200 text-xs font-black px-2.5 py-1 rounded-xl whitespace-nowrap">
+              {policy.isFeatured ? <span className="inline-flex items-center gap-1 flex-shrink-0 bg-green-50 text-green-700 border-2 border-green-200 text-xs font-black px-2.5 py-1 rounded-xl whitespace-nowrap">
                   <Star className="w-3 h-3 fill-current" /> Top Pick
-                </span>
-              )}
+                </span> : null}
             </div>
 
-            {policy.description && (
-              <p className="text-sm text-gray-500 mb-5 leading-relaxed line-clamp-2">{policy.description}</p>
-            )}
+            {policy.description ? <p className="text-sm text-gray-500 mb-5 leading-relaxed line-clamp-2">{policy.description}</p> : null}
 
             {/* Stats grid */}
             <div className="grid grid-cols-2 gap-2.5 mb-5">
-              {policy.premiumStartsFrom && (
+              {!!policy.premiumStartsFrom && (
                 <div className="bg-gray-50 border-2 border-gray-100 rounded-2xl p-3 group-hover:border-gray-200 transition-colors">
                   <p className="text-xs text-gray-400 mb-1">Premium from</p>
                   <p className="text-sm font-black text-gray-900">
@@ -99,24 +95,20 @@ export default function PolicyGrid({ policies, category }: { policies: PolicyWit
                   </p>
                 </div>
               )}
-              {policy.coverAmount && (
-                <div className="bg-gray-50 border-2 border-gray-100 rounded-2xl p-3 group-hover:border-gray-200 transition-colors">
+              {policy.coverAmount ? <div className="bg-gray-50 border-2 border-gray-100 rounded-2xl p-3 group-hover:border-gray-200 transition-colors">
                   <p className="text-xs text-gray-400 mb-1">Cover</p>
                   <p className="text-sm font-black text-gray-900">{policy.coverAmount}</p>
-                </div>
-              )}
-              {policy.provider.claimSettlementRatio && (
+                </div> : null}
+              {!!policy.provider.claimSettlementRatio && (
                 <div className={`border-2 rounded-2xl p-3 ${c.avatarBg}`}>
                   <p className="text-xs text-gray-400 mb-1">Claim Ratio</p>
                   <p className={`text-sm font-black ${c.avatarText}`}>{policy.provider.claimSettlementRatio}%</p>
                 </div>
               )}
-              {policy.eligibilityAge && (
-                <div className="bg-gray-50 border-2 border-gray-100 rounded-2xl p-3 group-hover:border-gray-200 transition-colors">
+              {policy.eligibilityAge ? <div className="bg-gray-50 border-2 border-gray-100 rounded-2xl p-3 group-hover:border-gray-200 transition-colors">
                   <p className="text-xs text-gray-400 mb-1">Age</p>
                   <p className="text-sm font-black text-gray-900">{policy.eligibilityAge}</p>
-                </div>
-              )}
+                </div> : null}
             </div>
 
             {/* Key benefits */}

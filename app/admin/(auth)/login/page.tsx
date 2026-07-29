@@ -130,12 +130,10 @@ export default function AdminLoginPage() {
                 </div>
               </div>
 
-              {error && (
-                <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+              {error ? <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
                   <AlertCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
                   <p className="text-red-600 text-sm">{error}</p>
-                </div>
-              )}
+                </div> : null}
 
               <button
                 type="submit"

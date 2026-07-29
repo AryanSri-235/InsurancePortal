@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { Provider } from "@prisma/client";
-import { MapPin } from "lucide-react";
 
 interface ProviderNetworkSearchProps {
   provider: Provider;
@@ -98,26 +97,12 @@ export default function ProviderNetworkSearch({
           ))}
         </div>
 
-        {/* Note and CTA */}
-        <div className="mt-4 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+        {/* Note */}
+        <div className="mt-4">
           <p className="text-xs text-gray-400 italic">
             Actual hospital/garage count may vary. Call +91 80761 75709 to
             confirm.
           </p>
-          {isHealth && (
-            <a
-              href="#"
-              className="text-sm font-semibold text-blue-600 hover:text-blue-700 whitespace-nowrap"
-            >
-              View Full Hospital Network &rarr;
-            </a>
-          )}
-        </div>
-
-        {/* Map Placeholder */}
-        <div className="mt-6 bg-gray-100 border-2 border-gray-200 rounded-2xl h-48 flex flex-col items-center justify-center gap-2">
-          <MapPin className="w-8 h-8 text-gray-400" />
-          <span className="text-gray-400 text-sm">Interactive map coming soon</span>
         </div>
       </div>
     </section>

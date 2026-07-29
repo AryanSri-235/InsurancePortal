@@ -2,14 +2,14 @@
 
 import { useEffect, useState, useCallback } from "react";
 import Swal from "sweetalert2";
-import { Search, X, Frown, CheckCircle } from "lucide-react";
+import { Search, X, Frown, CheckCircle, Lock } from "lucide-react";
 
 const STATUS_OPTIONS = ["new", "contacted", "converted", "lost"];
 
 interface RenewalModal { leadId: number; name: string; phone: string; }
 interface Provider { id: number; name: string; }
 
-const CATEGORY_OPTIONS = ["term", "life", "health", "motor", "car", "two-wheeler", "family-health", "group-health", "travel", "home", "term-women", "return-premium", "guaranteed-return", "child-savings", "retirement"];
+const CATEGORY_OPTIONS = ["term", "life", "health", "motor", "car", "two-wheeler", "family-health", "group-health", "travel", "home", "term-women", "term-rop", "guaranteed-return", "child-savings", "retirement"];
 
 const STATUS_BADGE: Record<string, string> = {
   new: "bg-blue-50 text-blue-700 border-blue-100",
@@ -194,11 +194,9 @@ export default function LeadsPage() {
           <p className="text-gray-400 text-sm">{meta.total} total leads</p>
         </div>
         <div className="flex items-center gap-2">
-          {hasFilters && (
-            <span className="text-xs text-blue-600 font-medium bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-full">
+          {hasFilters ? <span className="text-xs text-blue-600 font-medium bg-blue-50 border border-blue-100 px-2.5 py-1 rounded-full">
               Filtered
-            </span>
-          )}
+            </span> : null}
         </div>
       </div>
 
@@ -262,15 +260,13 @@ export default function LeadsPage() {
             />
           </FilterInput>
 
-          {hasFilters && (
-            <button
+          {hasFilters ? <button
               onClick={() => setFilters({ status: "", category: "", search: "", page: 1, dateFrom: "", dateTo: "" })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
               <X className="w-3.5 h-3.5" />
               Clear filters
-            </button>
-          )}
+            </button> : null}
         </div>
       </div>
 
@@ -306,7 +302,7 @@ export default function LeadsPage() {
                     <div className="flex flex-col items-center justify-center py-14 text-gray-400">
                       <Frown className="w-8 h-8 mb-2 opacity-40" />
                       <p className="text-sm font-medium">No leads found</p>
-                      {hasFilters && <p className="text-xs mt-1">Try adjusting your filters</p>}
+                      {hasFilters ? <p className="text-xs mt-1">Try adjusting your filters</p> : null}
                     </div>
                   </td>
                 </tr>
@@ -315,12 +311,10 @@ export default function LeadsPage() {
                   <tr key={lead.id} className="hover:bg-gray-50/80 transition-colors">
                     <td className="px-4 py-3.5">
                       <div className="font-semibold text-gray-900 text-sm">{lead.name}</div>
-                      {lead.email && <div className="text-xs text-gray-400 mt-0.5">{lead.email}</div>}
-                      {lead.isReturning && (
-                        <span className="text-[10px] font-bold bg-orange-50 text-orange-600 border border-orange-100 px-1.5 py-0.5 rounded-full mt-1 inline-block">
+                      {lead.email ? <div className="text-xs text-gray-400 mt-0.5">{lead.email}</div> : null}
+                      {lead.isReturning ? <span className="text-[10px] font-bold bg-orange-50 text-orange-600 border border-orange-100 px-1.5 py-0.5 rounded-full mt-1 inline-block">
                           Returning
-                        </span>
-                      )}
+                        </span> : null}
                     </td>
                     <td className="px-4 py-3.5">
                       <span className="font-mono text-gray-700 text-sm">{lead.phone}</span>
@@ -343,16 +337,29 @@ export default function LeadsPage() {
                       <div className="text-gray-400 mt-0.5">{new Date(lead.createdAt).toLocaleTimeString("en-IN", { hour: "2-digit", minute: "2-digit", hour12: true })}</div>
                     </td>
                     <td className="px-4 py-3.5">
-                      <select
-                        value={lead.status}
-                        disabled={updatingId === lead.id}
-                        onChange={(e) => updateStatus(lead.id, e.target.value, lead)}
-                        className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500 bg-white disabled:opacity-50 text-gray-700 transition-colors"
-                      >
-                        {STATUS_OPTIONS.map((s) => (
-                          <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
-                        ))}
-                      </select>
+                      {lead.status === "converted" ? (
+                        // Converted is final — the renewal record already exists, so
+                        // re-selecting it would be a silent no-op and moving away from
+                        // it would orphan the due date.
+                        <span
+                          title="This lead is converted and its renewal is on file. Edit the renewal from Due Dates."
+                          className="inline-flex items-center gap-1.5 text-xs font-semibold px-2.5 py-1.5 rounded-lg border bg-gray-50 text-gray-500 border-gray-200 cursor-default"
+                        >
+                          <Lock className="w-3 h-3" />
+                          Locked
+                        </span>
+                      ) : (
+                        <select
+                          value={lead.status}
+                          disabled={updatingId === lead.id}
+                          onChange={(e) => updateStatus(lead.id, e.target.value, lead)}
+                          className="border border-gray-200 rounded-lg px-2 py-1.5 text-xs focus:outline-none focus:border-blue-500 bg-white disabled:opacity-50 text-gray-700 transition-colors"
+                        >
+                          {STATUS_OPTIONS.map((s) => (
+                            <option key={s} value={s}>{s.charAt(0).toUpperCase() + s.slice(1)}</option>
+                          ))}
+                        </select>
+                      )}
                     </td>
                   </tr>
                 ))
@@ -388,8 +395,7 @@ export default function LeadsPage() {
       </div>
 
       {/* Renewal Modal */}
-      {renewalModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+      {renewalModal ? <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
             <div className="bg-emerald-50 border-b border-emerald-100 px-5 py-4 flex items-center gap-3">
               <div className="w-8 h-8 rounded-full bg-emerald-100 flex items-center justify-center">
@@ -401,11 +407,9 @@ export default function LeadsPage() {
               </div>
             </div>
             <div className="p-5 space-y-3.5">
-              {renewalError && (
-                <div className="px-3 py-2.5 bg-red-50 border border-red-100 rounded-lg text-xs text-red-600 font-medium">
+              {renewalError ? <div className="px-3 py-2.5 bg-red-50 border border-red-100 rounded-lg text-xs text-red-600 font-medium">
                   {renewalError}
-                </div>
-              )}
+                </div> : null}
 
               <div>
                 <label className="block text-xs font-semibold text-gray-500 uppercase tracking-widest mb-1.5">
@@ -504,8 +508,7 @@ export default function LeadsPage() {
               </div>
             </div>
           </div>
-        </div>
-      )}
+        </div> : null}
     </div>
   );
 }

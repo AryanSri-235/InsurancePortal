@@ -105,10 +105,11 @@ body {
   to   { transform: rotate(360deg); }
 }
 
-/* Translates by 1/3 of total width — works when the item list is tripled */
+/* Translates by exactly one copy of the list. The track sets --marquee-shift
+   to -(100/copies)%; the fallback matches a tripled list. */
 @keyframes marquee {
   from { transform: translateX(0); }
-  to   { transform: translateX(-33.333%); }
+  to   { transform: translateX(var(--marquee-shift, -33.333%)); }
 }
 
 @keyframes pulse-glow {

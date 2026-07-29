@@ -1,6 +1,7 @@
 import { Policy, Provider } from "@prisma/client";
 import Link from "next/link";
 import { Trophy, Tag } from "lucide-react";
+import { categoryRoute } from "@/lib/utils";
 
 type PolicyWithProvider = Policy & {
   provider: Pick<Provider, "name" | "slug" | "claimSettlementRatio" | "logoUrl">;
@@ -104,14 +105,12 @@ export default function TopPoliciesTable({ policies, category }: Props) {
 
                   {/* Specs row */}
                   <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-gray-500">
-                    {policy.coverAmount && (
-                      <span>
+                    {policy.coverAmount ? <span>
                         Cover{" "}
                         <span className="font-semibold text-gray-800">
                           {formatAmount(policy.coverAmount)}
                         </span>
-                      </span>
-                    )}
+                      </span> : null}
                     {policy.premiumStartsFrom != null && (
                       <span>
                         Premium{" "}
@@ -120,18 +119,14 @@ export default function TopPoliciesTable({ policies, category }: Props) {
                         </span>
                       </span>
                     )}
-                    {policy.policyTerm && (
-                      <span>
+                    {policy.policyTerm ? <span>
                         Term{" "}
                         <span className="font-semibold text-gray-800">{policy.policyTerm}</span>
-                      </span>
-                    )}
-                    {policy.eligibilityAge && (
-                      <span>
+                      </span> : null}
+                    {policy.eligibilityAge ? <span>
                         Age{" "}
                         <span className="font-semibold text-gray-800">{policy.eligibilityAge}</span>
-                      </span>
-                    )}
+                      </span> : null}
                   </div>
                 </div>
 
@@ -143,7 +138,7 @@ export default function TopPoliciesTable({ policies, category }: Props) {
                     </span>
                   )}
                   <Link
-                    href={`/${category}-insurance/${policy.provider.slug}/${policySlug}`}
+                    href={`${categoryRoute(category)}/${policy.provider.slug}/${policySlug}`}
                     className={`inline-flex items-center gap-1.5 ${btn} text-white text-xs font-bold px-4 py-2.5 rounded-xl transition-colors whitespace-nowrap shadow-sm`}
                   >
                     Know More →

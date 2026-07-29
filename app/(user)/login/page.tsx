@@ -189,9 +189,7 @@ export default function LoginPage() {
               <span className="text-xs text-gray-400 ml-1">{step === "phone" ? "Enter number" : "Enter OTP"}</span>
             </div>
 
-            {error && (
-              <div className="mb-4 px-4 py-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">{error}</div>
-            )}
+            {error ? <div className="mb-4 px-4 py-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">{error}</div> : null}
 
             {/* Step 1: Phone */}
             {step === "phone" && (

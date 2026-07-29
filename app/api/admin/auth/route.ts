@@ -46,7 +46,7 @@ export async function POST(req: NextRequest) {
 
     const ROLE_MAP: Record<string, string> = {
       SUPER_ADMIN: "superadmin", ADMIN: "superadmin",
-      EDITOR: "superadmin", VIEWER: "superadmin",
+      EDITOR: "editor", VIEWER: "viewer",
       RAM: "ram", SALES: "sales", RENEWAL: "renewal",
     };
     const normalizedRole = ROLE_MAP[user.role] ?? user.role.toLowerCase().replace(/_/g, "");

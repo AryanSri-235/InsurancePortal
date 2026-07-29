@@ -1,55 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
-import bcrypt from "bcryptjs";
-import { db as prisma } from "@/lib/db";
-import { signUserToken, userCookieOptions } from "@/lib/user/auth";
-import { isRateLimited } from "@/lib/rate-limit";
+import { NextResponse } from "next/server";
 
-const schema = z.object({
-  phone: z.string().regex(/^[6-9]\d{9}$/, "Invalid mobile number"),
-  password: z.string().min(1),
-});
-
-export async function POST(req: NextRequest) {
-  try {
-    const body = await req.json();
-    const { phone, password } = schema.parse(body);
-
-    const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ?? "unknown";
-    if (isRateLimited(`user-login:${ip}:${phone}`, 10, 15 * 60 * 1000)) {
-      return NextResponse.json({ error: "Too many login attempts. Please try again in 15 minutes." }, { status: 429 });
-    }
-
-    const user = await prisma.user.findUnique({ where: { phone } });
-    if (!user || !user.isActive) {
-      return NextResponse.json({ error: "No account found with this mobile number." }, { status: 401 });
-    }
-
-    if (!user.passwordHash) {
-      return NextResponse.json({ error: "This account uses OTP login. Please sign in with OTP." }, { status: 401 });
-    }
-
-    const valid = await bcrypt.compare(password, user.passwordHash);
-    if (!valid) {
-      return NextResponse.json({ error: "Incorrect password. Please try again." }, { status: 401 });
-    }
-
-    await prisma.user.update({ where: { id: user.id }, data: { lastLoginAt: new Date() } });
-
-    const token = await signUserToken({ id: user.id, phone: user.phone, name: user.name ?? "", email: user.email });
-    const opts = userCookieOptions();
-
-    const res = NextResponse.json({ success: true, user: { id: user.id, name: user.name, phone: user.phone } });
-    res.cookies.set(opts.name, token, opts);
-    return res;
-  } catch (err) {
-    if (err instanceof z.ZodError) {
-      return NextResponse.json({ error: err.issues[0].message }, { status: 422 });
-    }
-    return NextResponse.json({ error: "Something went wrong." }, { status: 500 });
-  }
-}
-
+// User sign-in is OTP-only (see /api/auth/send-otp and /api/auth/verify-otp).
+// This route exists solely to clear the session cookie on logout.
 export async function DELETE() {
   const res = NextResponse.json({ success: true });
   res.cookies.set("user_token", "", { maxAge: 0, path: "/" });

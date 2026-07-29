@@ -74,6 +74,22 @@ export function resolveCategory(cat: string): ValidCategory | null {
   return SEGMENT_TO_SLUG[cat] ?? null;
 }
 
+// Canonical public route for a category. Not every category follows the
+// "{slug}-insurance" shape — retirement lives at /retirement-plans, term-rop at
+// /return-of-premium-plans — so never build these URLs by string concatenation.
+const CATEGORY_ROUTES: Record<string, string> = {
+  "term-women": "/term-insurance-women",
+  "term-rop": "/return-of-premium-plans",
+  "guaranteed-return": "/guaranteed-return-plans",
+  "child-savings": "/child-savings-plans",
+  retirement: "/retirement-plans",
+};
+
+export function categoryRoute(cat: string): string {
+  const slug = resolveCategory(cat) ?? cat;
+  return CATEGORY_ROUTES[slug] ?? `/${slug}-insurance`;
+}
+
 export function categoryLabel(slug: string): string {
   const resolved = resolveCategory(slug) || slug;
   const map: Record<string, string> = {

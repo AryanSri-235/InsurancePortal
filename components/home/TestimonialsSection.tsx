@@ -188,7 +188,7 @@ export default function TestimonialsSection({ testimonials }: { testimonials: Te
                   </div>
                   <div>
                     <p className="font-bold text-gray-900 text-sm">{t.name}</p>
-                    {t.city && <p className="text-xs text-gray-400">{t.city}</p>}
+                    {t.city ? <p className="text-xs text-gray-400">{t.city}</p> : null}
                   </div>
                 </div>
               </div>
@@ -229,11 +229,9 @@ export default function TestimonialsSection({ testimonials }: { testimonials: Te
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-6">
-                  {error && (
-                    <div className="px-4 py-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">
+                  {error ? <div className="px-4 py-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">
                       {error}
-                    </div>
-                  )}
+                    </div> : null}
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                     <div>

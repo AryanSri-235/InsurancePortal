@@ -264,11 +264,9 @@ export default function BlogForm({ initialData, onSubmit, saving, error, submitL
 
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
-      {error && (
-        <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-3 text-sm font-medium">
+      {error ? <div className="bg-red-50 border border-red-200 text-red-600 rounded-lg p-3 text-sm font-medium">
           {error}
-        </div>
-      )}
+        </div> : null}
 
       <div className="bg-white rounded-xl border border-gray-200 p-6 space-y-5">
         <div className="flex flex-wrap items-center justify-between border-b border-gray-100 pb-3 gap-2">

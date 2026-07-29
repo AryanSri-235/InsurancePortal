@@ -88,7 +88,7 @@ export default async function ProviderPage({ params }: Props) {
       <ProviderClaimProcess provider={provider} category={catSlug} />
       <SectionDivider />
       <ProviderNetworkSearch provider={provider} category={catSlug} />
-      {showNetworkSearch && <SectionDivider />}
+      {showNetworkSearch ? <SectionDivider /> : null}
       <ProviderFaq providerName={provider.name} category={catSlug} />
     </>
   );

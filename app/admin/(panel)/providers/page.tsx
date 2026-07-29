@@ -120,14 +120,12 @@ export default function ProvidersPage() {
             <option key={c} value={c} className="capitalize">{c}</option>
           ))}
         </select>
-        {(search || catFilter !== "all") && (
-          <button
+        {(search || catFilter !== "all") ? <button
             onClick={() => { setSearch(""); setCatFilter("all"); }}
             className="flex items-center gap-1.5 px-3 py-2.5 text-sm text-gray-500 border border-gray-200 rounded-xl hover:bg-gray-50"
           >
             <X className="w-3.5 h-3.5" /> Clear
-          </button>
-        )}
+          </button> : null}
       </div>
 
       {/* List */}
@@ -168,7 +166,7 @@ export default function ProvidersPage() {
                           Inactive
                         </span>
                       )}
-                      {provider.claimSettlementRatio && (
+                      {!!provider.claimSettlementRatio && (
                         <span className="text-[10px] font-semibold text-emerald-700 bg-emerald-50 border border-emerald-100 px-1.5 py-0.5 rounded-full">
                           {provider.claimSettlementRatio}% CSR
                         </span>
@@ -202,8 +200,7 @@ export default function ProvidersPage() {
                 </button>
 
                 {/* Expanded policies */}
-                {open && (
-                  <div className="border-t border-gray-100">
+                {open ? <div className="border-t border-gray-100">
                     {provider.policies.length === 0 ? (
                       <p className="px-5 py-4 text-sm text-gray-400">No policies for this provider.</p>
                     ) : (
@@ -225,13 +222,9 @@ export default function ProvidersPage() {
                                 <div className="flex items-center gap-2">
                                   <Shield className="w-3.5 h-3.5 text-gray-300 flex-shrink-0" />
                                   <span className="font-medium text-gray-800">{pol.name}</span>
-                                  {pol.isFeatured && (
-                                    <Star className="w-3 h-3 text-amber-400 fill-amber-400 flex-shrink-0" />
-                                  )}
+                                  {pol.isFeatured ? <Star className="w-3 h-3 text-amber-400 fill-amber-400 flex-shrink-0" /> : null}
                                 </div>
-                                {pol.subCategory && (
-                                  <p className="text-[11px] text-gray-400 mt-0.5 ml-5">{pol.subCategory}</p>
-                                )}
+                                {pol.subCategory ? <p className="text-[11px] text-gray-400 mt-0.5 ml-5">{pol.subCategory}</p> : null}
                               </td>
                               <td className="px-4 py-3">
                                 <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border capitalize ${catBadge(pol.category)}`}>
@@ -268,8 +261,7 @@ export default function ProvidersPage() {
                       </table>
                       </div>
                     )}
-                  </div>
-                )}
+                  </div> : null}
               </div>
             );
           })}

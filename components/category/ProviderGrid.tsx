@@ -169,27 +169,25 @@ export default function ProviderGrid({ providers, category }: Props) {
                   )}
                   <div>
                     <h3 className="font-black text-gray-900 text-lg leading-tight">{p.name}</h3>
-                    {p.irdaiRegNo && (
-                      <p className="text-xs text-gray-400 mt-0.5">IRDAI Reg: {p.irdaiRegNo}</p>
-                    )}
+                    {p.irdaiRegNo ? <p className="text-xs text-gray-400 mt-0.5">IRDAI Reg: {p.irdaiRegNo}</p> : null}
                   </div>
                 </div>
 
                 {/* Stats */}
                 <div className="grid grid-cols-2 gap-3 mb-5">
-                  {p.claimSettlementRatio && (
+                  {!!p.claimSettlementRatio && (
                     <div className={`border-2 rounded-2xl p-3 ${accent.statBg}`}>
                       <p className="text-xs text-gray-400 mb-1">Claim Ratio</p>
                       <p className={`text-base font-black ${accent.statText}`}>{p.claimSettlementRatio}%</p>
                     </div>
                   )}
-                  {p.solvencyRatio && (
+                  {!!p.solvencyRatio && (
                     <div className={`border-2 rounded-2xl p-3 ${accent.statBg}`}>
                       <p className="text-xs text-gray-400 mb-1">Solvency Ratio</p>
                       <p className={`text-base font-black ${accent.statText}`}>{p.solvencyRatio}x</p>
                     </div>
                   )}
-                  {p.networkHospitals && (
+                  {!!p.networkHospitals && (
                     <div className="bg-blue-50 border-2 border-blue-100 rounded-2xl p-3 col-span-2">
                       <p className="text-xs text-gray-400 mb-1">Network Hospitals</p>
                       <p className="text-base font-black text-blue-700">{p.networkHospitals.toLocaleString("en-IN")}+</p>
@@ -197,9 +195,7 @@ export default function ProviderGrid({ providers, category }: Props) {
                   )}
                 </div>
 
-                {p.tagline && (
-                  <p className="text-xs text-gray-400 italic mb-5 border-l-2 border-gray-100 pl-3">&ldquo;{p.tagline}&rdquo;</p>
-                )}
+                {p.tagline ? <p className="text-xs text-gray-400 italic mb-5 border-l-2 border-gray-100 pl-3">&ldquo;{p.tagline}&rdquo;</p> : null}
 
                 {/* CTA */}
                 <Link

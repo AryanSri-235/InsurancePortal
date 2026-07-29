@@ -220,11 +220,9 @@ export default function MotorSpecific() {
                   plan.tag ? "border-blue-400" : "border-gray-200"
                 }`}
               >
-                {plan.tag && (
-                  <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
+                {plan.tag ? <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-blue-500 text-white text-xs font-bold px-3 py-1 rounded-full">
                     {plan.tag}
-                  </span>
-                )}
+                  </span> : null}
                 <h3 className="text-base font-bold text-gray-900 mb-4">{plan.label}</h3>
                 <div className="space-y-4">
                   <div>

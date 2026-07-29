@@ -4,6 +4,7 @@ import { Policy, Provider } from "@prisma/client";
 import Link from "next/link";
 import { useState, useMemo } from "react";
 import { Star, Check, Search } from "lucide-react";
+import { categoryRoute } from "@/lib/utils";
 
 type PolicyWithProvider = Policy & {
   provider: Pick<Provider, "name" | "slug" | "claimSettlementRatio" | "logoUrl">;
@@ -168,13 +169,11 @@ export default function ProviderPlans({ policies, category, providerName }: Prop
                 <div className={`h-2 w-full bg-gradient-to-r ${gradient}`} />
 
                 {/* Featured Badge */}
-                {(policy as any).isFeatured && (
-                  <div className="absolute top-4 right-4">
+                {(policy as any).isFeatured ? <div className="absolute top-4 right-4">
                     <span className="inline-flex items-center gap-1 bg-green-100 text-green-700 text-xs font-semibold px-2.5 py-1 rounded-full border border-green-200">
                       <Star className="w-3 h-3 fill-current" /> Top Pick
                     </span>
-                  </div>
-                )}
+                  </div> : null}
 
                 <div className="p-5 flex flex-col flex-1">
                   {/* Policy Name & Provider Pill */}
@@ -237,7 +236,7 @@ export default function ProviderPlans({ policies, category, providerName }: Prop
                   {/* Action Buttons */}
                   <div className="flex gap-2 mt-4">
                     <Link
-                      href={`/${category}-insurance/${policy.provider.slug}/${(policy as any).slug}`}
+                      href={`${categoryRoute(category)}/${policy.provider.slug}/${(policy as any).slug}`}
                       className={`flex-1 text-center text-sm font-semibold px-4 py-2.5 rounded-xl text-white bg-gradient-to-r ${gradient} hover:opacity-90 transition-opacity`}
                     >
                       Know More →

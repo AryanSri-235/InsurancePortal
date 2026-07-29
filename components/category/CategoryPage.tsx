@@ -102,12 +102,10 @@ export default async function CategoryPage({ config }: Props) {
       <SectionDivider />
 
       {/* 5. Category-specific section */}
-      {CategorySpecific && (
-        <>
+      {CategorySpecific ? <>
           <CategorySpecific />
           <SectionDivider />
-        </>
-      )}
+        </> : null}
 
       {/* 8. CategoryFaq */}
       <CategoryFaq faqs={config.faqs} title={`${config.label} FAQs`} />

@@ -219,7 +219,7 @@ export default async function DashboardPage() {
               </div>
               <p className="text-3xl font-bold text-gray-900 tracking-tight">{card.value}</p>
               <p className="text-xs text-gray-400 mt-1.5">{card.sub}</p>
-              {card.href && <p className="text-xs text-blue-500 mt-2 font-medium">View all →</p>}
+              {card.href ? <p className="text-xs text-blue-500 mt-2 font-medium">View all →</p> : null}
             </>
           );
           return card.href ? (
@@ -330,11 +330,9 @@ export default async function DashboardPage() {
                 >
                   {action.icon}
                   <span className="flex-1">{action.label}</span>
-                  {"badge" in action && action.badge && action.badge > 0 && (
-                    <span className="bg-red-100 text-red-700 text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
+                  {"badge" in action && action.badge && action.badge > 0 ? <span className="bg-red-100 text-red-700 text-xs font-bold px-1.5 py-0.5 rounded-full min-w-[20px] text-center">
                       {action.badge}
-                    </span>
-                  )}
+                    </span> : null}
                 </Link>
               ))}
             </div>
@@ -375,16 +373,14 @@ export default async function DashboardPage() {
                   <div className="flex-1 min-w-0">
                     <p className="text-sm font-semibold text-gray-900 truncate">{r.policyHolderName}</p>
                     <p className="text-xs text-gray-400 truncate">{r.phone}{r.policyNumber ? ` · ${r.policyNumber}` : ""}</p>
-                    {providerLine && <p className="text-xs text-gray-400 truncate mt-0.5">{providerLine}</p>}
+                    {providerLine ? <p className="text-xs text-gray-400 truncate mt-0.5">{providerLine}</p> : null}
                     <div className="flex items-center gap-2 mt-1.5 flex-wrap">
                       <span className="text-xs text-gray-500">
                         {new Date(r.dueDate).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}
                       </span>
-                      {freqBadge && (
-                        <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${freqBadge.className}`}>
+                      {freqBadge ? <span className={`text-xs font-semibold px-2 py-0.5 rounded-full border ${freqBadge.className}`}>
                           ↻ {freqBadge.label}
-                        </span>
-                      )}
+                        </span> : null}
                     </div>
                   </div>
                 </div>

@@ -56,12 +56,10 @@ export default function UserLookupPage() {
                 className="flex-1 border border-gray-200 rounded-r-lg px-4 py-3 text-sm focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors text-gray-700 placeholder-gray-400"
               />
             </div>
-            {error && (
-              <p className="mt-2 text-sm text-red-500 flex items-center gap-1.5">
+            {error ? <p className="mt-2 text-sm text-red-500 flex items-center gap-1.5">
                 <AlertTriangle className="w-4 h-4 flex-shrink-0" />
                 {error}
-              </p>
-            )}
+              </p> : null}
           </div>
 
           <button

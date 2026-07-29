@@ -59,7 +59,7 @@ export default function AccountSidebar({
         <div className="profile-info">
           <p className="profile-name">{userName}</p>
           <p className="profile-phone">+91 {userPhone}</p>
-          {userCity && <p className="profile-city">{userCity}</p>}
+          {userCity ? <p className="profile-city">{userCity}</p> : null}
           <div className="member-badge">
             <div className="status-dot" />
             <span>Member since {memberSince}</span>

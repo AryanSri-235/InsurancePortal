@@ -309,7 +309,7 @@ type Post = (typeof fallbackPosts)[0];
 
 async function getPost(slug: string): Promise<Post | null> {
   try {
-    const p = await db.blogPost.findUnique({ where: { slug } });
+    const p = await db.blogPost.findUnique({ where: { slug, isPublished: true } });
     if (p) {
       return {
         id: p.id,
@@ -402,9 +402,7 @@ export default async function BlogPostPage({ params }: Props) {
             {post.title}
           </h1>
 
-          {post.excerpt && (
-            <p className="text-lg text-gray-500 leading-relaxed mb-8 max-w-2xl">{post.excerpt}</p>
-          )}
+          {post.excerpt ? <p className="text-lg text-gray-500 leading-relaxed mb-8 max-w-2xl">{post.excerpt}</p> : null}
 
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-sm text-gray-500">
             <div className="flex items-center gap-2.5">

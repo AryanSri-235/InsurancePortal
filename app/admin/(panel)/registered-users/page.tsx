@@ -117,11 +117,9 @@ export default async function RegisteredUsersPage({
         <button type="submit" className="bg-blue-600 text-white text-sm font-semibold px-4 py-2.5 rounded-xl hover:bg-blue-700 transition-colors">
           Search
         </button>
-        {search && (
-          <Link href="/admin/registered-users" className="border border-gray-200 text-gray-600 text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-gray-50 transition-colors">
+        {search ? <Link href="/admin/registered-users" className="border border-gray-200 text-gray-600 text-sm font-medium px-4 py-2.5 rounded-xl hover:bg-gray-50 transition-colors">
             Clear
-          </Link>
-        )}
+          </Link> : null}
       </form>
 
       {/* Table */}

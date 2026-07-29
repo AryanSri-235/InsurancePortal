@@ -3,7 +3,7 @@ import { Metadata } from "next";
 import Link from "next/link";
 import { ChevronLeft, Star } from "lucide-react";
 import { db } from "@/lib/db";
-import { isValidCategory, resolveCategory, categoryLabel } from "@/lib/utils";
+import { isValidCategory, resolveCategory, categoryLabel, categoryRoute } from "@/lib/utils";
 import PolicyTabs from "@/components/policy/PolicyTabs";
 import PolicySidebar from "@/components/policy/PolicySidebar";
 import PolicyGrid from "@/components/category/PolicyGrid";
@@ -80,6 +80,9 @@ export default async function PolicyDetailPage({ params }: Props) {
 
   if (!isValidCategory(category)) notFound();
   const catSlug = resolveCategory(category)!;
+  // `category` is the raw URL segment (e.g. "term-insurance"), so appending
+  // "-insurance" to it produces a dead link. Always link via the canonical route.
+  const catRoute = categoryRoute(catSlug);
 
   let policy, similar;
   try {
@@ -99,9 +102,9 @@ export default async function PolicyDetailPage({ params }: Props) {
           <nav className="text-sm text-slate-400 mb-6 flex items-center gap-2 flex-wrap">
             <Link href="/" className="hover:text-white">Home</Link>
             <span>›</span>
-            <Link href={`/${category}-insurance`} className="hover:text-white">{categoryLabel(category)}</Link>
+            <Link href={catRoute} className="hover:text-white">{categoryLabel(category)}</Link>
             <span>›</span>
-            <Link href={`/${category}-insurance/${providerSlug}`} className="hover:text-white">{policy.provider.name}</Link>
+            <Link href={`${catRoute}/${providerSlug}`} className="hover:text-white">{policy.provider.name}</Link>
             <span>›</span>
             <span className="text-white">{policy.name}</span>
           </nav>
@@ -112,11 +115,9 @@ export default async function PolicyDetailPage({ params }: Props) {
                 <span className="bg-blue-500/30 text-blue-200 text-xs font-semibold px-3 py-1 rounded-full">
                   {categoryLabel(category)}
                 </span>
-                {policy.isFeatured && (
-                  <span className="bg-green-400/20 text-green-300 text-xs font-semibold px-3 py-1 rounded-full">
+                {policy.isFeatured ? <span className="bg-green-400/20 text-green-300 text-xs font-semibold px-3 py-1 rounded-full">
                     <Star className="w-3 h-3 fill-current inline" /> Featured Plan
-                  </span>
-                )}
+                  </span> : null}
               </div>
               <h1 className="text-2xl lg:text-3xl font-bold mb-1">{policy.name}</h1>
               <p className="text-slate-300 text-sm">by {policy.provider.name}</p>
@@ -124,19 +125,17 @@ export default async function PolicyDetailPage({ params }: Props) {
 
             {/* Quick stats */}
             <div className="flex flex-wrap gap-4">
-              {policy.premiumStartsFrom && (
+              {!!policy.premiumStartsFrom && (
                 <div className="bg-white/10 rounded-xl px-4 py-3 text-center">
                   <p className="text-xl font-bold">₹{policy.premiumStartsFrom.toLocaleString("en-IN")}/mo</p>
                   <p className="text-slate-400 text-xs">Premium from</p>
                 </div>
               )}
-              {policy.coverAmount && (
-                <div className="bg-white/10 rounded-xl px-4 py-3 text-center">
+              {policy.coverAmount ? <div className="bg-white/10 rounded-xl px-4 py-3 text-center">
                   <p className="text-xl font-bold">{policy.coverAmount}</p>
                   <p className="text-slate-400 text-xs">Cover</p>
-                </div>
-              )}
-              {policy.provider.claimSettlementRatio && (
+                </div> : null}
+              {!!policy.provider.claimSettlementRatio && (
                 <div className="bg-white/10 rounded-xl px-4 py-3 text-center">
                   <p className="text-xl font-bold text-green-400">{policy.provider.claimSettlementRatio}%</p>
                   <p className="text-slate-400 text-xs">Claim Ratio</p>
@@ -177,7 +176,7 @@ export default async function PolicyDetailPage({ params }: Props) {
         {/* Back link */}
         <div className="mt-10">
           <Link
-            href={`/${category}-insurance/${providerSlug}`}
+            href={`${catRoute}/${providerSlug}`}
             className="inline-flex items-center gap-2 text-blue-600 text-sm font-medium hover:underline"
           >
             <ChevronLeft className="w-4 h-4" />

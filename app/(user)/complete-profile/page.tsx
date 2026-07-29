@@ -76,9 +76,7 @@ export default function CompleteProfilePage() {
           <div className="h-1.5 bg-gradient-to-r from-teal-500 via-blue-500 to-indigo-600" />
 
           <form onSubmit={handleSubmit} className="px-8 py-8 space-y-5">
-            {error && (
-              <div className="px-4 py-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">{error}</div>
-            )}
+            {error ? <div className="px-4 py-3 bg-red-50 border border-red-100 rounded-xl text-sm text-red-600">{error}</div> : null}
 
             {/* Name */}
             <div>

@@ -216,15 +216,13 @@ export default function BlogClient({ role }: { role: string }) {
             </select>
           </div>
 
-          {hasFilters && (
-            <button
+          {hasFilters ? <button
               onClick={() => setFilters({ search: "", category: "", status: "" })}
               className="flex items-center gap-1.5 text-sm font-medium text-red-500 hover:text-red-700 border border-red-100 hover:border-red-200 bg-red-50 hover:bg-red-100 px-3 py-2 rounded-lg transition-colors"
             >
               <X className="w-3.5 h-3.5" />
               Clear
-            </button>
-          )}
+            </button> : null}
         </div>
       </div>
 
@@ -259,7 +257,7 @@ export default function BlogClient({ role }: { role: string }) {
                     <div className="flex flex-col items-center justify-center py-14 text-gray-400">
                       <FileText className="w-8 h-8 mb-2 opacity-40" />
                       <p className="text-sm font-medium">No blog posts found</p>
-                      {hasFilters && <p className="text-xs mt-1">Try adjusting your filters</p>}
+                      {hasFilters ? <p className="text-xs mt-1">Try adjusting your filters</p> : null}
                     </div>
                   </td>
                 </tr>

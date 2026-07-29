@@ -231,7 +231,7 @@ export default function UsersPage() {
                           </div>
                           <div>
                             <p className="font-semibold text-gray-900">{user.name}</p>
-                            {user.bankName && <p className="text-[11px] text-gray-400">{user.bankName}</p>}
+                            {user.bankName ? <p className="text-[11px] text-gray-400">{user.bankName}</p> : null}
                           </div>
                         </div>
                       </td>
@@ -326,8 +326,7 @@ export default function UsersPage() {
       </div>
 
       {/* ── Add User Modal ── */}
-      {showModal && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      {showModal ? <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-black/40 backdrop-blur-sm" onClick={() => setShowModal(false)} />
           <div className="relative bg-white rounded-2xl shadow-2xl w-full max-w-md p-6">
             <div className="flex items-center justify-between mb-5">
@@ -420,8 +419,7 @@ export default function UsersPage() {
               </div>
             </form>
           </div>
-        </div>
-      )}
+        </div> : null}
     </div>
   );
 }

@@ -52,6 +52,7 @@ const PLAN_SECTIONS: PlanSection[] = [
     heading: "Motor",
     color: "text-orange-600",
     links: [
+      { label: "Motor Insurance",          href: "/motor-insurance",          icon: Car,        desc: "All vehicles, one place" },
       { label: "Car Insurance",            href: "/car-insurance",            icon: Car,        desc: "Zero dep, cashless garages" },
       { label: "Two Wheeler Insurance",    href: "/two-wheeler-insurance",    icon: Bike,       desc: "Bike & scooter cover" },
     ],
@@ -316,8 +317,7 @@ export default function Navbar() {
                 </>
               )}
 
-              {userSession && (
-                <div
+              {userSession ? <div
                   className="relative"
                   onMouseEnter={() => { if (userMenuTimer.current) clearTimeout(userMenuTimer.current); setUserMenuOpen(true); }}
                   onMouseLeave={() => { userMenuTimer.current = setTimeout(() => setUserMenuOpen(false), 150); }}
@@ -338,17 +338,12 @@ export default function Navbar() {
                       <User className="w-4 h-4" />
                       My Account
                     </Link>
-                    <Link href="/account/policies" onClick={() => setUserMenuOpen(false)} className="flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-gray-700 hover:bg-blue-50 hover:text-blue-600 transition-colors">
-                      <Shield className="w-4 h-4" />
-                      My Policies
-                    </Link>
                     <button onClick={handleLogout} className="w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-sm text-red-500 hover:bg-red-50 transition-colors mt-1 border-t border-gray-100 pt-2">
                       <LogOut className="w-4 h-4" />
                       Logout
                     </button>
                   </div>
-                </div>
-              )}
+                </div> : null}
 
               <Link href="/#lead-form" className="btn-shine relative overflow-hidden bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-5 py-2.5 rounded-xl text-sm font-bold hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-md shadow-blue-200 hover:shadow-lg hover:shadow-blue-300 hover:-translate-y-0.5">
                 Get Free Quote
@@ -499,7 +494,7 @@ function MobileAccordion({
         <span>{label}</span>
         <ChevronDown className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${isOpen ? "rotate-180" : ""}`} />
       </button>
-      {isOpen && <div className="pl-3 mt-1">{children}</div>}
+      {isOpen ? <div className="pl-3 mt-1">{children}</div> : null}
     </div>
   );
 }

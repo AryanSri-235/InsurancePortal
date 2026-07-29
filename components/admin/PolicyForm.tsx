@@ -33,47 +33,47 @@ const CATEGORIES = [
   "life",
   "health",
   "motor",
+  "car",
+  "two-wheeler",
+  "family-health",
+  "group-health",
   "travel",
   "home",
-  "personal-accident",
-  "fire",
-  "marine",
-  "pension",
-  "commercial",
-  "crop",
-  "cyber",
+  "guaranteed-return",
+  "child-savings",
+  "retirement",
 ];
 
 const CAT_LABELS: Record<string, string> = {
-  "term":              "Term Insurance",
-  "life":              "Life Insurance",
-  "health":            "Health Insurance",
-  "motor":             "Motor Insurance",
-  "travel":            "Travel Insurance",
-  "home":              "Home Insurance",
-  "personal-accident": "Personal Accident",
-  "fire":              "Fire Insurance",
-  "marine":            "Marine Insurance",
-  "pension":           "Pension / Retirement",
-  "commercial":        "Commercial / Business",
-  "crop":              "Crop Insurance",
-  "cyber":             "Cyber Insurance",
+  "term":               "Term Insurance",
+  "life":               "Life Insurance",
+  "health":             "Health Insurance",
+  "motor":              "Motor Insurance",
+  "car":                "Car Insurance",
+  "two-wheeler":        "Two Wheeler Insurance",
+  "family-health":      "Family Health Insurance",
+  "group-health":       "Group Health Insurance",
+  "travel":             "Travel Insurance",
+  "home":               "Home Insurance",
+  "guaranteed-return":  "Guaranteed Return Plans",
+  "child-savings":      "Child Savings Plans",
+  "retirement":         "Retirement Plans",
 };
 
 const CAT_SUB: Record<string, string[]> = {
-  term:              ["Pure Term", "Return of Premium", "Increasing Cover"],
-  life:              ["Whole Life", "ULIP", "Endowment", "Money Back"],
-  health:            ["Individual", "Family Floater", "Senior Citizen", "Critical Illness", "Group Health"],
-  motor:             ["Comprehensive", "Third Party", "Own Damage", "Electric Vehicle"],
-  travel:            ["Domestic", "International", "Student", "Senior Citizen Travel", "Group Travel"],
-  home:              ["Building", "Contents", "Building + Contents"],
-  "personal-accident": ["Individual", "Group", "Workmen Compensation"],
-  fire:              ["Standard Fire", "Industrial All Risk", "Consequential Loss"],
-  marine:            ["Cargo", "Hull", "Inland Transit"],
-  pension:           ["Immediate Annuity", "Deferred Annuity", "NPS Tier I", "NPS Tier II"],
-  commercial:        ["General Liability", "Professional Indemnity", "Directors & Officers"],
-  crop:              ["PMFBY", "Weather Based", "Horticulture"],
-  cyber:             ["Individual", "Business", "Data Breach"],
+  term:                ["Pure Term", "Return of Premium", "Increasing Cover"],
+  life:                ["Whole Life", "ULIP", "Endowment", "Money Back"],
+  health:              ["Individual", "Senior Citizen", "Critical Illness"],
+  motor:               ["Comprehensive", "Third Party", "Own Damage"],
+  car:                 ["Comprehensive", "Third Party", "Zero Depreciation", "Electric Vehicle"],
+  "two-wheeler":       ["Comprehensive", "Third Party", "Zero Depreciation"],
+  "family-health":     ["Family Floater", "Multi-Individual"],
+  "group-health":      ["Employee Group", "Corporate Buffer"],
+  travel:              ["Domestic", "International", "Student", "Senior Citizen Travel"],
+  home:                ["Building", "Contents", "Building + Contents"],
+  "guaranteed-return": ["Assured Return", "Guaranteed Savings Plan"],
+  "child-savings":     ["Education Plan", "Child ULIP"],
+  retirement:          ["Immediate Annuity", "Deferred Annuity", "NPS-linked"],
 };
 
 const inputCls = "w-full border border-gray-200 rounded-lg px-3 py-2.5 text-sm bg-white focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors text-gray-800 placeholder-gray-400";
@@ -178,12 +178,10 @@ export default function PolicyForm({ providers, initialData, onSubmit, saving, e
 
   return (
     <form onSubmit={handleSubmit} className="space-y-5">
-      {error && (
-        <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
+      {error ? <div className="flex items-start gap-2.5 bg-red-50 border border-red-200 rounded-xl px-4 py-3">
           <XCircle className="w-4 h-4 text-red-500 mt-0.5 flex-shrink-0" />
           <p className="text-red-600 text-sm">{error}</p>
-        </div>
-      )}
+        </div> : null}
 
       {/* Basic info */}
       <div className="bg-white rounded-xl border border-gray-200 p-5 space-y-4">

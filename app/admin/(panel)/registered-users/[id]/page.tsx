@@ -24,10 +24,13 @@ interface DueDate {
   id: number;
   policyHolderName: string;
   phone: string;
+  email: string | null;
   policyNumber: string | null;
   dueDate: string;
   status: string;
   notes: string | null;
+  bankName: string | null;
+  category: string | null;
   policy: { name: string; category: string; provider: { name: string } } | null;
 }
 
@@ -56,7 +59,22 @@ const STATUS_BADGE_LEAD: Record<string, string> = {
 };
 const DD_STATUS_OPTIONS = ["pending", "notified", "renewed", "lapsed"];
 
-function getDaysUntil(dateStr: string) {
+function parseFrequency(notes: string | null): "monthly" | "quarterly" | "annually" {
+  const match = notes?.match(/Frequency:\s*(monthly|quarterly|annually)/i);
+  return (match?.[1]?.toLowerCase() as "monthly" | "quarterly" | "annually") ?? "annually";
+}
+
+function calculateNextDueDate(currentDueDate: string, frequency: "monthly" | "quarterly" | "annually"): Date {
+  const d = new Date(currentDueDate);
+  if (frequency === "monthly")        d.setMonth(d.getMonth() + 1);
+  else if (frequency === "quarterly") d.setMonth(d.getMonth() + 3);
+  else                                d.setFullYear(d.getFullYear() + 1);
+  return d;
+}
+
+function getDaysUntil(dateStr: string, status?: string) {
+  // Closed cycles have no countdown — the live one moved to the next due date.
+  if (status === "renewed" || status === "lapsed") return { label: "—", cls: "text-gray-300" };
   const d = Math.ceil((new Date(dateStr).getTime() - Date.now()) / 86400000);
   if (d < 0)  return { label: `${Math.abs(d)}d overdue`, cls: "text-red-600 font-bold" };
   if (d === 0) return { label: "Today!",            cls: "text-red-600 font-bold" };
@@ -108,6 +126,55 @@ export default function UserDetailPage() {
   useEffect(() => { fetchData(); }, [fetchData]);
 
   async function updateDDStatus(ddId: number, status: string, current: string) {
+    // Renewing rolls the policy forward: mark this cycle renewed and open the next one.
+    if (status === "renewed" && current !== "renewed") {
+      const item = dueDates.find((d) => d.id === ddId);
+      if (!item) return;
+
+      const frequency = parseFrequency(item.notes);
+      const nextDate = calculateNextDueDate(item.dueDate, frequency);
+      const nextDateFormatted = nextDate.toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" });
+      const freqLabel = frequency.charAt(0).toUpperCase() + frequency.slice(1);
+
+      const result = await Swal.fire({
+        icon: "question",
+        title: "Confirm Renewal",
+        html: `Mark <b>${item.policyHolderName}</b>'s policy as renewed?<br/>
+               <span style="color:#6b7280;font-size:13px;margin-top:6px;display:block">
+                 Next renewal: <b>${nextDateFormatted}</b> &nbsp;·&nbsp; Frequency: <b>${freqLabel}</b>
+               </span>`,
+        showCancelButton: true,
+        confirmButtonText: "Yes, Renew",
+        cancelButtonText: "Cancel",
+        confirmButtonColor: "#059669",
+        reverseButtons: true,
+      });
+      if (!result.isConfirmed) return;
+
+      await fetch("/api/admin/due-dates", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id: ddId, status: "renewed" }),
+      });
+      await fetch("/api/admin/due-dates", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          policyHolderName: item.policyHolderName,
+          phone: item.phone,
+          email: item.email ?? "",
+          policyNumber: item.policyNumber ?? "",
+          bankName: item.bankName ?? "",
+          category: item.category ?? "",
+          dueDate: nextDate.toISOString().split("T")[0],
+          notes: item.notes ?? "",
+          status: "pending",
+        }),
+      });
+      fetchData();
+      return;
+    }
+
     const label = status.charAt(0).toUpperCase() + status.slice(1);
     const result = await Swal.fire({
       icon: status === "lapsed" ? "warning" : "question",
@@ -315,15 +382,13 @@ export default function UserDetailPage() {
         </a>
 
         {/* Email */}
-        {user.email && (
-          <a
+        {user.email ? <a
             href={`mailto:${user.email}?subject=Regarding your insurance policy&body=Hi ${user.name},%0A%0A`}
             className="flex items-center gap-2 bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 font-semibold text-sm px-4 py-2 rounded-lg transition-colors"
           >
             <Mail className="w-4 h-4" />
             Email
-          </a>
-        )}
+          </a> : null}
 
         {/* Log Query */}
         <button
@@ -336,8 +401,7 @@ export default function UserDetailPage() {
       </div>
 
       {/* Log Query form */}
-      {showQuery && (
-        <form onSubmit={logQuery} className="bg-violet-50 border border-violet-200 rounded-xl p-4 flex flex-col gap-3">
+      {showQuery ? <form onSubmit={logQuery} className="bg-violet-50 border border-violet-200 rounded-xl p-4 flex flex-col gap-3">
           <div className="flex items-center gap-2">
             <MessageSquare className="w-4 h-4 text-violet-500 flex-shrink-0" />
             <p className="text-sm font-semibold text-violet-800">Log a Query / Note for {user.name}</p>
@@ -366,8 +430,7 @@ export default function UserDetailPage() {
               Cancel
             </button>
           </div>
-        </form>
-      )}
+        </form> : null}
 
       {/* Tabs */}
       <div className="flex gap-1 bg-gray-100 p-1 rounded-xl w-fit">
@@ -397,8 +460,7 @@ export default function UserDetailPage() {
           </div>
 
           {/* Add form */}
-          {showAddForm && (
-            <form onSubmit={handleAddRenewal} className="border-b border-gray-100 p-5 bg-blue-50/30 grid grid-cols-1 sm:grid-cols-3 gap-4">
+          {showAddForm ? <form onSubmit={handleAddRenewal} className="border-b border-gray-100 p-5 bg-blue-50/30 grid grid-cols-1 sm:grid-cols-3 gap-4">
               <div>
                 <label className="block text-[10px] font-bold text-gray-500 uppercase tracking-widest mb-1.5">Policy Number</label>
                 <input type="text" placeholder="POL-XXXXXXXX" value={addForm.policyNumber} onChange={(e) => setAddForm({ ...addForm, policyNumber: e.target.value })} className={inputCls} />
@@ -417,8 +479,7 @@ export default function UserDetailPage() {
                 </button>
                 <button type="button" onClick={() => setShowAddForm(false)} className="border border-gray-200 text-gray-600 text-xs font-medium px-4 py-2 rounded-lg hover:bg-gray-50 transition-colors">Cancel</button>
               </div>
-            </form>
-          )}
+            </form> : null}
 
           {dueDates.length === 0 ? (
             <div className="py-14 flex flex-col items-center text-gray-400">
@@ -441,7 +502,7 @@ export default function UserDetailPage() {
               </thead>
               <tbody className="divide-y divide-gray-50">
                 {dueDates.map((d) => {
-                  const t = getDaysUntil(d.dueDate);
+                  const t = getDaysUntil(d.dueDate, d.status);
                   return (
                     <tr key={d.id} className="hover:bg-gray-50/80 transition-colors">
                       <td className="px-5 py-3.5">
@@ -549,8 +610,7 @@ export default function UserDetailPage() {
       )}
 
       {/* Edit renewal modal */}
-      {editItem && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
+      {editItem ? <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm px-4">
           <div className="bg-white rounded-2xl shadow-2xl w-full max-w-sm overflow-hidden">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 bg-gray-50/60">
               <p className="font-bold text-gray-900 text-sm">Edit Renewal</p>
@@ -585,8 +645,7 @@ export default function UserDetailPage() {
               </div>
             </form>
           </div>
-        </div>
-      )}
+        </div> : null}
     </div>
   );
 }

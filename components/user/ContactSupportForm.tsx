@@ -91,9 +91,7 @@ export default function ContactSupportForm({ name, phone, email }: Props) {
         />
       </div>
 
-      {error && (
-        <p style={{ fontSize: 12, color: "#DC2626", marginBottom: 10 }}>{error}</p>
-      )}
+      {error ? <p style={{ fontSize: 12, color: "#DC2626", marginBottom: 10 }}>{error}</p> : null}
 
       <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
         <button
